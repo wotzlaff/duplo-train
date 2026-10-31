@@ -768,6 +768,16 @@ function mountedControls() {
     log('→ Hub Action: switch off (0x01) — train will announce 0x30/0x31 first', 'info');
   };
   $('btn-clearlog').onclick = () => { $('log').textContent = ''; };
+  $('btn-copylog').onclick = async (event) => {
+    const button = event.currentTarget;
+    try {
+      await navigator.clipboard.writeText($('log').innerText || $('log').textContent);
+      button.textContent = 'Kopiert!';
+      setTimeout(() => { button.textContent = 'Logs kopieren'; }, 1500);
+    } catch (e) {
+      log('Could not copy logs: ' + (e?.message || e), 'err');
+    }
+  };
 
   /* throttle rate switch — mirrors SetNoAckParameters */
   $('chk-throttle').addEventListener('change', (e) => {
