@@ -42,9 +42,15 @@ const PORT_FALLBACK = {  /* 2018 hub layout — used only until Attached I/O arr
 };
 
 const LWP3_COLORS = [
-  [0,'Black'], [1,'Pink'], [2,'Purple'], [3,'Blue'], [4,'Light blue'],
-  [5,'Cyan'], [6,'Green'], [7,'Yellow'], [8,'Orange'], [9,'Red'], [10,'White'], [255,'None'],
+  [0,'Schwarz'], [1,'Pink'], [2,'Lila'], [3,'Blau'], [4,'Hellblau'],
+  [5,'Cyan'], [6,'Grün'], [7,'Gelb'], [8,'Orange'], [9,'Rot'], [10,'Weiß'], [255,'Keine Farbe'],
 ];
+const COLOR_SWATCHES = {
+  0: ['#111318', '#ffffff'], 1: ['#ff8ab6', '#241018'], 2: ['#8f4acb', '#ffffff'],
+  3: ['#0055bf', '#ffffff'], 4: ['#9fc3e9', '#15202d'], 5: ['#00a9ce', '#102027'],
+  6: ['#237841', '#ffffff'], 7: ['#f2cd37', '#241f0b'], 8: ['#fe8a18', '#241707'],
+  9: ['#c91a09', '#ffffff'], 10: ['#f4f4f4', '#16181d'], 255: ['transparent', 'var(--dim)'],
+};
 
 const SOUND_NAMES = {
   3: 'Brake', 5: 'Depart', 7: 'Water refill', 9: 'Horn', 10: 'Steam',
@@ -546,7 +552,12 @@ function decodePortValue(u8) {
     if (u8.length < 5) return;
     const idx = dv.getUint8(4);
     const name = (LWP3_COLORS.find(c => c[0] === idx) || [idx, 'unknown'])[1];
-    $('val-color').textContent = `${name} (${idx})`;
+    const el = $('val-color');
+    const [background, foreground] = COLOR_SWATCHES[idx] || ['#6b7280', '#ffffff'];
+    el.textContent = `${name} (${idx})`;
+    el.style.backgroundColor = background;
+    el.style.color = foreground;
+    el.classList.add('color-value');
   } else if (map.kind === 'speedo') {
     const fmt = state.portFormats[port];
     const raw = readSensorNumber(dv, 4, fmt, u8.length);
