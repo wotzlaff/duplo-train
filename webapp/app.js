@@ -35,6 +35,8 @@ const DEVICE_TYPES = {
   0x2A: 'Speaker',
   0x2B: 'Colour sensor',
   0x2C: 'Speedometer',
+  0x5A: 'Hub diagnostics (2025)',
+  0x5B: 'Tile/tag sensor (2025)',
 };
 
 const PORT_FALLBACK = {  /* 2018 hub layout — used only until Attached I/O arrives */
@@ -437,13 +439,14 @@ function onNotify(e) {
     case 0x05: return decodeGenericError(u8);
     case 0x44: return decodeModeInfo(u8);
     case 0x47: return decodeInputFormat(u8);
+    case 0x43: return decodePortInformation(u8);
     default:
       /* 0x43 Port Information, 0x47 … also tolerated */
   }
 }
 
 function portKindLabel(k) {
-  return { motor: 'Motor', speaker: 'Speaker', rgb: 'LED', color: 'Colour', speedo: 'Speedometer', voltage: 'Voltage' }[k] || k;
+  return { motor: 'Motor', speaker: 'Speaker', rgb: 'LED', color: 'Colour', speedo: 'Speedometer', voltage: 'Voltage' }[k] || (k.startsWith('device-') ? 'Unbekanntes Gerät' : k);
 }
 
 function decodeAttachedIO(u8) {
@@ -466,7 +469,11 @@ function decodeAttachedIO(u8) {
     case 0x2C: kind = 'speedo'; break;
     case 0x14: kind = 'voltage'; break;
   }
-  if (!kind) return;
+  if (!kind) {
+    state.ports[`device-${port}`] = { port, type, name: tName };
+    renderPorts();
+    return;
+  }
 
   state.ports[kind] = { port, type, name: tName };
 
@@ -498,11 +505,49 @@ function decodeAttachedIO(u8) {
   renderPorts();
 }
 
-function requestModeInfo(port, mode) {
-  /* Port Mode Information Request: [len,hub,0x22,port,mode,info] info=0x80 VALUE FORMAT */
-  const msg = lwp3Build(0x22, [port, mode, 0x80]);
+function requestPortInformation(port) {
+  /* Port Information Request, info type 0x01 describes available modes. */
+  const msg = lwp3Build(0x21, [port, 0x01]);
   bytesOf(msg, 'TX', 'tx');
   throttler.enqueue(msg);
+}
+
+function requestModeInfo(port, mode, info = 0x80) {
+  const msg = lwp3Build(0x22, [port, mode, info]);
+  bytesOf(msg, 'TX', 'tx');
+  throttler.enqueue(msg);
+}
+
+function probePorts() {
+  if (!connectedGuard()) return;
+  const ports = Object.values(state.ports);
+  if (!ports.length) { log('No attached ports to inspect yet', 'warn'); return; }
+  log(`Probing mode information for ${ports.length} attached ports…`, 'info');
+  for (const { port } of ports) requestPortInformation(port);
+}
+
+function decodePortInformation(u8) {
+  /* 0x43 info type 0x01: port, info, capabilities, count, input mask, output mask */
+  if (u8.length < 11 || u8[4] !== 0x01) return;
+  const port = u8[3], capabilities = u8[5], count = u8[6];
+  const inputModes = u8[7] | (u8[8] << 8);
+  const outputModes = u8[9] | (u8[10] << 8);
+  const modes = [];
+  for (let mode = 0; mode < Math.min(count, 16); mode++) {
+    if (inputModes & (1 << mode)) modes.push(mode);
+  }
+  const hexModes = value => `0x${value.toString(16).padStart(4, '0')}`;
+  log(`port 0x${port.toString(16)} info: capabilities 0x${capabilities.toString(16)}, ${count} modes, input ${hexModes(inputModes)}, output ${hexModes(outputModes)}`, 'info');
+  if (!modes.length) {
+    /* Some DUPLO Hub No. 16 ports have known-bad mode masks; inspect every mode. */
+    modes.push(...Array.from({ length: Math.min(count, 16) }, (_, mode) => mode));
+    log(`port 0x${port.toString(16)} has no input mask; probing all ${modes.length} declared modes (mask may be unreliable)`, 'warn');
+  }
+  for (const mode of modes) {
+    requestModeInfo(port, mode, 0x00); // mode name
+    requestModeInfo(port, mode, 0x04); // SI unit/symbol
+    requestModeInfo(port, mode, 0x80); // value format
+  }
 }
 
 function decodeInputFormat(u8) {
@@ -514,9 +559,20 @@ function decodeInputFormat(u8) {
 }
 
 function decodeModeInfo(u8) {
-  /* [len,hub,0x44,port,mode,0x80,datasets,type,figures,decimals] */
-  if (u8.length < 10 || u8[5] !== 0x80) return;
+  /* [len,hub,0x44,port,mode,infoType,…] */
+  if (u8.length < 6) return;
   const port = u8[3], mode = u8[4];
+  if (u8[5] === 0x00) {
+    const name = new TextDecoder().decode(u8.slice(6)).replace(/\0+$/, '').trim();
+    log(`port 0x${port.toString(16)} mode ${mode} name: ${name || '(empty)'}`, 'info');
+    return;
+  }
+  if (u8[5] === 0x04) {
+    const symbol = new TextDecoder().decode(u8.slice(6)).replace(/\0+$/, '').trim();
+    log(`port 0x${port.toString(16)} mode ${mode} unit: ${symbol || '(none)'}`, 'info');
+    return;
+  }
+  if (u8[5] !== 0x80 || u8.length < 10) return;
   const fmt = { datasets: u8[6], type: u8[7], figures: u8[8], decimals: u8[9] };
   state.portFormats[port] = fmt;
   const map = state.portModes[port];
@@ -789,6 +845,7 @@ function mountedControls() {
   $('btn-battery').onclick = () => { if (connectedGuard()) { throttler.enqueue(cmdHubPropRequest(6)); log('→ Hub Properties: request battery(6)', 'info'); } };
   $('btn-versions').onclick = () => { if (connectedGuard()) { throttler.enqueue(cmdHubPropRequest(3)); throttler.enqueue(cmdHubPropRequest(4)); log('→ Hub Properties: request fw(3), hw(4)', 'info'); } };
   $('btn-rssi').onclick = () => { if (connectedGuard()) { requestRssi(); log('→ Hub Properties: request rssi(5) — link quality probe', 'info'); } };
+  $('btn-probeports').onclick = probePorts;
   $('btn-choose').onclick = findAndConnect;
   $('btn-disconnect').onclick = disconnectNow;
   $('btn-poweroff').onclick = () => {
