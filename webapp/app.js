@@ -46,10 +46,9 @@ const LWP3_COLORS = [
   [5,'Cyan'], [6,'Grün'], [7,'Gelb'], [8,'Orange'], [9,'Rot'], [10,'Weiß'], [255,'Keine Farbe'],
 ];
 const COLOR_SWATCHES = {
-  0: ['#111318', '#ffffff'], 1: ['#ff8ab6', '#241018'], 2: ['#8f4acb', '#ffffff'],
-  3: ['#0055bf', '#ffffff'], 4: ['#9fc3e9', '#15202d'], 5: ['#00a9ce', '#102027'],
-  6: ['#237841', '#ffffff'], 7: ['#f2cd37', '#241f0b'], 8: ['#fe8a18', '#241707'],
-  9: ['#c91a09', '#ffffff'], 10: ['#f4f4f4', '#16181d'], 255: ['transparent', 'var(--dim)'],
+  0: '#111318', 1: '#ff8ab6', 2: '#8f4acb', 3: '#0055bf', 4: '#9fc3e9',
+  5: '#00a9ce', 6: '#237841', 7: '#f2cd37', 8: '#fe8a18', 9: '#c91a09',
+  10: '#f4f4f4', 255: 'transparent',
 };
 
 const SOUND_NAMES = {
@@ -554,9 +553,9 @@ function decodePortValue(u8) {
     const idx = dv.getUint8(4);
     const name = (LWP3_COLORS.find(c => c[0] === idx) || [idx, 'unknown'])[1];
     const el = $('val-color');
-    const [background, foreground] = COLOR_SWATCHES[idx] || ['#6b7280', '#ffffff'];
+    const background = COLOR_SWATCHES[idx] || '#6b7280';
     el.textContent = `${name} (${idx})`;
-    el.style.color = foreground;
+    el.style.color = 'var(--text)';
     $('color-swatch').style.backgroundColor = background === 'transparent' ? '#535866' : background;
     log(`colour sensor: ${name} (${idx})`, 'info');
   } else if (map.kind === 'speedo') {
