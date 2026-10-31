@@ -1,0 +1,44 @@
+
+### METHOD <clinit> ()V
+  v0, Ldk/lego/cubb/model/DeviceConnectionState;
+  v1, 0
+  v2, "Disconnected"
+  v0, v2, v1, Ldk/lego/cubb/model/DeviceConnectionState;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/model/DeviceConnectionState;->Disconnected Ldk/lego/cubb/model/DeviceConnectionState;
+  v0, Ldk/lego/cubb/model/DeviceConnectionState;
+  v2, 1
+  v3, "Connecting"
+  v0, v3, v2, Ldk/lego/cubb/model/DeviceConnectionState;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/model/DeviceConnectionState;->Connecting Ldk/lego/cubb/model/DeviceConnectionState;
+  v0, Ldk/lego/cubb/model/DeviceConnectionState;
+  v3, 2
+  v4, "Connected"
+  v0, v4, v3, Ldk/lego/cubb/model/DeviceConnectionState;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/model/DeviceConnectionState;->Connected Ldk/lego/cubb/model/DeviceConnectionState;
+  v4, 3
+  v4, v4, [Ldk/lego/cubb/model/DeviceConnectionState;
+  v5, Ldk/lego/cubb/model/DeviceConnectionState;->Disconnected Ldk/lego/cubb/model/DeviceConnectionState;
+  v5, v4, v1
+  v1, Ldk/lego/cubb/model/DeviceConnectionState;->Connecting Ldk/lego/cubb/model/DeviceConnectionState;
+  v1, v4, v2
+  v0, v4, v3
+  v4, Ldk/lego/cubb/model/DeviceConnectionState;->$VALUES [Ldk/lego/cubb/model/DeviceConnectionState;
+  
+
+### METHOD <init> (Ljava/lang/String; I)V
+  v0, v1, v2, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V
+  
+
+### METHOD valueOf (Ljava/lang/String;)Ldk/lego/cubb/model/DeviceConnectionState;
+  v0, Ldk/lego/cubb/model/DeviceConnectionState;
+  v0, v1, Ljava/lang/Enum;->valueOf(Ljava/lang/Class; Ljava/lang/String;)Ljava/lang/Enum;
+  v1
+  v1, Ldk/lego/cubb/model/DeviceConnectionState;
+  v1
+
+### METHOD values ()[Ldk/lego/cubb/model/DeviceConnectionState;
+  v0, Ldk/lego/cubb/model/DeviceConnectionState;->$VALUES [Ldk/lego/cubb/model/DeviceConnectionState;
+  v0, [Ldk/lego/cubb/model/DeviceConnectionState;->clone()Ljava/lang/Object;
+  v0
+  v0, [Ldk/lego/cubb/model/DeviceConnectionState;
+  v0

@@ -1,0 +1,16 @@
+
+### METHOD <init> (Ldk/lego/cubb/bluetooth/SendThrottler;)V
+  v1, v0, Ldk/lego/cubb/bluetooth/SendThrottler$1;->this$0 Ldk/lego/cubb/bluetooth/SendThrottler;
+  v0, Ljava/lang/Object;-><init>()V
+  
+
+### METHOD run ()V
+  v0, "Send throttler timer triggered"
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0, v2, Ldk/lego/cubb/bluetooth/SendThrottler$1;->this$0 Ldk/lego/cubb/bluetooth/SendThrottler;
+  v1, 0
+  v0, v1, Ldk/lego/cubb/bluetooth/SendThrottler;->access$502(Ldk/lego/cubb/bluetooth/SendThrottler; Z)Z
+  v0, v2, Ldk/lego/cubb/bluetooth/SendThrottler$1;->this$0 Ldk/lego/cubb/bluetooth/SendThrottler;
+  v0, Ldk/lego/cubb/bluetooth/SendThrottler;->access$600(Ldk/lego/cubb/bluetooth/SendThrottler;)V
+  

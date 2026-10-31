@@ -1,0 +1,69 @@
+
+### METHOD <clinit> ()V
+  v0, "UTF-8"
+  v0, Ljava/nio/charset/Charset;->forName(Ljava/lang/String;)Ljava/nio/charset/Charset;
+  v0
+  v0, Ldk/lego/cubb/unity/MessageToUnity;->UTF8 Ljava/nio/charset/Charset;
+  
+
+### METHOD <init> (Ljava/lang/String;)V
+  v1, Ljava/lang/Object;-><init>()V
+  v0, Ljava/lang/StringBuilder;
+  v0, v2, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  v0, v1, Ldk/lego/cubb/unity/MessageToUnity;->buf Ljava/lang/StringBuilder;
+  
+
+### METHOD addBytes ([B)Ldk/lego/cubb/unity/MessageToUnity;
+  v0, v2, Ldk/lego/cubb/unity/MessageToUnity;->buf Ljava/lang/StringBuilder;
+  v1, 124
+  v0, v1, Ljava/lang/StringBuilder;->append(C)Ljava/lang/StringBuilder;
+  v3, +005h
+  v3, "%"
+  +6h
+  v1, 2
+  v3, v1, Landroid/util/Base64;->encodeToString([B I)Ljava/lang/String;
+  v3
+  v0, v3, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v2
+
+### METHOD addEnum (Ljava/lang/Enum;)Ldk/lego/cubb/unity/MessageToUnity;
+  v0, v2, Ldk/lego/cubb/unity/MessageToUnity;->buf Ljava/lang/StringBuilder;
+  v1, 124
+  v0, v1, Ljava/lang/StringBuilder;->append(C)Ljava/lang/StringBuilder;
+  v3, Ljava/lang/Enum;->name()Ljava/lang/String;
+  v3
+  v0, v3, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v2
+
+### METHOD addID (Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v0, v2, Ldk/lego/cubb/unity/MessageToUnity;->buf Ljava/lang/StringBuilder;
+  v1, 124
+  v0, v1, Ljava/lang/StringBuilder;->append(C)Ljava/lang/StringBuilder;
+  v0, v3, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v2
+
+### METHOD addInt (I)Ldk/lego/cubb/unity/MessageToUnity;
+  v0, v2, Ldk/lego/cubb/unity/MessageToUnity;->buf Ljava/lang/StringBuilder;
+  v1, 124
+  v0, v1, Ljava/lang/StringBuilder;->append(C)Ljava/lang/StringBuilder;
+  v3, Ljava/lang/Integer;->toString(I)Ljava/lang/String;
+  v3
+  v0, v3, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v2
+
+### METHOD addString (Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v2, +004h
+  v2, 0
+  +7h
+  v0, Ldk/lego/cubb/unity/MessageToUnity;->UTF8 Ljava/nio/charset/Charset;
+  v2, v0, Ljava/lang/String;->getBytes(Ljava/nio/charset/Charset;)[B
+  v2
+  v1, v2, Ldk/lego/cubb/unity/MessageToUnity;->addBytes([B)Ldk/lego/cubb/unity/MessageToUnity;
+  v2
+  v2
+
+### METHOD serialize ()Ljava/lang/String;
+  v0, v1, Ldk/lego/cubb/unity/MessageToUnity;->buf Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v0

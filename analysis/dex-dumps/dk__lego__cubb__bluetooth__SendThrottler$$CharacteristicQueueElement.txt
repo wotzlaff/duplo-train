@@ -1,0 +1,62 @@
+
+### METHOD <init> (Landroid/bluetooth/BluetoothGattCharacteristic; [B)V
+  v0, Ldk/lego/cubb/bluetooth/SendThrottler$QueueElement;-><init>()V
+  v1, v0, Ldk/lego/cubb/bluetooth/SendThrottler$CharacteristicQueueElement;->characteristic Landroid/bluetooth/BluetoothGattCharacteristic;
+  v2, v0, Ldk/lego/cubb/bluetooth/SendThrottler$CharacteristicQueueElement;->data [B
+  
+
+### METHOD alwaysUseWriteWithResponse ()Z
+   (abstract/native)
+
+### METHOD execute (Landroid/bluetooth/BluetoothGatt; Ldk/lego/cubb/bluetooth/SendThrottler$SendState;)V
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v4, Ldk/lego/cubb/bluetooth/SendThrottler$CharacteristicQueueElement;->alwaysUseWriteWithResponse()Z
+  v0
+  v0, +009h
+  v6, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->bumpNonAckSendCounter()V
+  v6, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->isTimeForAck()Z
+  v0
+  v0, +004h
+  v1, 2
+  +2h
+  v1, 1
+  v2, v4, Ldk/lego/cubb/bluetooth/SendThrottler$CharacteristicQueueElement;->characteristic Landroid/bluetooth/BluetoothGattCharacteristic;
+  v3, v4, Ldk/lego/cubb/bluetooth/SendThrottler$CharacteristicQueueElement;->data [B
+  v2, v3, Landroid/bluetooth/BluetoothGattCharacteristic;->setValue([B)Z
+  v2, v4, Ldk/lego/cubb/bluetooth/SendThrottler$CharacteristicQueueElement;->characteristic Landroid/bluetooth/BluetoothGattCharacteristic;
+  v2, v1, Landroid/bluetooth/BluetoothGattCharacteristic;->setWriteType(I)V
+  v1, v4, Ldk/lego/cubb/bluetooth/SendThrottler$CharacteristicQueueElement;->characteristic Landroid/bluetooth/BluetoothGattCharacteristic;
+  v5, v1, Landroid/bluetooth/BluetoothGatt;->writeCharacteristic(Landroid/bluetooth/BluetoothGattCharacteristic;)Z
+  v5
+  v1, Ljava/lang/StringBuilder;
+  v1, Ljava/lang/StringBuilder;-><init>()V
+  v2, "CUBB-ST: Written to characteristic: "
+  v1, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v2, v4, Ldk/lego/cubb/bluetooth/SendThrottler$CharacteristicQueueElement;->data [B
+  v2, Ljava/util/Arrays;->toString([B)Ljava/lang/String;
+  v2
+  v1, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v2, " - result: "
+  v1, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v1, v5, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  v1, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v5
+  v5, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v5, v6, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->lastSendWasWithResponse Z
+  v5, v0
+  v5, v6, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->lastSendWasWithResponse Z
+  v0, +005h
+  v6, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->resetNonAckSendCounter()V
+  v4, Ldk/lego/cubb/bluetooth/SendThrottler$CharacteristicQueueElement;->sequenceNumberInfo()Ldk/lego/cubb/bluetooth/SendThrottler$SequenceNumberedCharacteristicQueueElement;
+  v5
+  v5, +007h
+  v6, v6, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->pendingSequenceNumbers Ljava/util/List;
+  v6, v5, Ljava/util/List;->add(Ljava/lang/Object;)Z
+  
+
+### METHOD isSoftAck ()Z
+   (abstract/native)
+
+### METHOD sequenceNumberInfo ()Ldk/lego/cubb/bluetooth/SendThrottler$SequenceNumberedCharacteristicQueueElement;
+  v0, 0
+  v0

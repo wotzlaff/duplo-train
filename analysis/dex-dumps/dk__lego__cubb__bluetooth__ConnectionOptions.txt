@@ -1,0 +1,155 @@
+
+### METHOD <init> (Ljava/lang/String;)V
+  v10, Ljava/lang/Object;-><init>()V
+  v0, 0
+  v0, v10, Ldk/lego/cubb/bluetooth/ConnectionOptions;->autoConnect Z
+  v1, Ldk/lego/cubb/bluetooth/SendStrategy;->SoftAck Ldk/lego/cubb/bluetooth/SendStrategy;
+  v1, v10, Ldk/lego/cubb/bluetooth/ConnectionOptions;->sendStrategy Ldk/lego/cubb/bluetooth/SendStrategy;
+  v0, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  v1
+  v1, v10, Ldk/lego/cubb/bluetooth/ConnectionOptions;->connectionPriority Ljava/lang/Integer;
+  v11, +003h
+  
+  v1, ";"
+  v11, v1, Ljava/lang/String;->split(Ljava/lang/String;)[Ljava/lang/String;
+  v11
+  v1, v11
+  v2, 0
+  v2, v1, +098h
+  v3, v11, v2
+  v4, 2
+  v5, "="
+  v3, v5, v4, Ljava/lang/String;->split(Ljava/lang/String; I)[Ljava/lang/String;
+  v3
+  v5, v3, v0
+  v6, v3
+  v7, 1
+  v6, v7, +005h
+  v3, v3, v7
+  +2h
+  v3, 0
+  v6, -1
+  v5, Ljava/lang/String;->hashCode()I
+  v8
+  v9, -2084843749
+  v8, v9, +021h
+  v9, -836657502
+  v8, v9, +012h
+  v9, -439730117
+  v8, v9, +003h
+  +1eh
+  v8, "autoConnect"
+  v5, v8, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+  v8
+  v8, +017h
+  v6, 1
+  +14h
+  v8, "connectionPriority"
+  v5, v8, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+  v8
+  v8, +00dh
+  v6, 0
+  +ah
+  v8, "sendStrategy"
+  v5, v8, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+  v8
+  v8, +003h
+  v6, 2
+  v6, +047h
+  v6, v7, +03ch
+  v6, v4, +017h
+  v3, Ljava/lang/StringBuilder;
+  v3, Ljava/lang/StringBuilder;-><init>()V
+  v4, "Unknown option: "
+  v3, v4, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v3, v5, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v3, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v3
+  v3, Ldk/lego/cubb/logging/LDSDKLogger;->w(Ljava/lang/String;)V
+  +33h
+  v3, Ldk/lego/cubb/bluetooth/SendStrategy;->parse(Ljava/lang/String;)Ldk/lego/cubb/bluetooth/SendStrategy;
+  v4
+  v4, +005h
+  v4, v10, Ldk/lego/cubb/bluetooth/ConnectionOptions;->sendStrategy Ldk/lego/cubb/bluetooth/SendStrategy;
+  +2ah
+  v4, Ljava/lang/StringBuilder;
+  v4, Ljava/lang/StringBuilder;-><init>()V
+  v5, "Unknown send strategy: '"
+  v4, v5, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v4, v3, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v3, "'"
+  v4, v3, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v4, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v3
+  v3, Ldk/lego/cubb/logging/LDSDKLogger;->e(Ljava/lang/String;)V
+  +10h
+  v4, "true"
+  v4, v3, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+  v3
+  v3, v10, Ldk/lego/cubb/bluetooth/ConnectionOptions;->autoConnect Z
+  +7h
+  v3, Ldk/lego/cubb/bluetooth/ConnectionOptions;->parseConnectionPriority(Ljava/lang/String;)Ljava/lang/Integer;
+  v3
+  v3, v10, Ldk/lego/cubb/bluetooth/ConnectionOptions;->connectionPriority Ljava/lang/Integer;
+  v2, v2, 1
+  -096h
+  
+
+### METHOD parseConnectionPriority (Ljava/lang/String;)Ljava/lang/Integer;
+  v4, Ljava/lang/String;->hashCode()I
+  v0
+  v1, 0
+  v2, 2
+  v3, 1
+  v0, +000005dh
+  +29h
+  v0, "default"
+  v4, v0, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+  v0
+  v0, +022h
+  v0, 3
+  +20h
+  v0, "high"
+  v4, v0, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+  v0
+  v0, +018h
+  v0, 0
+  +16h
+  v0, "low"
+  v4, v0, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+  v0
+  v0, +00eh
+  v0, 2
+  +ch
+  v0, "medium"
+  v4, v0, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+  v0
+  v0, +004h
+  v0, 1
+  +2h
+  v0, -1
+  v0, +02bh
+  v0, v3, +024h
+  v0, v2, +01dh
+  v0, Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;-><init>()V
+  v1, "Unknown connection priority '"
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, v4, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v4, "'; use one of (low|medium|high)."
+  v0, v4, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v4
+  v4, Ldk/lego/cubb/logging/LDSDKLogger;->e(Ljava/lang/String;)V
+  v4, 0
+  v4
+  v2, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  v4
+  v4
+  v1, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  v4
+  v4
+  v3, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  v4
+  v4
+  -4041708b 1a354 30dda2 5c13d641

@@ -1,0 +1,16 @@
+
+### METHOD <init> (Landroid/bluetooth/BluetoothGattCharacteristic; [B I)V
+  v0, v1, v2, v3, Ldk/lego/cubb/bluetooth/SendThrottler$SequenceNumberedCharacteristicQueueElement;-><init>(Landroid/bluetooth/BluetoothGattCharacteristic; [B I)V
+  
+
+### METHOD <init> (Landroid/bluetooth/BluetoothGattCharacteristic; [B I Ldk/lego/cubb/bluetooth/SendThrottler$1;)V
+  v0, v1, v2, v3, Ldk/lego/cubb/bluetooth/SendThrottler$AckedCharacteristicQueueElement;-><init>(Landroid/bluetooth/BluetoothGattCharacteristic; [B I)V
+  
+
+### METHOD alwaysUseWriteWithResponse ()Z
+  v0, 1
+  v0
+
+### METHOD isSoftAck ()Z
+  v0, 0
+  v0

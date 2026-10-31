@@ -1,0 +1,170 @@
+
+### METHOD <init> ()V
+  v0, Ljava/lang/Object;-><init>()V
+  
+
+### METHOD cloneGattCharacteristicForWriting (Landroid/bluetooth/BluetoothGattCharacteristic;)Landroid/bluetooth/BluetoothGattCharacteristic;
+  v0, Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;-><init>()V
+  v1, "addCharacteristic: Creating clone of characteristic "
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v8, Landroid/bluetooth/BluetoothGattCharacteristic;->getUuid()Ljava/util/UUID;
+  v1
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v0, v8, Landroid/os/Parcelable;
+  v1, "setService"
+  v2, 0
+  v3, 1
+  v0, +044h
+  v0, "BTDeviceWrapper: cloning characteristic using method A."
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  Landroid/os/Parcel;->obtain()Landroid/os/Parcel;
+  v0
+  v0, v8, Landroid/os/Parcel;->writeValue(Ljava/lang/Object;)V
+  v0, v2, Landroid/os/Parcel;->setDataPosition(I)V
+  v4, Landroid/bluetooth/BluetoothGattCharacteristic;
+  v4, Ljava/lang/Class;->getClassLoader()Ljava/lang/ClassLoader;
+  v4
+  v0, v4, Landroid/os/Parcel;->readValue(Ljava/lang/ClassLoader;)Ljava/lang/Object;
+  v4
+  v4, Landroid/bluetooth/BluetoothGattCharacteristic;
+  v0, Landroid/os/Parcel;->recycle()V
+  +09fh
+  v8
+  v0, Landroid/os/Parcel;->recycle()V
+  v8
+  v8
+  v0, Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;-><init>()V
+  v1, "cloneGattCharacteristicForWriting: could not clone characteristic: "
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, v8, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->e(Ljava/lang/String;)V
+  v0, Ljava/lang/RuntimeException;
+  v1, "Could not clone characteristic"
+  v0, v1, v8, Ljava/lang/RuntimeException;-><init>(Ljava/lang/String; Ljava/lang/Throwable;)V
+  v0
+  v0, "BTDeviceWrapper: cloning characteristic using method B."
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v4, Landroid/bluetooth/BluetoothGattCharacteristic;
+  v8, Landroid/bluetooth/BluetoothGattCharacteristic;->getUuid()Ljava/util/UUID;
+  v0
+  v8, Landroid/bluetooth/BluetoothGattCharacteristic;->getProperties()I
+  v5
+  v8, Landroid/bluetooth/BluetoothGattCharacteristic;->getPermissions()I
+  v6
+  v4, v0, v5, v6, Landroid/bluetooth/BluetoothGattCharacteristic;-><init>(Ljava/util/UUID; I I)V
+  v0, Landroid/bluetooth/BluetoothGattCharacteristic;
+  v5, "setInstanceId"
+  v6, v2, [Ljava/lang/Class;
+  v0, v5, v6, Ljava/lang/Class;->getDeclaredMethod(Ljava/lang/String; [Ljava/lang/Class;)Ljava/lang/reflect/Method;
+  v5
+  v5, v3, Ljava/lang/reflect/Method;->setAccessible(Z)V
+  v6, 2
+  v6, v6, [Ljava/lang/Object;
+  v8, Landroid/bluetooth/BluetoothGattCharacteristic;->getInstanceId()I
+  v7
+  v7, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  v7
+  v7, v6, v2
+  v7, Ljava/lang/Integer;->TYPE Ljava/lang/Class;
+  v7, v6, v3
+  v5, v4, v6, Ljava/lang/reflect/Method;->invoke(Ljava/lang/Object; [Ljava/lang/Object;)Ljava/lang/Object;
+  +16h
+  v5
+  v6, Ljava/lang/StringBuilder;
+  v6, Ljava/lang/StringBuilder;-><init>()V
+  v7, "cloneGattCharacteristicForWriting: Could not find or invoke setInstanceId(): "
+  v6, v7, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v6, v5, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  v6, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v5
+  v5, Ldk/lego/cubb/logging/LDSDKLogger;->w(Ljava/lang/String;)V
+  v5, v3, [Ljava/lang/Class;
+  v6, Landroid/bluetooth/BluetoothGattService;
+  v6, v5, v2
+  v0, v1, v5, Ljava/lang/Class;->getDeclaredMethod(Ljava/lang/String; [Ljava/lang/Class;)Ljava/lang/reflect/Method;
+  v0
+  v0, v3, Ljava/lang/reflect/Method;->setAccessible(Z)V
+  v5, v3, [Ljava/lang/Object;
+  v8, Landroid/bluetooth/BluetoothGattCharacteristic;->getService()Landroid/bluetooth/BluetoothGattService;
+  v6
+  v6, v5, v2
+  v0, v4, v5, Ljava/lang/reflect/Method;->invoke(Ljava/lang/Object; [Ljava/lang/Object;)Ljava/lang/Object;
+  +16h
+  v0
+  v5, Ljava/lang/StringBuilder;
+  v5, Ljava/lang/StringBuilder;-><init>()V
+  v6, "cloneGattCharacteristicForWriting: Could not find or invoke setService(): "
+  v5, v6, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v5, v0, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  v5, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->w(Ljava/lang/String;)V
+  v4, Landroid/bluetooth/BluetoothGattCharacteristic;->getService()Landroid/bluetooth/BluetoothGattService;
+  v0
+  v0, +037h
+  v0, "cloneGattCharacteristicForWriting: Fixing up clone's service..."
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v0, Landroid/bluetooth/BluetoothGattCharacteristic;
+  v5, v3, [Ljava/lang/Class;
+  v6, Landroid/bluetooth/BluetoothGattService;
+  v6, v5, v2
+  v0, v1, v5, Ljava/lang/Class;->getDeclaredMethod(Ljava/lang/String; [Ljava/lang/Class;)Ljava/lang/reflect/Method;
+  v0
+  v0, v3, Ljava/lang/reflect/Method;->setAccessible(Z)V
+  v1, v3, [Ljava/lang/Object;
+  v8, Landroid/bluetooth/BluetoothGattCharacteristic;->getService()Landroid/bluetooth/BluetoothGattService;
+  v5
+  v5, v1, v2
+  v0, v4, v1, Ljava/lang/reflect/Method;->invoke(Ljava/lang/Object; [Ljava/lang/Object;)Ljava/lang/Object;
+  +16h
+  v0
+  v1, Ljava/lang/StringBuilder;
+  v1, Ljava/lang/StringBuilder;-><init>()V
+  v5, "addCharacteristic: Could not find or invoke setService(): "
+  v1, v5, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v1, v0, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  v1, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->w(Ljava/lang/String;)V
+  v0, Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;-><init>()V
+  v1, "cloneGattCharacteristicForWriting: Original properties: service="
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v8, Landroid/bluetooth/BluetoothGattCharacteristic;->getService()Landroid/bluetooth/BluetoothGattService;
+  v1
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  v1, " instanceId: "
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v8, Landroid/bluetooth/BluetoothGattCharacteristic;->getInstanceId()I
+  v5
+  v0, v5, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v0, Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;-><init>()V
+  v5, "cloneGattCharacteristicForWriting: Clone properties: service="
+  v0, v5, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v4, Landroid/bluetooth/BluetoothGattCharacteristic;->getService()Landroid/bluetooth/BluetoothGattService;
+  v5
+  v0, v5, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v4, Landroid/bluetooth/BluetoothGattCharacteristic;->getInstanceId()I
+  v1
+  v0, v1, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  v1, " distinct: "
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v4, v8, +003h
+  v2, 1
+  v0, v2, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v8
+  v8, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v4

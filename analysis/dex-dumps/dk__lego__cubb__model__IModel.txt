@@ -1,0 +1,21 @@
+
+### METHOD aboutToStartScanning ()V
+   (abstract/native)
+
+### METHOD adapterStateChanged (I)V
+   (abstract/native)
+
+### METHOD discoveryModeChanged (Z)V
+   (abstract/native)
+
+### METHOD getDeviceEntryByID (Ljava/lang/String;)Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;
+   (abstract/native)
+
+### METHOD initScanState (I Z)V
+   (abstract/native)
+
+### METHOD updateDeviceConnectivity (Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry; Ldk/lego/cubb/model/DeviceConnectionState; Ljava/lang/String;)V
+   (abstract/native)
+
+### METHOD updateDeviceProperties (Landroid/bluetooth/BluetoothDevice; Ldk/lego/cubb/model/DeviceVisibilityState; Ljava/util/UUID; I [B)V
+   (abstract/native)

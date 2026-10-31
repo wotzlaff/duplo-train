@@ -1,0 +1,62 @@
+
+### METHOD <clinit> ()V
+  v0, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothAdapterWrapperImpl;
+  
+
+### METHOD <init> (Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothAdapterWrapperImpl;)V
+  v1, v0, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothAdapterWrapperImpl$2;->this$0 Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothAdapterWrapperImpl;
+  v0, Landroid/bluetooth/le/ScanCallback;-><init>()V
+  
+
+### METHOD onScanFailed (I)V
+  v0, "ABTAW"
+  v1, 1
+  v4, v1, +008h
+  v4, "Bluetooth scanning already"
+  v0, v4, Landroid/util/Log;->i(Ljava/lang/String; Ljava/lang/String;)I
+  +27h
+  v1, Ljava/lang/StringBuilder;
+  v1, Ljava/lang/StringBuilder;-><init>()V
+  v2, "Bluetooth scanning failed: errorCode="
+  v1, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v1, v4, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  v1, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v4
+  v0, v4, Landroid/util/Log;->e(Ljava/lang/String; Ljava/lang/String;)I
+  v4, v3, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothAdapterWrapperImpl$2;->this$0 Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothAdapterWrapperImpl;
+  v4, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothAdapterWrapperImpl;->access$000(Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothAdapterWrapperImpl;)Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothScanCallbackListener;
+  v4
+  v4, +00ch
+  v4, v3, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothAdapterWrapperImpl$2;->this$0 Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothAdapterWrapperImpl;
+  v4, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothAdapterWrapperImpl;->access$000(Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothAdapterWrapperImpl;)Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothScanCallbackListener;
+  v4
+  v0, 0
+  v4, v0, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothScanCallbackListener;->discoveryModeChanged(Z)V
+  
+
+### METHOD onScanResult (I Landroid/bluetooth/le/ScanResult;)V
+  v2, v3, v4, Landroid/bluetooth/le/ScanCallback;->onScanResult(I Landroid/bluetooth/le/ScanResult;)V
+  v4, Landroid/bluetooth/le/ScanResult;->getScanRecord()Landroid/bluetooth/le/ScanRecord;
+  v3
+  v4, Landroid/bluetooth/le/ScanResult;->getDevice()Landroid/bluetooth/BluetoothDevice;
+  v0
+  v0, +008h
+  v4, Landroid/bluetooth/le/ScanResult;->getDevice()Landroid/bluetooth/BluetoothDevice;
+  v3, Landroid/bluetooth/le/ScanRecord;->getServiceUuids()Ljava/util/List;
+  v0, v2, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothAdapterWrapperImpl$2;->this$0 Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothAdapterWrapperImpl;
+  v0, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothAdapterWrapperImpl;->access$000(Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothAdapterWrapperImpl;)Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothScanCallbackListener;
+  v0
+  v0, +014h
+  v0, v2, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothAdapterWrapperImpl$2;->this$0 Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothAdapterWrapperImpl;
+  v0, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothAdapterWrapperImpl;->access$000(Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothAdapterWrapperImpl;)Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothScanCallbackListener;
+  v0
+  v4, Landroid/bluetooth/le/ScanResult;->getDevice()Landroid/bluetooth/BluetoothDevice;
+  v1
+  v4, Landroid/bluetooth/le/ScanResult;->getRssi()I
+  v4
+  v0, v1, v4, v3, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothScanCallbackListener;->onScanResult(Landroid/bluetooth/BluetoothDevice; I Landroid/bluetooth/le/ScanRecord;)V
+  +8h
+  v3, "ABTAW"
+  v4, "onScanResult: No listener."
+  v3, v4, Landroid/util/Log;->i(Ljava/lang/String; Ljava/lang/String;)I
+  

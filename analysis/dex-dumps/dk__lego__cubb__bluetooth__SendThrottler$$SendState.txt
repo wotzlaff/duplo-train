@@ -1,0 +1,53 @@
+
+### METHOD <init> (Ldk/lego/cubb/bluetooth/SendStrategy; Ldk/lego/cubb/bluetooth/TimerThrottler;)V
+  v1, Ljava/lang/Object;-><init>()V
+  v0, Ljava/util/ArrayList;
+  v0, Ljava/util/ArrayList;-><init>()V
+  v0, v1, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->pendingSequenceNumbers Ljava/util/List;
+  v0, 0
+  v0, v1, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->nonAckSendCounter I
+  v0, v1, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->lastSendWasWithResponse Z
+  v0, v1, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->softAckSendIsPending Z
+  v2, v1, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->sendStrategy Ldk/lego/cubb/bluetooth/SendStrategy;
+  v3, v1, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->timerThrottler Ldk/lego/cubb/bluetooth/TimerThrottler;
+  
+
+### METHOD access$400 (Ldk/lego/cubb/bluetooth/SendThrottler$SendState;)Ldk/lego/cubb/bluetooth/TimerThrottler;
+  v0, v0, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->timerThrottler Ldk/lego/cubb/bluetooth/TimerThrottler;
+  v0
+
+### METHOD bumpNonAckSendCounter ()V
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0, v2, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->nonAckSendCounter I
+  v1, 2147483647
+  v0, v1, +006h
+  v0, v0, 1
+  v0, v2, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->nonAckSendCounter I
+  
+
+### METHOD isTimeForAck ()Z
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0, Ldk/lego/cubb/bluetooth/SendThrottler$2;->$SwitchMap$dk$lego$cubb$bluetooth$SendStrategy [I
+  v1, v4, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->sendStrategy Ldk/lego/cubb/bluetooth/SendStrategy;
+  v1, Ldk/lego/cubb/bluetooth/SendStrategy;->ordinal()I
+  v1
+  v0, v0, v1
+  v1, 0
+  v2, 1
+  v0, v2, +00dh
+  v3, 2
+  v0, v3, +009h
+  v0, v4, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->nonAckSendCounter I
+  v3, 4
+  v0, v3, +003h
+  v1, 1
+  v1
+  v2
+  v1
+
+### METHOD resetNonAckSendCounter ()V
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0, 0
+  v0, v1, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->nonAckSendCounter I
+  v0, v1, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->softAckSendIsPending Z
+  

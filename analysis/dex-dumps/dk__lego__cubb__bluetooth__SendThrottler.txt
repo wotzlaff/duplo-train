@@ -1,0 +1,285 @@
+
+### METHOD <init> (Landroid/bluetooth/BluetoothGatt; Ldk/lego/cubb/bluetooth/ConnectionOptions; Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;)V
+  v2, Ljava/lang/Object;-><init>()V
+  v0, Ljava/util/LinkedList;
+  v0, Ljava/util/LinkedList;-><init>()V
+  v0, v2, Ldk/lego/cubb/bluetooth/SendThrottler;->queue Ljava/util/Queue;
+  v0, 0
+  v0, v2, Ldk/lego/cubb/bluetooth/SendThrottler;->gattWriteIsPending Z
+  v1, 1
+  v1, v2, Ldk/lego/cubb/bluetooth/SendThrottler;->connected Z
+  v0, v2, Ldk/lego/cubb/bluetooth/SendThrottler;->timerIsRunning Z
+  v0, Ldk/lego/cubb/bluetooth/SendThrottler$1;
+  v0, v2, Ldk/lego/cubb/bluetooth/SendThrottler$1;-><init>(Ldk/lego/cubb/bluetooth/SendThrottler;)V
+  v0, v2, Ldk/lego/cubb/bluetooth/SendThrottler;->delayedSendTask Ljava/lang/Runnable;
+  v0, "SendThrottler ctor"
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v3, v2, Ldk/lego/cubb/bluetooth/SendThrottler;->bluetoothGatt Landroid/bluetooth/BluetoothGatt;
+  v5, v2, Ldk/lego/cubb/bluetooth/SendThrottler;->upwardMessageSender Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;
+  v3, v4, Ldk/lego/cubb/bluetooth/ConnectionOptions;->sendStrategy Ldk/lego/cubb/bluetooth/SendStrategy;
+  v3, v2, Ldk/lego/cubb/bluetooth/SendThrottler;->sendStrategy Ldk/lego/cubb/bluetooth/SendStrategy;
+  v4, Ldk/lego/cubb/bluetooth/SendStrategy;->NoAck Ldk/lego/cubb/bluetooth/SendStrategy;
+  v3, v4, +00bh
+  v3, Ldk/lego/cubb/bluetooth/TimerThrottler;
+  v4, 4
+  v5, 80
+  v3, v4, v5, Ldk/lego/cubb/bluetooth/TimerThrottler;-><init>(I I)V
+  +2h
+  v3, 0
+  v4, Ljava/lang/StringBuilder;
+  v4, Ljava/lang/StringBuilder;-><init>()V
+  v5, "DEBUG SendThrottler ctor: timerThrottler="
+  v4, v5, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v4, v3, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  v4, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v4
+  v4, Ldk/lego/cubb/logging/LDSDKLogger;->i(Ljava/lang/String;)V
+  v4, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;
+  v5, v2, Ldk/lego/cubb/bluetooth/SendThrottler;->sendStrategy Ldk/lego/cubb/bluetooth/SendStrategy;
+  v4, v5, v3, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;-><init>(Ldk/lego/cubb/bluetooth/SendStrategy; Ldk/lego/cubb/bluetooth/TimerThrottler;)V
+  v4, v2, Ldk/lego/cubb/bluetooth/SendThrottler;->sendState Ldk/lego/cubb/bluetooth/SendThrottler$SendState;
+  
+
+### METHOD access$502 (Ldk/lego/cubb/bluetooth/SendThrottler; Z)Z
+  v1, v0, Ldk/lego/cubb/bluetooth/SendThrottler;->timerIsRunning Z
+  v1
+
+### METHOD access$600 (Ldk/lego/cubb/bluetooth/SendThrottler;)V
+  v0, Ldk/lego/cubb/bluetooth/SendThrottler;->sendSomethingIfPossible()V
+  
+
+### METHOD enqueue (Ldk/lego/cubb/bluetooth/SendThrottler$QueueElement;)V
+  v2, +00bh
+  v0, v1, Ldk/lego/cubb/bluetooth/SendThrottler;->queue Ljava/util/Queue;
+  v0, v2, Ljava/util/Queue;->add(Ljava/lang/Object;)Z
+  v1, Ldk/lego/cubb/bluetooth/SendThrottler;->sendSomethingIfPossible()V
+  
+  v2, Ljava/lang/NullPointerException;
+  v0, "queueElement"
+  v2, v0, Ljava/lang/NullPointerException;-><init>(Ljava/lang/String;)V
+  v2
+
+### METHOD sendSomethingIfPossible ()V
+  v0, v9, Ldk/lego/cubb/bluetooth/SendThrottler;->connected Z
+  v0, +008h
+  v0, "sendSomethingIfPossible - short circuited - not connected"
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0, Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;-><init>()V
+  v1, "sendSomethingIfPossible |q|="
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v1, v9, Ldk/lego/cubb/bluetooth/SendThrottler;->queue Ljava/util/Queue;
+  v1, Ljava/util/Queue;->size()I
+  v1
+  v0, v1, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v0, v9, Ldk/lego/cubb/bluetooth/SendThrottler;->timerIsRunning Z
+  v0, +008h
+  v0, "Send action blocked by throttle (timer is active)"
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  
+  v0, v9, Ldk/lego/cubb/bluetooth/SendThrottler;->gattWriteIsPending Z
+  v0, +008h
+  v0, "Send action blocked by write being in progress)"
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  
+  v0, v9, Ldk/lego/cubb/bluetooth/SendThrottler;->queue Ljava/util/Queue;
+  v0, Ljava/util/Queue;->isEmpty()Z
+  v0
+  v0, +014h
+  v0, "SSIP: queue is empty"
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v0, v9, Ldk/lego/cubb/bluetooth/SendThrottler;->listener Ldk/lego/cubb/bluetooth/SendThrottlerListener;
+  v0, +005h
+  v0, Ldk/lego/cubb/bluetooth/SendThrottlerListener;->onThrottlerQueueEmpty()V
+  v0, "SSIP: after notifying"
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  
+  Ljava/lang/System;->currentTimeMillis()J
+  v0
+  v2, v9, Ldk/lego/cubb/bluetooth/SendThrottler;->sendState Ldk/lego/cubb/bluetooth/SendThrottler$SendState;
+  v2, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->access$400(Ldk/lego/cubb/bluetooth/SendThrottler$SendState;)Ldk/lego/cubb/bluetooth/TimerThrottler;
+  v2
+  v2, +007h
+  v2, v0, v1, Ldk/lego/cubb/bluetooth/TimerThrottler;->calculateDelayAmount(J)J
+  v3
+  +3h
+  v3, -1
+  v5, Ljava/lang/StringBuilder;
+  v5, Ljava/lang/StringBuilder;-><init>()V
+  v6, "DEBUG SendThrottler: delayAmount="
+  v5, v6, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v5, v3, v4, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+  v5, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v5
+  v5, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v5, 0
+  v7, 1
+  v8, v3, v5
+  v8, +01eh
+  v3, "Performing a send action"
+  v3, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v3, v9, Ldk/lego/cubb/bluetooth/SendThrottler;->queue Ljava/util/Queue;
+  v3, Ljava/util/Queue;->remove()Ljava/lang/Object;
+  v3
+  v3, Ldk/lego/cubb/bluetooth/SendThrottler$QueueElement;
+  v2, +005h
+  v2, v0, v1, Ldk/lego/cubb/bluetooth/TimerThrottler;->registerSendTime(J)V
+  v0, v9, Ldk/lego/cubb/bluetooth/SendThrottler;->bluetoothGatt Landroid/bluetooth/BluetoothGatt;
+  v1, v9, Ldk/lego/cubb/bluetooth/SendThrottler;->sendState Ldk/lego/cubb/bluetooth/SendThrottler$SendState;
+  v3, v0, v1, Ldk/lego/cubb/bluetooth/SendThrottler$QueueElement;->execute(Landroid/bluetooth/BluetoothGatt; Ldk/lego/cubb/bluetooth/SendThrottler$SendState;)V
+  v7, v9, Ldk/lego/cubb/bluetooth/SendThrottler;->gattWriteIsPending Z
+  +dh
+  v0, "Send action blocked by throttle"
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v7, v9, Ldk/lego/cubb/bluetooth/SendThrottler;->timerIsRunning Z
+  v0, v9, Ldk/lego/cubb/bluetooth/SendThrottler;->delayedSendTask Ljava/lang/Runnable;
+  v0, v3, v4, Ldk/lego/cubb/utils/HandlerHelper;->postDelayed(Ljava/lang/Runnable; J)V
+  
+
+### METHOD Connected (Z)V
+  v0, Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;-><init>()V
+  v1, "Connected : "
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, v3, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v3, v2, Ldk/lego/cubb/bluetooth/SendThrottler;->connected Z
+  
+
+### METHOD onContentAvailable ()V
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0, "onContentAvailable"
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v1, Ldk/lego/cubb/bluetooth/SendThrottler;->sendSomethingIfPossible()V
+  
+
+### METHOD onGattActionPerformed ()V
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0, "onGattActionPerformed"
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v0, 0
+  v0, v7, Ldk/lego/cubb/bluetooth/SendThrottler;->gattWriteIsPending Z
+  v1, v7, Ldk/lego/cubb/bluetooth/SendThrottler;->connected Z
+  v1, +008h
+  v0, "onGattActionPerformed - short circuited - not connected"
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  
+  v1, v7, Ldk/lego/cubb/bluetooth/SendThrottler;->sendState Ldk/lego/cubb/bluetooth/SendThrottler$SendState;
+  v1, v1, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->lastSendWasWithResponse Z
+  v1, +008h
+  v1, v7, Ldk/lego/cubb/bluetooth/SendThrottler;->sendStrategy Ldk/lego/cubb/bluetooth/SendStrategy;
+  v2, Ldk/lego/cubb/bluetooth/SendStrategy;->NoAck Ldk/lego/cubb/bluetooth/SendStrategy;
+  v1, v2, +064h
+  v1, Ljava/lang/StringBuilder;
+  v1, Ljava/lang/StringBuilder;-><init>()V
+  v2, "onGattActionPerformed: sending PacketTransmitted acks for "
+  v1, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v2, v7, Ldk/lego/cubb/bluetooth/SendThrottler;->sendState Ldk/lego/cubb/bluetooth/SendThrottler$SendState;
+  v2, v2, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->pendingSequenceNumbers Ljava/util/List;
+  v2, Ljava/util/List;->size()I
+  v2
+  v1, v2, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  v2, " packets"
+  v1, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v1, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v1
+  v1, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v1, v7, Ldk/lego/cubb/bluetooth/SendThrottler;->sendState Ldk/lego/cubb/bluetooth/SendThrottler$SendState;
+  v1, v1, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->pendingSequenceNumbers Ljava/util/List;
+  v1, Ljava/util/List;->iterator()Ljava/util/Iterator;
+  v1
+  v1, Ljava/util/Iterator;->hasNext()Z
+  v2
+  v2, +02ah
+  v1, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  v2
+  v2, Ldk/lego/cubb/bluetooth/SendThrottler$SequenceNumberedCharacteristicQueueElement;
+  v3, v7, Ldk/lego/cubb/bluetooth/SendThrottler;->upwardMessageSender Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;
+  v4, v7, Ldk/lego/cubb/bluetooth/SendThrottler;->bluetoothGatt Landroid/bluetooth/BluetoothGatt;
+  v4, Landroid/bluetooth/BluetoothGatt;->getDevice()Landroid/bluetooth/BluetoothDevice;
+  v4
+  v4, Landroid/bluetooth/BluetoothDevice;->getAddress()Ljava/lang/String;
+  v4
+  v5, v2, Ldk/lego/cubb/bluetooth/SendThrottler$SequenceNumberedCharacteristicQueueElement;->characteristic Landroid/bluetooth/BluetoothGattCharacteristic;
+  v5, Landroid/bluetooth/BluetoothGattCharacteristic;->getService()Landroid/bluetooth/BluetoothGattService;
+  v5
+  v5, Landroid/bluetooth/BluetoothGattService;->getUuid()Ljava/util/UUID;
+  v5
+  v6, v2, Ldk/lego/cubb/bluetooth/SendThrottler$SequenceNumberedCharacteristicQueueElement;->characteristic Landroid/bluetooth/BluetoothGattCharacteristic;
+  v6, Landroid/bluetooth/BluetoothGattCharacteristic;->getUuid()Ljava/util/UUID;
+  v6
+  v2, v2, Ldk/lego/cubb/bluetooth/SendThrottler$SequenceNumberedCharacteristicQueueElement;->seqNr I
+  v3, v4, v5, v6, v2, Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;->sendPacketTransmitted(Ljava/lang/String; Ljava/util/UUID; Ljava/util/UUID; I)V
+  -2dh
+  v1, v7, Ldk/lego/cubb/bluetooth/SendThrottler;->sendState Ldk/lego/cubb/bluetooth/SendThrottler$SendState;
+  v1, v1, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->pendingSequenceNumbers Ljava/util/List;
+  v1, Ljava/util/List;->clear()V
+  v1, v7, Ldk/lego/cubb/bluetooth/SendThrottler;->sendState Ldk/lego/cubb/bluetooth/SendThrottler$SendState;
+  v0, v1, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->lastSendWasWithResponse Z
+  v7, Ldk/lego/cubb/bluetooth/SendThrottler;->sendSomethingIfPossible()V
+  
+
+### METHOD send (Landroid/bluetooth/BluetoothGattDescriptor; [B)V
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v4, +00ch
+  v0, Ldk/lego/cubb/bluetooth/SendThrottler$DescriptorQueueElement;
+  v1, 0
+  v0, v3, v4, v1, Ldk/lego/cubb/bluetooth/SendThrottler$DescriptorQueueElement;-><init>(Landroid/bluetooth/BluetoothGattDescriptor; [B Ldk/lego/cubb/bluetooth/SendThrottler$1;)V
+  v2, v0, Ldk/lego/cubb/bluetooth/SendThrottler;->enqueue(Ldk/lego/cubb/bluetooth/SendThrottler$QueueElement;)V
+  
+  v3, Ljava/lang/NullPointerException;
+  v4, "data"
+  v3, v4, Ljava/lang/NullPointerException;-><init>(Ljava/lang/String;)V
+  v3
+
+### METHOD sendAcked (Landroid/bluetooth/BluetoothGattCharacteristic; [B I Z)V
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v3, +014h
+  v0, 0
+  v5, +008h
+  v5, Ldk/lego/cubb/bluetooth/SendThrottler$SoftAckedCharacteristicQueueElement;
+  v5, v2, v3, v4, v0, Ldk/lego/cubb/bluetooth/SendThrottler$SoftAckedCharacteristicQueueElement;-><init>(Landroid/bluetooth/BluetoothGattCharacteristic; [B I Ldk/lego/cubb/bluetooth/SendThrottler$1;)V
+  +6h
+  v5, Ldk/lego/cubb/bluetooth/SendThrottler$AckedCharacteristicQueueElement;
+  v5, v2, v3, v4, v0, Ldk/lego/cubb/bluetooth/SendThrottler$AckedCharacteristicQueueElement;-><init>(Landroid/bluetooth/BluetoothGattCharacteristic; [B I Ldk/lego/cubb/bluetooth/SendThrottler$1;)V
+  v1, v5, Ldk/lego/cubb/bluetooth/SendThrottler;->enqueue(Ldk/lego/cubb/bluetooth/SendThrottler$QueueElement;)V
+  
+  v2, Ljava/lang/NullPointerException;
+  v3, "data"
+  v2, v3, Ljava/lang/NullPointerException;-><init>(Ljava/lang/String;)V
+  v2
+
+### METHOD sendUnacked (Landroid/bluetooth/BluetoothGattCharacteristic; [B)V
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v4, +00ch
+  v0, Ldk/lego/cubb/bluetooth/SendThrottler$UnackedCharacteristicQueueElement;
+  v1, 0
+  v0, v3, v4, v1, Ldk/lego/cubb/bluetooth/SendThrottler$UnackedCharacteristicQueueElement;-><init>(Landroid/bluetooth/BluetoothGattCharacteristic; [B Ldk/lego/cubb/bluetooth/SendThrottler$1;)V
+  v2, v0, Ldk/lego/cubb/bluetooth/SendThrottler;->enqueue(Ldk/lego/cubb/bluetooth/SendThrottler$QueueElement;)V
+  
+  v3, Ljava/lang/NullPointerException;
+  v4, "data"
+  v3, v4, Ljava/lang/NullPointerException;-><init>(Ljava/lang/String;)V
+  v3
+
+### METHOD setListener (Ldk/lego/cubb/bluetooth/SendThrottlerListener;)V
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v1, v0, Ldk/lego/cubb/bluetooth/SendThrottler;->listener Ldk/lego/cubb/bluetooth/SendThrottlerListener;
+  
+
+### METHOD setNoAckParameters (I I)V
+  v0, Ldk/lego/cubb/bluetooth/TimerThrottler;
+  v0, v2, v3, Ldk/lego/cubb/bluetooth/TimerThrottler;-><init>(I I)V
+  v2, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;
+  v3, v1, Ldk/lego/cubb/bluetooth/SendThrottler;->sendStrategy Ldk/lego/cubb/bluetooth/SendStrategy;
+  v2, v3, v0, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;-><init>(Ldk/lego/cubb/bluetooth/SendStrategy; Ldk/lego/cubb/bluetooth/TimerThrottler;)V
+  v2, v1, Ldk/lego/cubb/bluetooth/SendThrottler;->sendState Ldk/lego/cubb/bluetooth/SendThrottler$SendState;
+  

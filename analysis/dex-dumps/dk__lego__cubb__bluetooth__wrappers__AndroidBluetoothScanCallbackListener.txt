@@ -1,0 +1,15 @@
+
+### METHOD aboutToStartScanning ()V
+   (abstract/native)
+
+### METHOD adapterStateChanged (I)V
+   (abstract/native)
+
+### METHOD discoveryModeChanged (Z)V
+   (abstract/native)
+
+### METHOD initScanState (I Z)V
+   (abstract/native)
+
+### METHOD onScanResult (Landroid/bluetooth/BluetoothDevice; I Landroid/bluetooth/le/ScanRecord;)V
+   (abstract/native)

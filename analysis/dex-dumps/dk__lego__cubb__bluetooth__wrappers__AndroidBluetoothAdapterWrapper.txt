@@ -1,0 +1,6 @@
+
+### METHOD startScan ()V
+   (abstract/native)
+
+### METHOD stopScan ()V
+   (abstract/native)

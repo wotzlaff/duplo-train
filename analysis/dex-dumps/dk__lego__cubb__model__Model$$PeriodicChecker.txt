@@ -1,0 +1,31 @@
+
+### METHOD <init> (Ldk/lego/cubb/model/Model;)V
+  v1, v0, Ldk/lego/cubb/model/Model$PeriodicChecker;->this$0 Ldk/lego/cubb/model/Model;
+  v0, Ljava/lang/Object;-><init>()V
+  
+
+### METHOD <init> (Ldk/lego/cubb/model/Model; Ldk/lego/cubb/model/Model$1;)V
+  v0, v1, Ldk/lego/cubb/model/Model$PeriodicChecker;-><init>(Ldk/lego/cubb/model/Model;)V
+  
+
+### METHOD onTicked ()V
+  v0, v1, Ldk/lego/cubb/model/Model$PeriodicChecker;->this$0 Ldk/lego/cubb/model/Model;
+  v0, Ldk/lego/cubb/model/Model;->access$100(Ldk/lego/cubb/model/Model;)Ldk/lego/cubb/model/DeviceDatabase;
+  v0
+  v0, Ldk/lego/cubb/model/DeviceDatabase;->onTicked()V
+  
+
+### METHOD run ()V
+  v2, Ldk/lego/cubb/model/Model$PeriodicChecker;->onTicked()V
+  +7h
+  v0
+  v1, "PeriodicChecker encountered an error"
+  v1, v0, Ldk/lego/cubb/logging/LDSDKLogger;->e(Ljava/lang/String; Ljava/lang/Exception;)V
+  v0, 3000
+  v2, v0, v1, Ldk/lego/cubb/utils/HandlerHelper;->postDelayed(Ljava/lang/Runnable; J)V
+  
+
+### METHOD start (Landroid/os/Handler;)V
+  v0, 3000
+  v3, v2, v0, v1, Landroid/os/Handler;->postDelayed(Ljava/lang/Runnable; J)Z
+  

@@ -1,0 +1,39 @@
+
+### METHOD <clinit> ()V
+  v0, Landroid/os/HandlerThread;
+  v1, "CUBBHandlerThread"
+  v2, -3
+  v0, v1, v2, Landroid/os/HandlerThread;-><init>(Ljava/lang/String; I)V
+  v0, Landroid/os/HandlerThread;->start()V
+  v1, Landroid/os/Handler;
+  v0, Landroid/os/HandlerThread;->getLooper()Landroid/os/Looper;
+  v0
+  v1, v0, Landroid/os/Handler;-><init>(Landroid/os/Looper;)V
+  v1, Ldk/lego/cubb/utils/HandlerHelper;->mainHandler Landroid/os/Handler;
+  
+
+### METHOD <init> ()V
+  v0, Ljava/lang/Object;-><init>()V
+  
+
+### METHOD getMainHandler ()Landroid/os/Handler;
+  v0, Ldk/lego/cubb/utils/HandlerHelper;->mainHandler Landroid/os/Handler;
+  v0
+
+### METHOD post (Ljava/lang/Runnable;)V
+  v0, Ldk/lego/cubb/utils/HandlerHelper;->mainHandler Landroid/os/Handler;
+  v0, +005h
+  v0, v1, Landroid/os/Handler;->post(Ljava/lang/Runnable;)Z
+  
+
+### METHOD postDelayed (Ljava/lang/Runnable; J)V
+  v0, Ldk/lego/cubb/utils/HandlerHelper;->mainHandler Landroid/os/Handler;
+  v0, +005h
+  v0, v1, v2, v3, Landroid/os/Handler;->postDelayed(Ljava/lang/Runnable; J)Z
+  
+
+### METHOD removeCallbacks (Ljava/lang/Runnable;)V
+  v0, Ldk/lego/cubb/utils/HandlerHelper;->mainHandler Landroid/os/Handler;
+  v0, +005h
+  v0, v1, Landroid/os/Handler;->removeCallbacks(Ljava/lang/Runnable;)V
+  

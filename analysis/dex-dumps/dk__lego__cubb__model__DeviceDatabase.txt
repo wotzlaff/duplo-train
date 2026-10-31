@@ -1,0 +1,176 @@
+
+### METHOD <init> (Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;)V
+  v1, Ljava/lang/Object;-><init>()V
+  v0, Ljava/util/HashMap;
+  v0, Ljava/util/HashMap;-><init>()V
+  v0, v1, Ldk/lego/cubb/model/DeviceDatabase;->devices Ljava/util/HashMap;
+  v2, v1, Ldk/lego/cubb/model/DeviceDatabase;->upwardComm Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;
+  
+
+### METHOD access$300 (Ldk/lego/cubb/model/DeviceDatabase;)Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;
+  v0, v0, Ldk/lego/cubb/model/DeviceDatabase;->upwardComm Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;
+  v0
+
+### METHOD checkEntryForTransition (Ljava/util/ArrayList; Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;)V
+  v4, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->getVisibility()Ldk/lego/cubb/model/DeviceVisibilityState;
+  v0
+  v1, Ldk/lego/cubb/model/DeviceVisibilityState;->Visible Ldk/lego/cubb/model/DeviceVisibilityState;
+  v0, v1, +016h
+  v4, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->wasSeenVeryRecently()Z
+  v0
+  v0, +010h
+  v0, "[cubb][deviceDatabase] tick: -> invisible"
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v4, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->access$100(Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;)Z
+  v0
+  v0, +005h
+  v2, v4, Ldk/lego/cubb/model/DeviceDatabase;->publishDeviceUpdate(Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;)V
+  v4, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->getConnectivity()Ldk/lego/cubb/model/DeviceConnectionState;
+  v0
+  v1, Ldk/lego/cubb/model/DeviceConnectionState;->Disconnected Ldk/lego/cubb/model/DeviceConnectionState;
+  v0, v1, +010h
+  v4, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->wasSeenSomewhatRecently()Z
+  v0
+  v0, +00ah
+  v0, "[cubb][deviceDatabase] tick: -> disappeared"
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v3, v4, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  
+
+### METHOD forgetDevices (Ljava/util/Collection;)V
+  v0, Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;-><init>()V
+  v1, "[deviceDatabase] Forgetting about "
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v4, Ljava/util/Collection;->size()I
+  v1
+  v0, v1, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  v1, " devices"
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v4, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
+  v4
+  v4, Ljava/util/Iterator;->hasNext()Z
+  v0
+  v0, +017h
+  v4, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  v0
+  v0, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;
+  v1, v3, Ldk/lego/cubb/model/DeviceDatabase;->upwardComm Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;
+  v2, v0, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->id Ljava/lang/String;
+  v1, v2, Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;->sendDeviceDisappeared(Ljava/lang/String;)V
+  v1, v3, Ldk/lego/cubb/model/DeviceDatabase;->devices Ljava/util/HashMap;
+  v0, v0, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->id Ljava/lang/String;
+  v1, v0, Ljava/util/HashMap;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+  -1ah
+  
+
+### METHOD nonConnectedDevices ()Ljava/util/Collection;
+  v0, Ljava/util/ArrayList;
+  v1, v5, Ldk/lego/cubb/model/DeviceDatabase;->devices Ljava/util/HashMap;
+  v1, Ljava/util/HashMap;->size()I
+  v1
+  v0, v1, Ljava/util/ArrayList;-><init>(I)V
+  v1, v5, Ldk/lego/cubb/model/DeviceDatabase;->devices Ljava/util/HashMap;
+  v1, Ljava/util/HashMap;->values()Ljava/util/Collection;
+  v1
+  v1, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
+  v1
+  v1, Ljava/util/Iterator;->hasNext()Z
+  v2
+  v2, +014h
+  v1, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  v2
+  v2, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;
+  v2, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->getConnectivity()Ldk/lego/cubb/model/DeviceConnectionState;
+  v3
+  v4, Ldk/lego/cubb/model/DeviceConnectionState;->Disconnected Ldk/lego/cubb/model/DeviceConnectionState;
+  v3, v4, -012h
+  v0, v2, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  -17h
+  v0
+
+### METHOD publishDeviceUpdate (Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;)V
+  v0, v7, Ldk/lego/cubb/model/DeviceDatabase;->upwardComm Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;
+  v1, v8, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->id Ljava/lang/String;
+  v8, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->getVisibility()Ldk/lego/cubb/model/DeviceVisibilityState;
+  v2
+  v8, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->getName()Ljava/lang/String;
+  v3
+  v8, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->getServiceGUID()Ljava/util/UUID;
+  v4
+  v8, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->getRssi()I
+  v5
+  v8, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->getManuData()[B
+  v6
+  v0 ... v6, Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;->sendDeviceStateChanged(Ljava/lang/String; Ldk/lego/cubb/model/DeviceVisibilityState; Ljava/lang/String; Ljava/util/UUID; I [B)V
+  
+
+### METHOD forgetAllNonconnectedDevices ()V
+  v1, Ldk/lego/cubb/model/DeviceDatabase;->nonConnectedDevices()Ljava/util/Collection;
+  v0
+  v1, v0, Ldk/lego/cubb/model/DeviceDatabase;->forgetDevices(Ljava/util/Collection;)V
+  
+
+### METHOD getDeviceEntryByID (Ljava/lang/String;)Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;
+  v0, v1, Ldk/lego/cubb/model/DeviceDatabase;->devices Ljava/util/HashMap;
+  v0, v2, Ljava/util/HashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  v2
+  v2, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;
+  v2, +003h
+  v2, 0
+  v2
+
+### METHOD onTicked ()V
+  v0, Ljava/util/ArrayList;
+  v0, Ljava/util/ArrayList;-><init>()V
+  v1, v3, Ldk/lego/cubb/model/DeviceDatabase;->devices Ljava/util/HashMap;
+  v1, Ljava/util/HashMap;->values()Ljava/util/Collection;
+  v1
+  v1, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
+  v1
+  v1, Ljava/util/Iterator;->hasNext()Z
+  v2
+  v2, +00ch
+  v1, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  v2
+  v2, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;
+  v3, v0, v2, Ldk/lego/cubb/model/DeviceDatabase;->checkEntryForTransition(Ljava/util/ArrayList; Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;)V
+  -fh
+  v3, v0, Ldk/lego/cubb/model/DeviceDatabase;->forgetDevices(Ljava/util/Collection;)V
+  
+
+### METHOD update (Landroid/bluetooth/BluetoothDevice; Ldk/lego/cubb/model/DeviceVisibilityState; Ljava/util/UUID; I [B)V
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v10, Landroid/bluetooth/BluetoothDevice;->getAddress()Ljava/lang/String;
+  v0
+  v10, Landroid/bluetooth/BluetoothDevice;->getName()Ljava/lang/String;
+  v3
+  v1, v9, Ldk/lego/cubb/model/DeviceDatabase;->devices Ljava/util/HashMap;
+  v1, v0, Ljava/util/HashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  v1
+  v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;
+  v1, +00fh
+  v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;
+  v2, 0
+  v1, v9, v0, v2, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;-><init>(Ldk/lego/cubb/model/DeviceDatabase; Ljava/lang/String; Ldk/lego/cubb/model/DeviceDatabase$1;)V
+  v2, v9, Ldk/lego/cubb/model/DeviceDatabase;->devices Ljava/util/HashMap;
+  v2, v0, v1, Ljava/util/HashMap;->put(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;
+  v0, 1
+  +2h
+  v0, 0
+  v8, v1
+  v1, v8
+  v2, v10
+  v4, v12
+  v5, v11
+  v6, v13
+  v7, v14
+  v1 ... v7, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->update(Landroid/bluetooth/BluetoothDevice; Ljava/lang/String; Ljava/util/UUID; Ldk/lego/cubb/model/DeviceVisibilityState; I [B)Z
+  v10
+  v10, v0
+  v10, +005h
+  v9, v8, Ldk/lego/cubb/model/DeviceDatabase;->publishDeviceUpdate(Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;)V
+  

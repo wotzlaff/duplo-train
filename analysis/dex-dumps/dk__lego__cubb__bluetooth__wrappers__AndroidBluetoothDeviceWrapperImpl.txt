@@ -1,0 +1,290 @@
+
+### METHOD <init> (Landroid/bluetooth/BluetoothDevice; Ldk/lego/cubb/bluetooth/BluetoothGattHelper; Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;)V
+  v1, Ljava/lang/Object;-><init>()V
+  v0, Landroid/util/ArrayMap;
+  v0, Landroid/util/ArrayMap;-><init>()V
+  v0, v1, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->characteristicsForReading Landroid/util/ArrayMap;
+  v0, Landroid/util/ArrayMap;
+  v0, Landroid/util/ArrayMap;-><init>()V
+  v0, v1, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->characteristicsForWriting Landroid/util/ArrayMap;
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v2, v1, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->bluetoothDevice Landroid/bluetooth/BluetoothDevice;
+  v3, v1, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->bluetoothGattHelper Ldk/lego/cubb/bluetooth/BluetoothGattHelper;
+  v4, v1, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->upwardMessageSender Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;
+  
+
+### METHOD addCharacteristic (Ljava/util/UUID; Landroid/bluetooth/BluetoothGattCharacteristic;)V
+  v0, v3, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->characteristicsForReading Landroid/util/ArrayMap;
+  v0, v4, Landroid/util/ArrayMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  v0
+  v0, Landroid/util/ArrayMap;
+  v0, +00dh
+  v0, v3, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->characteristicsForReading Landroid/util/ArrayMap;
+  v1, Landroid/util/ArrayMap;
+  v1, Landroid/util/ArrayMap;-><init>()V
+  v0, v4, v1, Landroid/util/ArrayMap;->put(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;
+  v0, v1
+  v5, Landroid/bluetooth/BluetoothGattCharacteristic;->getUuid()Ljava/util/UUID;
+  v1
+  v0, v1, v5, Landroid/util/ArrayMap;->put(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;
+  v5, Ldk/lego/cubb/utils/DocumentedHacks;->cloneGattCharacteristicForWriting(Landroid/bluetooth/BluetoothGattCharacteristic;)Landroid/bluetooth/BluetoothGattCharacteristic;
+  v0
+  v1, v3, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->characteristicsForWriting Landroid/util/ArrayMap;
+  v1, v4, Landroid/util/ArrayMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  v1
+  v1, Landroid/util/ArrayMap;
+  v1, +00dh
+  v1, v3, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->characteristicsForWriting Landroid/util/ArrayMap;
+  v2, Landroid/util/ArrayMap;
+  v2, Landroid/util/ArrayMap;-><init>()V
+  v1, v4, v2, Landroid/util/ArrayMap;->put(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;
+  v1, v2
+  v5, Landroid/bluetooth/BluetoothGattCharacteristic;->getUuid()Ljava/util/UUID;
+  v4
+  v1, v4, v0, Landroid/util/ArrayMap;->put(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;
+  
+
+### METHOD enableNotifications (Landroid/bluetooth/BluetoothGattCharacteristic;)V
+  v0, 1
+  v2, v3, v0, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->setCharacteristicNotification(Landroid/bluetooth/BluetoothGattCharacteristic; Z)V
+  v0, Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;-><init>()V
+  v1, "Enabled notifications on characteristic "
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v3, Landroid/bluetooth/BluetoothGattCharacteristic;->getUuid()Ljava/util/UUID;
+  v3
+  v0, v3, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v3
+  v3, Ldk/lego/cubb/logging/LDSDKLogger;->i(Ljava/lang/String;)V
+  
+
+### METHOD isOADNonNotifyingCharacteristic (Landroid/bluetooth/BluetoothGattCharacteristic;)Z
+  v0, "F000FFC3-0451-4000-B000-000000000000"
+  v0, Ljava/util/UUID;->fromString(Ljava/lang/String;)Ljava/util/UUID;
+  v0
+  v1, "F000FFC4-0451-4000-B000-000000000000"
+  v1, Ljava/util/UUID;->fromString(Ljava/lang/String;)Ljava/util/UUID;
+  v1
+  v2, 2
+  v2, v2, [Ljava/util/UUID;
+  v3, 0
+  v0, v2, v3
+  v0, 1
+  v1, v2, v0
+  v2, Ljava/util/Arrays;->asList([Ljava/lang/Object;)Ljava/util/List;
+  v0
+  v5, Landroid/bluetooth/BluetoothGattCharacteristic;->getUuid()Ljava/util/UUID;
+  v5
+  v0, v5, Ljava/util/List;->contains(Ljava/lang/Object;)Z
+  v5
+  v5
+
+### METHOD setCharacteristicNotification (Landroid/bluetooth/BluetoothGattCharacteristic; Z)V
+  v0, v7, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->bluetoothGattHelper Ldk/lego/cubb/bluetooth/BluetoothGattHelper;
+  v0, Ldk/lego/cubb/bluetooth/BluetoothGattHelper;->getBluetoothGatt()Landroid/bluetooth/BluetoothGatt;
+  v0
+  v0, +055h
+  v7, v8, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->isOADNonNotifyingCharacteristic(Landroid/bluetooth/BluetoothGattCharacteristic;)Z
+  v1
+  v2, 1
+  v3, 0
+  v1, +018h
+  Ljava/util/Locale;->getDefault()Ljava/util/Locale;
+  v9
+  v0, v2, [Ljava/lang/Object;
+  v8, Landroid/bluetooth/BluetoothGattCharacteristic;->getUuid()Ljava/util/UUID;
+  v8
+  v8, v0, v3
+  v8, "Notifications for characteristic %s will not be set"
+  v9, v8, v0, Ljava/lang/String;->format(Ljava/util/Locale; Ljava/lang/String; [Ljava/lang/Object;)Ljava/lang/String;
+  v8
+  v8, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  +3bh
+  Ljava/util/Locale;->getDefault()Ljava/util/Locale;
+  v1
+  v4, 2
+  v5, v4, [Ljava/lang/Object;
+  v8, Landroid/bluetooth/BluetoothGattCharacteristic;->getUuid()Ljava/util/UUID;
+  v6
+  v6, v5, v3
+  v9, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+  v3
+  v3, v5, v2
+  v2, "Notifications for characteristic %s set to %b"
+  v1, v2, v5, Ljava/lang/String;->format(Ljava/util/Locale; Ljava/lang/String; [Ljava/lang/Object;)Ljava/lang/String;
+  v1
+  v1, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v0, v8, v9, Landroid/bluetooth/BluetoothGatt;->setCharacteristicNotification(Landroid/bluetooth/BluetoothGattCharacteristic; Z)Z
+  v0, Ldk/lego/cubb/bluetooth/BluetoothGattHelper;->CHARACTERISTIC_UPDATE_NOTIFICATION_DESCRIPTOR_UUID Ljava/util/UUID;
+  v8, v0, Landroid/bluetooth/BluetoothGattCharacteristic;->getDescriptor(Ljava/util/UUID;)Landroid/bluetooth/BluetoothGattDescriptor;
+  v8
+  v9, +005h
+  v9, Landroid/bluetooth/BluetoothGattDescriptor;->ENABLE_NOTIFICATION_VALUE [B
+  +6h
+  v9, v4, [B
+  v9, +0000010h
+  v0, v7, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->sendThrottler Ldk/lego/cubb/bluetooth/SendThrottler;
+  v0, v8, v9, Ldk/lego/cubb/bluetooth/SendThrottler;->send(Landroid/bluetooth/BluetoothGattDescriptor; [B)V
+  +6h
+  v8, "Could not set CharacteristicNotification since BluetoothGatt was null!"
+  v8, Ldk/lego/cubb/logging/LDSDKLogger;->e(Ljava/lang/String;)V
+  
+  
+  b'\x00\x00' | \x00\x00
+
+### METHOD closeGatt ()V
+  v0, v2, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->bluetoothGattHelper Ldk/lego/cubb/bluetooth/BluetoothGattHelper;
+  v0, +005h
+  v0, Ldk/lego/cubb/bluetooth/BluetoothGattHelper;->closeGatt()V
+  v0, v2, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->sendThrottler Ldk/lego/cubb/bluetooth/SendThrottler;
+  v1, 0
+  v0, v1, Ldk/lego/cubb/bluetooth/SendThrottler;->Connected(Z)V
+  
+
+### METHOD connectGatt (Landroid/content/Context; Ldk/lego/cubb/bluetooth/ConnectionOptions; Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback;)V
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0, v2, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->bluetoothGattHelper Ldk/lego/cubb/bluetooth/BluetoothGattHelper;
+  v0, Ldk/lego/cubb/bluetooth/BluetoothGattHelper;->getBluetoothGatt()Landroid/bluetooth/BluetoothGatt;
+  v0
+  v0, +007h
+  v0, "connectGatt: already connected - gatt != null"
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->w(Ljava/lang/String;)V
+  v0, v2, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->bluetoothDevice Landroid/bluetooth/BluetoothDevice;
+  v1, v4, Ldk/lego/cubb/bluetooth/ConnectionOptions;->autoConnect Z
+  v0, v3, v1, v5, Landroid/bluetooth/BluetoothDevice;->connectGatt(Landroid/content/Context; Z Landroid/bluetooth/BluetoothGattCallback;)Landroid/bluetooth/BluetoothGatt;
+  v3
+  v5, v2, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->bluetoothGattHelper Ldk/lego/cubb/bluetooth/BluetoothGattHelper;
+  v5, v3, Ldk/lego/cubb/bluetooth/BluetoothGattHelper;->setBluetoothGatt(Landroid/bluetooth/BluetoothGatt;)V
+  v5, Ldk/lego/cubb/bluetooth/SendThrottler;
+  v0, v2, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->upwardMessageSender Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;
+  v5, v3, v4, v0, Ldk/lego/cubb/bluetooth/SendThrottler;-><init>(Landroid/bluetooth/BluetoothGatt; Ldk/lego/cubb/bluetooth/ConnectionOptions; Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;)V
+  v5, v2, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->sendThrottler Ldk/lego/cubb/bluetooth/SendThrottler;
+  v3, 1
+  v5, v3, Ldk/lego/cubb/bluetooth/SendThrottler;->Connected(Z)V
+  
+
+### METHOD getAddress ()Ljava/lang/String;
+  v0, v1, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->bluetoothDevice Landroid/bluetooth/BluetoothDevice;
+  v0, Landroid/bluetooth/BluetoothDevice;->getAddress()Ljava/lang/String;
+  v0
+  v0
+
+### METHOD getBluetoothGattHelper ()Ldk/lego/cubb/bluetooth/BluetoothGattHelper;
+  v0, v1, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->bluetoothGattHelper Ldk/lego/cubb/bluetooth/BluetoothGattHelper;
+  v0
+
+### METHOD getDevice ()Landroid/bluetooth/BluetoothDevice;
+  v0, v1, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->bluetoothDevice Landroid/bluetooth/BluetoothDevice;
+  v0
+
+### METHOD getGattCharacteristicForWriting (Ljava/util/UUID; Ljava/util/UUID;)Landroid/bluetooth/BluetoothGattCharacteristic;
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0, v1, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->characteristicsForWriting Landroid/util/ArrayMap;
+  v0, v2, Landroid/util/ArrayMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  v2
+  v2, Landroid/util/ArrayMap;
+  v2, +004h
+  v2, 0
+  v2
+  v2, v3, Landroid/util/ArrayMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  v2
+  v2, Landroid/bluetooth/BluetoothGattCharacteristic;
+  v2
+
+### METHOD getName ()Ljava/lang/String;
+  v0, v1, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->bluetoothDevice Landroid/bluetooth/BluetoothDevice;
+  v0, Landroid/bluetooth/BluetoothDevice;->getName()Ljava/lang/String;
+  v0
+  v0
+
+### METHOD getSendThrottler ()Ldk/lego/cubb/bluetooth/SendThrottler;
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0, v1, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->sendThrottler Ldk/lego/cubb/bluetooth/SendThrottler;
+  v0
+
+### METHOD handleServicesDiscovered ()V
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0, v6, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->bluetoothGattHelper Ldk/lego/cubb/bluetooth/BluetoothGattHelper;
+  v0, Ldk/lego/cubb/bluetooth/BluetoothGattHelper;->getServices()Ljava/util/List;
+  v0
+  v0, Ljava/util/List;->size()I
+  v1
+  v1, +01bh
+  v0, Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;-><init>()V
+  v1, "Device has no services: "
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v6, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->getAddress()Ljava/lang/String;
+  v1
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->e(Ljava/lang/String;)V
+  
+  v1, 0
+  v0, Ljava/util/List;->iterator()Ljava/util/Iterator;
+  v0
+  v0, Ljava/util/Iterator;->hasNext()Z
+  v2
+  v2, +047h
+  v0, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  v2
+  v2, Landroid/bluetooth/BluetoothGattService;
+  v2, Landroid/bluetooth/BluetoothGattService;->getUuid()Ljava/util/UUID;
+  v3
+  v3, Ldk/lego/cubb/bluetooth/DiscoveryFilters;->isRecognizedService(Ljava/util/UUID;)Z
+  v3
+  v3, +003h
+  -16h
+  v2, Landroid/bluetooth/BluetoothGattService;->getCharacteristics()Ljava/util/List;
+  v3
+  v3, Ljava/util/List;->iterator()Ljava/util/Iterator;
+  v3
+  v3, Ljava/util/Iterator;->hasNext()Z
+  v4
+  v4, -023h
+  v3, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  v4
+  v4, Landroid/bluetooth/BluetoothGattCharacteristic;
+  v4, Landroid/bluetooth/BluetoothGattCharacteristic;->getUuid()Ljava/util/UUID;
+  v5
+  v5, Ldk/lego/cubb/bluetooth/DiscoveryFilters;->isRecognizedCharacteristic(Ljava/util/UUID;)Z
+  v5
+  v5, +003h
+  -16h
+  v2, Landroid/bluetooth/BluetoothGattService;->getUuid()Ljava/util/UUID;
+  v5
+  v6, v5, v4, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->addCharacteristic(Ljava/util/UUID; Landroid/bluetooth/BluetoothGattCharacteristic;)V
+  v4, Landroid/bluetooth/BluetoothGattCharacteristic;->getProperties()I
+  v5
+  v5, v5, 16
+  v5, -024h
+  v6, v4, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->enableNotifications(Landroid/bluetooth/BluetoothGattCharacteristic;)V
+  v1, v1, 1
+  -2bh
+  v0, Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;-><init>()V
+  v2, "Subscribed to "
+  v0, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, v1, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  v2, " GATT characteristics on "
+  v0, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v6, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->getAddress()Ljava/lang/String;
+  v2
+  v0, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->i(Ljava/lang/String;)V
+  v1, +01ah
+  v0, Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;-><init>()V
+  v1, "Device has no known GATT characteristics: "
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v6, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;->getAddress()Ljava/lang/String;
+  v1
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->e(Ljava/lang/String;)V
+  

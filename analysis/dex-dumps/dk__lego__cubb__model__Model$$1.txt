@@ -1,0 +1,19 @@
+
+### METHOD <clinit> ()V
+  Ldk/lego/cubb/model/AdapterScanState;->values()[Ldk/lego/cubb/model/AdapterScanState;
+  v0
+  v0, v0
+  v0, v0, [I
+  v0, Ldk/lego/cubb/model/Model$1;->$SwitchMap$dk$lego$cubb$model$AdapterScanState [I
+  v1, Ldk/lego/cubb/model/AdapterScanState;->BluetoothUnavailable Ldk/lego/cubb/model/AdapterScanState;
+  v1, Ldk/lego/cubb/model/AdapterScanState;->ordinal()I
+  v1
+  v2, 1
+  v2, v0, v1
+  v0, Ldk/lego/cubb/model/Model$1;->$SwitchMap$dk$lego$cubb$model$AdapterScanState [I
+  v1, Ldk/lego/cubb/model/AdapterScanState;->BluetoothDisabled Ldk/lego/cubb/model/AdapterScanState;
+  v1, Ldk/lego/cubb/model/AdapterScanState;->ordinal()I
+  v1
+  v2, 2
+  v2, v0, v1
+  

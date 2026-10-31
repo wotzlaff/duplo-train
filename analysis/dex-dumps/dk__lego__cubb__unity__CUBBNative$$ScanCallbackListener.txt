@@ -1,0 +1,81 @@
+
+### METHOD <init> (Ldk/lego/cubb/unity/CUBBNative;)V
+  v1, v0, Ldk/lego/cubb/unity/CUBBNative$ScanCallbackListener;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v0, Ljava/lang/Object;-><init>()V
+  
+
+### METHOD <init> (Ldk/lego/cubb/unity/CUBBNative; Ldk/lego/cubb/unity/CUBBNative$1;)V
+  v0, v1, Ldk/lego/cubb/unity/CUBBNative$ScanCallbackListener;-><init>(Ldk/lego/cubb/unity/CUBBNative;)V
+  
+
+### METHOD onInterestingScanResult (Landroid/bluetooth/BluetoothDevice; I Landroid/bluetooth/le/ScanRecord; Ljava/util/UUID;)V
+  v0, Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;-><init>()V
+  v1, "onInterestingScanResult: "
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v8, Landroid/bluetooth/BluetoothDevice;->getAddress()Ljava/lang/String;
+  v1
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v0, 919
+  v10, v0, Landroid/bluetooth/le/ScanRecord;->getManufacturerSpecificData(I)[B
+  v6
+  v10, v7, Ldk/lego/cubb/unity/CUBBNative$ScanCallbackListener;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v10, Ldk/lego/cubb/unity/CUBBNative;->access$100(Ldk/lego/cubb/unity/CUBBNative;)Ldk/lego/cubb/model/Model;
+  v1
+  v3, Ldk/lego/cubb/model/DeviceVisibilityState;->Visible Ldk/lego/cubb/model/DeviceVisibilityState;
+  v2, v8
+  v4, v11
+  v5, v9
+  v1 ... v6, Ldk/lego/cubb/model/Model;->updateDeviceProperties(Landroid/bluetooth/BluetoothDevice; Ldk/lego/cubb/model/DeviceVisibilityState; Ljava/util/UUID; I [B)V
+  
+
+### METHOD aboutToStartScanning ()V
+  v0, v1, Ldk/lego/cubb/unity/CUBBNative$ScanCallbackListener;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v0, Ldk/lego/cubb/unity/CUBBNative;->access$100(Ldk/lego/cubb/unity/CUBBNative;)Ldk/lego/cubb/model/Model;
+  v0
+  v0, Ldk/lego/cubb/model/Model;->aboutToStartScanning()V
+  
+
+### METHOD adapterStateChanged (I)V
+  v0, v1, Ldk/lego/cubb/unity/CUBBNative$ScanCallbackListener;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v0, Ldk/lego/cubb/unity/CUBBNative;->access$100(Ldk/lego/cubb/unity/CUBBNative;)Ldk/lego/cubb/model/Model;
+  v0
+  v0, v2, Ldk/lego/cubb/model/Model;->adapterStateChanged(I)V
+  
+
+### METHOD discoveryModeChanged (Z)V
+  v0, v1, Ldk/lego/cubb/unity/CUBBNative$ScanCallbackListener;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v0, Ldk/lego/cubb/unity/CUBBNative;->access$100(Ldk/lego/cubb/unity/CUBBNative;)Ldk/lego/cubb/model/Model;
+  v0
+  v0, v2, Ldk/lego/cubb/model/Model;->discoveryModeChanged(Z)V
+  
+
+### METHOD initScanState (I Z)V
+  v0, v1, Ldk/lego/cubb/unity/CUBBNative$ScanCallbackListener;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v0, Ldk/lego/cubb/unity/CUBBNative;->access$100(Ldk/lego/cubb/unity/CUBBNative;)Ldk/lego/cubb/model/Model;
+  v0
+  v0, v2, v3, Ldk/lego/cubb/model/Model;->initScanState(I Z)V
+  
+
+### METHOD onScanResult (Landroid/bluetooth/BluetoothDevice; I Landroid/bluetooth/le/ScanRecord;)V
+  v6, Landroid/bluetooth/le/ScanRecord;->getServiceUuids()Ljava/util/List;
+  v0
+  v0, +01fh
+  v0, Ljava/util/List;->iterator()Ljava/util/Iterator;
+  v0
+  v0, Ljava/util/Iterator;->hasNext()Z
+  v1
+  v1, +015h
+  v0, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  v1
+  v1, Landroid/os/ParcelUuid;
+  v1, Landroid/os/ParcelUuid;->getUuid()Ljava/util/UUID;
+  v1
+  v1, Ldk/lego/cubb/bluetooth/DiscoveryFilters;->isRecognizedService(Ljava/util/UUID;)Z
+  v2
+  v2, -014h
+  v3, v4, v5, v6, v1, Ldk/lego/cubb/unity/CUBBNative$ScanCallbackListener;->onInterestingScanResult(Landroid/bluetooth/BluetoothDevice; I Landroid/bluetooth/le/ScanRecord; Ljava/util/UUID;)V
+  

@@ -1,0 +1,53 @@
+
+### METHOD <init> (I I)V
+  v2, Ljava/lang/Object;-><init>()V
+  v0, 0
+  v0, v2, Ldk/lego/cubb/bluetooth/TimerThrottler;->sendTimeIndex I
+  v0, Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;-><init>()V
+  v1, "DEBUG TimerThrottler ctor: timerThrottler="
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, v3, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  v1, " per "
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, v4, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->i(Ljava/lang/String;)V
+  v3, v2, Ldk/lego/cubb/bluetooth/TimerThrottler;->packetCount I
+  v4, v2, Ldk/lego/cubb/bluetooth/TimerThrottler;->windowLengthMillis I
+  v3, v3, [J
+  v3, v2, Ldk/lego/cubb/bluetooth/TimerThrottler;->sendTimes [J
+  
+
+### METHOD calculateDelayAmount (J)J
+  v0, v5, Ldk/lego/cubb/bluetooth/TimerThrottler;->sendTimes [J
+  v1, v5, Ldk/lego/cubb/bluetooth/TimerThrottler;->sendTimeIndex I
+  v1, v0, v1
+  v0, v5, Ldk/lego/cubb/bluetooth/TimerThrottler;->windowLengthMillis I
+  v3, v0
+  v1, v3
+  v1, v6
+  v1
+
+### METHOD registerSendTime (J)V
+  v0, Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;-><init>()V
+  v1, "Registering send time: "
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, v3, v4, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+  v1, "ms"
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v0, v2, Ldk/lego/cubb/bluetooth/TimerThrottler;->sendTimes [J
+  v1, v2, Ldk/lego/cubb/bluetooth/TimerThrottler;->sendTimeIndex I
+  v3, v0, v1
+  v1, v1, 1
+  v1, v2, Ldk/lego/cubb/bluetooth/TimerThrottler;->sendTimeIndex I
+  v3, v0
+  v1, v3, +005h
+  v3, 0
+  v3, v2, Ldk/lego/cubb/bluetooth/TimerThrottler;->sendTimeIndex I
+  

@@ -1,0 +1,16 @@
+
+### METHOD <init> (Ldk/lego/cubb/bluetooth/SerializingScanCallback; I Landroid/bluetooth/le/ScanResult;)V
+  v1, v0, Ldk/lego/cubb/bluetooth/SerializingScanCallback$1;->this$0 Ldk/lego/cubb/bluetooth/SerializingScanCallback;
+  v2, v0, Ldk/lego/cubb/bluetooth/SerializingScanCallback$1;->val$callbackType I
+  v3, v0, Ldk/lego/cubb/bluetooth/SerializingScanCallback$1;->val$result Landroid/bluetooth/le/ScanResult;
+  v0, Ljava/lang/Object;-><init>()V
+  
+
+### METHOD run ()V
+  v0, v3, Ldk/lego/cubb/bluetooth/SerializingScanCallback$1;->this$0 Ldk/lego/cubb/bluetooth/SerializingScanCallback;
+  v0, Ldk/lego/cubb/bluetooth/SerializingScanCallback;->access$000(Ldk/lego/cubb/bluetooth/SerializingScanCallback;)Landroid/bluetooth/le/ScanCallback;
+  v0
+  v1, v3, Ldk/lego/cubb/bluetooth/SerializingScanCallback$1;->val$callbackType I
+  v2, v3, Ldk/lego/cubb/bluetooth/SerializingScanCallback$1;->val$result Landroid/bluetooth/le/ScanResult;
+  v0, v1, v2, Landroid/bluetooth/le/ScanCallback;->onScanResult(I Landroid/bluetooth/le/ScanResult;)V
+  

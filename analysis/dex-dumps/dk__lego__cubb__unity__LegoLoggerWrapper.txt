@@ -1,0 +1,6 @@
+
+### METHOD setLogCallbacksEnabled (Z)V
+   (abstract/native)
+
+### METHOD setLogLevel (I)V
+   (abstract/native)

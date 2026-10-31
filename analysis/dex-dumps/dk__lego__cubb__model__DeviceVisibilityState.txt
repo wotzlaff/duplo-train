@@ -1,0 +1,37 @@
+
+### METHOD <clinit> ()V
+  v0, Ldk/lego/cubb/model/DeviceVisibilityState;
+  v1, 0
+  v2, "Invisible"
+  v0, v2, v1, Ldk/lego/cubb/model/DeviceVisibilityState;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/model/DeviceVisibilityState;->Invisible Ldk/lego/cubb/model/DeviceVisibilityState;
+  v0, Ldk/lego/cubb/model/DeviceVisibilityState;
+  v2, 1
+  v3, "Visible"
+  v0, v3, v2, Ldk/lego/cubb/model/DeviceVisibilityState;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/model/DeviceVisibilityState;->Visible Ldk/lego/cubb/model/DeviceVisibilityState;
+  v3, 2
+  v3, v3, [Ldk/lego/cubb/model/DeviceVisibilityState;
+  v4, Ldk/lego/cubb/model/DeviceVisibilityState;->Invisible Ldk/lego/cubb/model/DeviceVisibilityState;
+  v4, v3, v1
+  v0, v3, v2
+  v3, Ldk/lego/cubb/model/DeviceVisibilityState;->$VALUES [Ldk/lego/cubb/model/DeviceVisibilityState;
+  
+
+### METHOD <init> (Ljava/lang/String; I)V
+  v0, v1, v2, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V
+  
+
+### METHOD valueOf (Ljava/lang/String;)Ldk/lego/cubb/model/DeviceVisibilityState;
+  v0, Ldk/lego/cubb/model/DeviceVisibilityState;
+  v0, v1, Ljava/lang/Enum;->valueOf(Ljava/lang/Class; Ljava/lang/String;)Ljava/lang/Enum;
+  v1
+  v1, Ldk/lego/cubb/model/DeviceVisibilityState;
+  v1
+
+### METHOD values ()[Ldk/lego/cubb/model/DeviceVisibilityState;
+  v0, Ldk/lego/cubb/model/DeviceVisibilityState;->$VALUES [Ldk/lego/cubb/model/DeviceVisibilityState;
+  v0, [Ldk/lego/cubb/model/DeviceVisibilityState;->clone()Ljava/lang/Object;
+  v0
+  v0, [Ldk/lego/cubb/model/DeviceVisibilityState;
+  v0

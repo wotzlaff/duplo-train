@@ -1,0 +1,10 @@
+# Large binary input — the analyzed APK stays outside version control
+external/
+
+# Python artifacts of the analysis tooling
+__pycache__/
+*.pyc
+
+# Editor / OS noise
+*.swp
+.DS_Store

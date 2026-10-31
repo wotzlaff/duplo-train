@@ -1,0 +1,50 @@
+
+### METHOD <init> (Ljava/util/UUID; Z)V
+  v0, Ljava/lang/Object;-><init>()V
+  v1, v0, Ldk/lego/cubb/bluetooth/GattCharacteristic;->uuid Ljava/util/UUID;
+  v2, v0, Ldk/lego/cubb/bluetooth/GattCharacteristic;->notifyValue Z
+  
+
+### METHOD create (Lorg/json/JSONObject;)Ldk/lego/cubb/bluetooth/GattCharacteristic;
+  v0, 0
+  v1, "Uuid"
+  v3, v1, Lorg/json/JSONObject;->getString(Ljava/lang/String;)Ljava/lang/String;
+  v1
+  v1, Ljava/util/UUID;->fromString(Ljava/lang/String;)Ljava/util/UUID;
+  v1
+  v2, "NotifyValue"
+  v3, v2, Lorg/json/JSONObject;->getBoolean(Ljava/lang/String;)Z
+  v3
+  v0, Ldk/lego/cubb/bluetooth/GattCharacteristic;
+  v0, v1, v3, Ldk/lego/cubb/bluetooth/GattCharacteristic;-><init>(Ljava/util/UUID; Z)V
+  v0
+  v1, Ljava/lang/StringBuilder;
+  v1, Ljava/lang/StringBuilder;-><init>()V
+  v2, "Unable to find NotifyValue value for jsonObject: "
+  v1, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v3, Lorg/json/JSONObject;->toString()Ljava/lang/String;
+  v3
+  v1, v3, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v1, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v3
+  v3, Ldk/lego/cubb/logging/LDSDKLogger;->e(Ljava/lang/String;)V
+  v0
+  v1, Ljava/lang/StringBuilder;
+  v1, Ljava/lang/StringBuilder;-><init>()V
+  v2, "Unable to find UUID value for jsonObject: "
+  v1, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v3, Lorg/json/JSONObject;->toString()Ljava/lang/String;
+  v3
+  v1, v3, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v1, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v3
+  v3, Ldk/lego/cubb/logging/LDSDKLogger;->e(Ljava/lang/String;)V
+  v0
+
+### METHOD getNotifyValue ()Z
+  v0, v1, Ldk/lego/cubb/bluetooth/GattCharacteristic;->notifyValue Z
+  v0
+
+### METHOD getUuid ()Ljava/util/UUID;
+  v0, v1, Ldk/lego/cubb/bluetooth/GattCharacteristic;->uuid Ljava/util/UUID;
+  v0

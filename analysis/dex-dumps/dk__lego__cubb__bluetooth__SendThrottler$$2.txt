@@ -1,0 +1,25 @@
+
+### METHOD <clinit> ()V
+  Ldk/lego/cubb/bluetooth/SendStrategy;->values()[Ldk/lego/cubb/bluetooth/SendStrategy;
+  v0
+  v0, v0
+  v0, v0, [I
+  v0, Ldk/lego/cubb/bluetooth/SendThrottler$2;->$SwitchMap$dk$lego$cubb$bluetooth$SendStrategy [I
+  v1, Ldk/lego/cubb/bluetooth/SendStrategy;->NoAck Ldk/lego/cubb/bluetooth/SendStrategy;
+  v1, Ldk/lego/cubb/bluetooth/SendStrategy;->ordinal()I
+  v1
+  v2, 1
+  v2, v0, v1
+  v0, Ldk/lego/cubb/bluetooth/SendThrottler$2;->$SwitchMap$dk$lego$cubb$bluetooth$SendStrategy [I
+  v1, Ldk/lego/cubb/bluetooth/SendStrategy;->HardAck Ldk/lego/cubb/bluetooth/SendStrategy;
+  v1, Ldk/lego/cubb/bluetooth/SendStrategy;->ordinal()I
+  v1
+  v2, 2
+  v2, v0, v1
+  v0, Ldk/lego/cubb/bluetooth/SendThrottler$2;->$SwitchMap$dk$lego$cubb$bluetooth$SendStrategy [I
+  v1, Ldk/lego/cubb/bluetooth/SendStrategy;->SoftAck Ldk/lego/cubb/bluetooth/SendStrategy;
+  v1, Ldk/lego/cubb/bluetooth/SendStrategy;->ordinal()I
+  v1
+  v2, 3
+  v2, v0, v1
+  

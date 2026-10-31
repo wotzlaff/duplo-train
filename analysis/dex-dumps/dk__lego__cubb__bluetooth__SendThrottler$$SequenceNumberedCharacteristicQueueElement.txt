@@ -1,0 +1,13 @@
+
+### METHOD <init> (Landroid/bluetooth/BluetoothGattCharacteristic; [B I)V
+  v0, v1, v2, Ldk/lego/cubb/bluetooth/SendThrottler$CharacteristicQueueElement;-><init>(Landroid/bluetooth/BluetoothGattCharacteristic; [B)V
+  v3, v0, Ldk/lego/cubb/bluetooth/SendThrottler$SequenceNumberedCharacteristicQueueElement;->seqNr I
+  
+
+### METHOD sequenceNumberInfo ()Ldk/lego/cubb/bluetooth/SendThrottler$SequenceNumberedCharacteristicQueueElement;
+  v0, v1, Ldk/lego/cubb/bluetooth/SendThrottler$SequenceNumberedCharacteristicQueueElement;->seqNr I
+  v0, +004h
+  v0, v1
+  +2h
+  v0, 0
+  v0

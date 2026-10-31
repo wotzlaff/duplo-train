@@ -1,0 +1,202 @@
+
+### METHOD <init> (Ldk/lego/cubb/model/DeviceDatabase; Ljava/lang/String;)V
+  v2, v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->this$0 Ldk/lego/cubb/model/DeviceDatabase;
+  v1, Ljava/lang/Object;-><init>()V
+  v2, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry$Callbacks;
+  v0, 0
+  v2, v1, v0, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry$Callbacks;-><init>(Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry; Ldk/lego/cubb/model/DeviceDatabase$1;)V
+  v2, v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->callbacks Ldk/lego/cubb/model/SendQueue$SendQueueCallbacks;
+  v3, v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->id Ljava/lang/String;
+  v2, Ldk/lego/cubb/model/DeviceConnectionState;->Disconnected Ldk/lego/cubb/model/DeviceConnectionState;
+  v2, v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->connectivity Ldk/lego/cubb/model/DeviceConnectionState;
+  v2, Ldk/lego/cubb/model/DeviceVisibilityState;->Invisible Ldk/lego/cubb/model/DeviceVisibilityState;
+  v2, v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->visibility Ldk/lego/cubb/model/DeviceVisibilityState;
+  v2, 0
+  v2, v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->lastSeen J
+  v0, v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->sendQueue Ldk/lego/cubb/model/SendQueue;
+  
+
+### METHOD <init> (Ldk/lego/cubb/model/DeviceDatabase; Ljava/lang/String; Ldk/lego/cubb/model/DeviceDatabase$1;)V
+  v0, v1, v2, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;-><init>(Ldk/lego/cubb/model/DeviceDatabase; Ljava/lang/String;)V
+  
+
+### METHOD access$100 (Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;)Z
+  v0, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->markAsInvisible()Z
+  v0
+  v0
+
+### METHOD access$400 (Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;)Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapper;
+  v0, v0, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->wrapper Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapper;
+  v0
+
+### METHOD markAsInvisible ()Z
+  v0, v2, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->visibility Ldk/lego/cubb/model/DeviceVisibilityState;
+  v1, Ldk/lego/cubb/model/DeviceVisibilityState;->Invisible Ldk/lego/cubb/model/DeviceVisibilityState;
+  v0, v1, +008h
+  v0, Ldk/lego/cubb/model/DeviceVisibilityState;->Invisible Ldk/lego/cubb/model/DeviceVisibilityState;
+  v0, v2, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->visibility Ldk/lego/cubb/model/DeviceVisibilityState;
+  v0, 1
+  v0
+  v0, 0
+  v0
+
+### METHOD getConnectivity ()Ldk/lego/cubb/model/DeviceConnectionState;
+  v0, v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->connectivity Ldk/lego/cubb/model/DeviceConnectionState;
+  v0
+
+### METHOD getManuData ()[B
+  v0, v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->manuData [B
+  v0
+
+### METHOD getName ()Ljava/lang/String;
+  v0, v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->name Ljava/lang/String;
+  v0
+
+### METHOD getRssi ()I
+  v0, v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->rssi I
+  v0
+
+### METHOD getSendQueue ()Ldk/lego/cubb/model/SendQueue;
+  v0, v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->sendQueue Ldk/lego/cubb/model/SendQueue;
+  v0
+
+### METHOD getSendThrottler ()Ldk/lego/cubb/bluetooth/SendThrottler;
+  v0, v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->wrapper Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapper;
+  v0, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapper;->getSendThrottler()Ldk/lego/cubb/bluetooth/SendThrottler;
+  v0
+  v0
+
+### METHOD getServiceGUID ()Ljava/util/UUID;
+  v0, v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->serviceGUID Ljava/util/UUID;
+  v0
+
+### METHOD getVisibility ()Ldk/lego/cubb/model/DeviceVisibilityState;
+  v0, v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->visibility Ldk/lego/cubb/model/DeviceVisibilityState;
+  v0
+
+### METHOD getWrapper ()Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapper;
+  v0, v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->wrapper Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapper;
+  v0
+
+### METHOD setNoAckParameters (I I)V
+  v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->getSendThrottler()Ldk/lego/cubb/bluetooth/SendThrottler;
+  v0
+  v0, v2, v3, Ldk/lego/cubb/bluetooth/SendThrottler;->setNoAckParameters(I I)V
+  
+
+### METHOD update (Landroid/bluetooth/BluetoothDevice; Ljava/lang/String; Ljava/util/UUID; Ldk/lego/cubb/model/DeviceVisibilityState; I [B)Z
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0, Ldk/lego/cubb/model/DeviceVisibilityState;->Visible Ldk/lego/cubb/model/DeviceVisibilityState;
+  v8, v0, +008h
+  Ljava/lang/System;->currentTimeMillis()J
+  v0
+  v0, v4, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->lastSeen J
+  v0, 1
+  v5, +025h
+  v1, v4, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->bluetoothDevice Landroid/bluetooth/BluetoothDevice;
+  v5, v1, Ljava/util/Objects;->equals(Ljava/lang/Object; Ljava/lang/Object;)Z
+  v1
+  v1, +01dh
+  v5, v4, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->bluetoothDevice Landroid/bluetooth/BluetoothDevice;
+  v1, Ldk/lego/cubb/model/DeviceConnectionState;->Disconnected Ldk/lego/cubb/model/DeviceConnectionState;
+  v4, v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->update(Ldk/lego/cubb/model/DeviceConnectionState;)Z
+  v1, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;
+  v2, Ldk/lego/cubb/bluetooth/BluetoothGattHelper;
+  v2, Ldk/lego/cubb/bluetooth/BluetoothGattHelper;-><init>()V
+  v3, v4, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->this$0 Ldk/lego/cubb/model/DeviceDatabase;
+  v3, Ldk/lego/cubb/model/DeviceDatabase;->access$300(Ldk/lego/cubb/model/DeviceDatabase;)Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;
+  v3
+  v1, v5, v2, v3, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapperImpl;-><init>(Landroid/bluetooth/BluetoothDevice; Ldk/lego/cubb/bluetooth/BluetoothGattHelper; Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;)V
+  v1, v4, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->wrapper Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapper;
+  v5, 1
+  +2h
+  v5, 0
+  v6, +00dh
+  v1, v4, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->name Ljava/lang/String;
+  v6, v1, Ljava/util/Objects;->equals(Ljava/lang/Object; Ljava/lang/Object;)Z
+  v1
+  v1, +005h
+  v6, v4, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->name Ljava/lang/String;
+  v5, 1
+  v7, +00dh
+  v6, v4, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->serviceGUID Ljava/util/UUID;
+  v7, v6, Ljava/util/Objects;->equals(Ljava/lang/Object; Ljava/lang/Object;)Z
+  v6
+  v6, +005h
+  v7, v4, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->serviceGUID Ljava/util/UUID;
+  v5, 1
+  v6, v4, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->visibility Ldk/lego/cubb/model/DeviceVisibilityState;
+  v8, v6, +005h
+  v8, v4, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->visibility Ldk/lego/cubb/model/DeviceVisibilityState;
+  v5, 1
+  v6, v4, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->rssi I
+  v9, v6, +005h
+  v9, v4, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->rssi I
+  v5, 1
+  v10, +00dh
+  v6, v4, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->manuData [B
+  v10, v6, Ljava/util/Arrays;->equals([B [B)Z
+  v6
+  v6, +005h
+  v10, v4, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->manuData [B
+  +2h
+  v0, v5
+  v0
+
+### METHOD update (Ldk/lego/cubb/model/DeviceConnectionState;)Z
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0, v3, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->connectivity Ldk/lego/cubb/model/DeviceConnectionState;
+  v1, 1
+  v4, v0, +006h
+  v4, v3, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->connectivity Ldk/lego/cubb/model/DeviceConnectionState;
+  v4, 1
+  +2h
+  v4, 0
+  v4, +026h
+  v0, Ldk/lego/cubb/model/DeviceDatabase$1;->$SwitchMap$dk$lego$cubb$model$DeviceConnectionState [I
+  v2, v3, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->connectivity Ldk/lego/cubb/model/DeviceConnectionState;
+  v2, Ldk/lego/cubb/model/DeviceConnectionState;->ordinal()I
+  v2
+  v0, v0, v2
+  v0, v1, +006h
+  v0, 0
+  v0, v3, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->sendQueue Ldk/lego/cubb/model/SendQueue;
+  +15h
+  v0, Ldk/lego/cubb/model/SendQueue;
+  v1, v3, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->callbacks Ldk/lego/cubb/model/SendQueue$SendQueueCallbacks;
+  v0, v1, Ldk/lego/cubb/model/SendQueue;-><init>(Ldk/lego/cubb/model/SendQueue$SendQueueCallbacks;)V
+  v0, v3, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->sendQueue Ldk/lego/cubb/model/SendQueue;
+  v0, v3, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->wrapper Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapper;
+  v0, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapper;->getSendThrottler()Ldk/lego/cubb/bluetooth/SendThrottler;
+  v0
+  v1, v3, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->sendQueue Ldk/lego/cubb/model/SendQueue;
+  v0, v1, Ldk/lego/cubb/bluetooth/SendThrottler;->setListener(Ldk/lego/cubb/bluetooth/SendThrottlerListener;)V
+  v4
+
+### METHOD wasSeenSomewhatRecently ()Z
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0, v6, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->lastSeen J
+  Ljava/lang/System;->currentTimeMillis()J
+  v2
+  v4, 60000
+  v2, v4
+  v4, v0, v2
+  v4, +004h
+  v0, 1
+  +2h
+  v0, 0
+  v0
+
+### METHOD wasSeenVeryRecently ()Z
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0, v6, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->lastSeen J
+  Ljava/lang/System;->currentTimeMillis()J
+  v2
+  v4, 1000
+  v2, v4
+  v4, v0, v2
+  v4, +004h
+  v0, 1
+  +2h
+  v0, 0
+  v0

@@ -1,0 +1,161 @@
+
+### METHOD <init> (Ldk/lego/cubb/unity/CUBBNative;)V
+  v1, v0, Ldk/lego/cubb/unity/CUBBNative$ModelUpwardMessageSender;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v0, Ljava/lang/Object;-><init>()V
+  
+
+### METHOD sendAdapterStateChanged (Ldk/lego/cubb/model/AdapterScanState;)V
+  v0, v3, Ldk/lego/cubb/unity/CUBBNative$ModelUpwardMessageSender;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v1, Ldk/lego/cubb/unity/MessageToUnity;
+  v2, "ScanStateChanged"
+  v1, v2, Ldk/lego/cubb/unity/MessageToUnity;-><init>(Ljava/lang/String;)V
+  v4, Ldk/lego/cubb/model/AdapterScanState;->name()Ljava/lang/String;
+  v4
+  v1, v4, Ldk/lego/cubb/unity/MessageToUnity;->addID(Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v0, v4, Ldk/lego/cubb/unity/CUBBNative;->access$500(Ldk/lego/cubb/unity/CUBBNative; Ldk/lego/cubb/unity/MessageToUnity;)V
+  
+
+### METHOD sendDeviceConnectionStateChanged (Ljava/lang/String; Ldk/lego/cubb/model/DeviceConnectionState; Ljava/lang/String;)V
+  v0, v3, Ldk/lego/cubb/unity/CUBBNative$ModelUpwardMessageSender;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v1, Ldk/lego/cubb/unity/MessageToUnity;
+  v2, "DeviceConnectionStateChanged"
+  v1, v2, Ldk/lego/cubb/unity/MessageToUnity;-><init>(Ljava/lang/String;)V
+  v1, v4, Ldk/lego/cubb/unity/MessageToUnity;->addID(Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v5, Ldk/lego/cubb/model/DeviceConnectionState;->name()Ljava/lang/String;
+  v5
+  v4, v5, Ldk/lego/cubb/unity/MessageToUnity;->addID(Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v4, v6, Ldk/lego/cubb/unity/MessageToUnity;->addString(Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v0, v4, Ldk/lego/cubb/unity/CUBBNative;->access$500(Ldk/lego/cubb/unity/CUBBNative; Ldk/lego/cubb/unity/MessageToUnity;)V
+  
+
+### METHOD sendDeviceDisappeared (Ljava/lang/String;)V
+  v0, v3, Ldk/lego/cubb/unity/CUBBNative$ModelUpwardMessageSender;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v1, Ldk/lego/cubb/unity/MessageToUnity;
+  v2, "DeviceDisappeared"
+  v1, v2, Ldk/lego/cubb/unity/MessageToUnity;-><init>(Ljava/lang/String;)V
+  v1, v4, Ldk/lego/cubb/unity/MessageToUnity;->addID(Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v0, v4, Ldk/lego/cubb/unity/CUBBNative;->access$500(Ldk/lego/cubb/unity/CUBBNative; Ldk/lego/cubb/unity/MessageToUnity;)V
+  
+
+### METHOD sendDeviceStateChanged (Ljava/lang/String; Ldk/lego/cubb/model/DeviceVisibilityState; Ljava/lang/String; Ljava/util/UUID; I [B)V
+  v0, v3, Ldk/lego/cubb/unity/CUBBNative$ModelUpwardMessageSender;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v1, Ldk/lego/cubb/unity/MessageToUnity;
+  v2, "DeviceStateChanged"
+  v1, v2, Ldk/lego/cubb/unity/MessageToUnity;-><init>(Ljava/lang/String;)V
+  v1, v4, Ldk/lego/cubb/unity/MessageToUnity;->addID(Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v5, Ldk/lego/cubb/model/DeviceVisibilityState;->name()Ljava/lang/String;
+  v5
+  v4, v5, Ldk/lego/cubb/unity/MessageToUnity;->addID(Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v4, v6, Ldk/lego/cubb/unity/MessageToUnity;->addString(Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v7, Ljava/util/UUID;->toString()Ljava/lang/String;
+  v5
+  v4, v5, Ldk/lego/cubb/unity/MessageToUnity;->addID(Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v4, v8, Ldk/lego/cubb/unity/MessageToUnity;->addInt(I)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v4, v9, Ldk/lego/cubb/unity/MessageToUnity;->addBytes([B)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v0, v4, Ldk/lego/cubb/unity/CUBBNative;->access$500(Ldk/lego/cubb/unity/CUBBNative; Ldk/lego/cubb/unity/MessageToUnity;)V
+  
+
+### METHOD sendError (Ljava/lang/String;)V
+  v0, v3, Ldk/lego/cubb/unity/CUBBNative$ModelUpwardMessageSender;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v1, Ldk/lego/cubb/unity/MessageToUnity;
+  v2, "Error"
+  v1, v2, Ldk/lego/cubb/unity/MessageToUnity;-><init>(Ljava/lang/String;)V
+  v1, v4, Ldk/lego/cubb/unity/MessageToUnity;->addString(Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v0, v4, Ldk/lego/cubb/unity/CUBBNative;->access$500(Ldk/lego/cubb/unity/CUBBNative; Ldk/lego/cubb/unity/MessageToUnity;)V
+  
+
+### METHOD sendLogMessage (Ljava/lang/String; Ljava/lang/String;)V
+  v0, v3, Ldk/lego/cubb/unity/CUBBNative$ModelUpwardMessageSender;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v1, Ldk/lego/cubb/unity/MessageToUnity;
+  v2, "Log"
+  v1, v2, Ldk/lego/cubb/unity/MessageToUnity;-><init>(Ljava/lang/String;)V
+  v1, v4, Ldk/lego/cubb/unity/MessageToUnity;->addString(Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v4, v5, Ldk/lego/cubb/unity/MessageToUnity;->addString(Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v0, v4, Ldk/lego/cubb/unity/CUBBNative;->access$500(Ldk/lego/cubb/unity/CUBBNative; Ldk/lego/cubb/unity/MessageToUnity;)V
+  
+
+### METHOD sendMtuSizeChanged (Ljava/lang/String; I)V
+  v0, v3, Ldk/lego/cubb/unity/CUBBNative$ModelUpwardMessageSender;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v1, Ldk/lego/cubb/unity/MessageToUnity;
+  v2, "MtuSizeChanged"
+  v1, v2, Ldk/lego/cubb/unity/MessageToUnity;-><init>(Ljava/lang/String;)V
+  v1, v4, Ldk/lego/cubb/unity/MessageToUnity;->addID(Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v4, v5, Ldk/lego/cubb/unity/MessageToUnity;->addInt(I)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v0, v4, Ldk/lego/cubb/unity/CUBBNative;->access$500(Ldk/lego/cubb/unity/CUBBNative; Ldk/lego/cubb/unity/MessageToUnity;)V
+  
+
+### METHOD sendPacketDropped (Ljava/lang/String; Ljava/util/UUID; Ljava/util/UUID; I)V
+  v0, v3, Ldk/lego/cubb/unity/CUBBNative$ModelUpwardMessageSender;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v1, Ldk/lego/cubb/unity/MessageToUnity;
+  v2, "PacketDropped"
+  v1, v2, Ldk/lego/cubb/unity/MessageToUnity;-><init>(Ljava/lang/String;)V
+  v1, v4, Ldk/lego/cubb/unity/MessageToUnity;->addID(Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v5, Ljava/util/UUID;->toString()Ljava/lang/String;
+  v5
+  v4, v5, Ldk/lego/cubb/unity/MessageToUnity;->addID(Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v6, Ljava/util/UUID;->toString()Ljava/lang/String;
+  v5
+  v4, v5, Ldk/lego/cubb/unity/MessageToUnity;->addID(Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v4, v7, Ldk/lego/cubb/unity/MessageToUnity;->addInt(I)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v0, v4, Ldk/lego/cubb/unity/CUBBNative;->access$500(Ldk/lego/cubb/unity/CUBBNative; Ldk/lego/cubb/unity/MessageToUnity;)V
+  
+
+### METHOD sendPacketTransmitted (Ljava/lang/String; Ljava/util/UUID; Ljava/util/UUID; I)V
+  v0, v3, Ldk/lego/cubb/unity/CUBBNative$ModelUpwardMessageSender;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v1, Ldk/lego/cubb/unity/MessageToUnity;
+  v2, "PacketTransmitted"
+  v1, v2, Ldk/lego/cubb/unity/MessageToUnity;-><init>(Ljava/lang/String;)V
+  v1, v4, Ldk/lego/cubb/unity/MessageToUnity;->addID(Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v5, Ljava/util/UUID;->toString()Ljava/lang/String;
+  v5
+  v4, v5, Ldk/lego/cubb/unity/MessageToUnity;->addID(Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v6, Ljava/util/UUID;->toString()Ljava/lang/String;
+  v5
+  v4, v5, Ldk/lego/cubb/unity/MessageToUnity;->addID(Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v4, v7, Ldk/lego/cubb/unity/MessageToUnity;->addInt(I)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v0, v4, Ldk/lego/cubb/unity/CUBBNative;->access$500(Ldk/lego/cubb/unity/CUBBNative; Ldk/lego/cubb/unity/MessageToUnity;)V
+  
+
+### METHOD sendReceivedPacket (Ljava/lang/String; Ljava/util/UUID; Ljava/util/UUID; [B)V
+  v0, v3, Ldk/lego/cubb/unity/CUBBNative$ModelUpwardMessageSender;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v1, Ldk/lego/cubb/unity/MessageToUnity;
+  v2, "ReceivedPacket"
+  v1, v2, Ldk/lego/cubb/unity/MessageToUnity;-><init>(Ljava/lang/String;)V
+  v1, v4, Ldk/lego/cubb/unity/MessageToUnity;->addID(Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v5, Ljava/util/UUID;->toString()Ljava/lang/String;
+  v5
+  v4, v5, Ldk/lego/cubb/unity/MessageToUnity;->addID(Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v6, Ljava/util/UUID;->toString()Ljava/lang/String;
+  v5
+  v4, v5, Ldk/lego/cubb/unity/MessageToUnity;->addID(Ljava/lang/String;)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v4, v7, Ldk/lego/cubb/unity/MessageToUnity;->addBytes([B)Ldk/lego/cubb/unity/MessageToUnity;
+  v4
+  v0, v4, Ldk/lego/cubb/unity/CUBBNative;->access$500(Ldk/lego/cubb/unity/CUBBNative; Ldk/lego/cubb/unity/MessageToUnity;)V
+  

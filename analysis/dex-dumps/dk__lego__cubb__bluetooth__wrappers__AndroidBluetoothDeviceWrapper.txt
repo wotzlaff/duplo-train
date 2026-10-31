@@ -1,0 +1,27 @@
+
+### METHOD closeGatt ()V
+   (abstract/native)
+
+### METHOD connectGatt (Landroid/content/Context; Ldk/lego/cubb/bluetooth/ConnectionOptions; Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback;)V
+   (abstract/native)
+
+### METHOD getAddress ()Ljava/lang/String;
+   (abstract/native)
+
+### METHOD getBluetoothGattHelper ()Ldk/lego/cubb/bluetooth/BluetoothGattHelper;
+   (abstract/native)
+
+### METHOD getDevice ()Landroid/bluetooth/BluetoothDevice;
+   (abstract/native)
+
+### METHOD getGattCharacteristicForWriting (Ljava/util/UUID; Ljava/util/UUID;)Landroid/bluetooth/BluetoothGattCharacteristic;
+   (abstract/native)
+
+### METHOD getName ()Ljava/lang/String;
+   (abstract/native)
+
+### METHOD getSendThrottler ()Ldk/lego/cubb/bluetooth/SendThrottler;
+   (abstract/native)
+
+### METHOD handleServicesDiscovered ()V
+   (abstract/native)

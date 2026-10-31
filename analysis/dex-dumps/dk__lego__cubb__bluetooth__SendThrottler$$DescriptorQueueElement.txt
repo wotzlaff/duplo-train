@@ -1,0 +1,20 @@
+
+### METHOD <init> (Landroid/bluetooth/BluetoothGattDescriptor; [B)V
+  v0, Ldk/lego/cubb/bluetooth/SendThrottler$QueueElement;-><init>()V
+  v1, v0, Ldk/lego/cubb/bluetooth/SendThrottler$DescriptorQueueElement;->descriptor Landroid/bluetooth/BluetoothGattDescriptor;
+  v2, v0, Ldk/lego/cubb/bluetooth/SendThrottler$DescriptorQueueElement;->data [B
+  
+
+### METHOD <init> (Landroid/bluetooth/BluetoothGattDescriptor; [B Ldk/lego/cubb/bluetooth/SendThrottler$1;)V
+  v0, v1, v2, Ldk/lego/cubb/bluetooth/SendThrottler$DescriptorQueueElement;-><init>(Landroid/bluetooth/BluetoothGattDescriptor; [B)V
+  
+
+### METHOD execute (Landroid/bluetooth/BluetoothGatt; Ldk/lego/cubb/bluetooth/SendThrottler$SendState;)V
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0, v2, Ldk/lego/cubb/bluetooth/SendThrottler$DescriptorQueueElement;->descriptor Landroid/bluetooth/BluetoothGattDescriptor;
+  v1, v2, Ldk/lego/cubb/bluetooth/SendThrottler$DescriptorQueueElement;->data [B
+  v0, v1, Landroid/bluetooth/BluetoothGattDescriptor;->setValue([B)Z
+  v0, v2, Ldk/lego/cubb/bluetooth/SendThrottler$DescriptorQueueElement;->descriptor Landroid/bluetooth/BluetoothGattDescriptor;
+  v3, v0, Landroid/bluetooth/BluetoothGatt;->writeDescriptor(Landroid/bluetooth/BluetoothGattDescriptor;)Z
+  v4, Ldk/lego/cubb/bluetooth/SendThrottler$SendState;->bumpNonAckSendCounter()V
+  

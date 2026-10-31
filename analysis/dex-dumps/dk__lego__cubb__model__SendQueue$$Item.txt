@@ -1,0 +1,51 @@
+
+### METHOD <init> (Ldk/lego/cubb/model/SendQueue; Landroid/bluetooth/BluetoothGattCharacteristic; [B I I I)V
+  v1, v0, Ldk/lego/cubb/model/SendQueue$Item;->this$0 Ldk/lego/cubb/model/SendQueue;
+  v0, Ljava/lang/Object;-><init>()V
+  v2, v0, Ldk/lego/cubb/model/SendQueue$Item;->gattCharacteristic Landroid/bluetooth/BluetoothGattCharacteristic;
+  v3, v0, Ldk/lego/cubb/model/SendQueue$Item;->data [B
+  v4, v0, Ldk/lego/cubb/model/SendQueue$Item;->group I
+  v5, v0, Ldk/lego/cubb/model/SendQueue$Item;->flags I
+  v6, v0, Ldk/lego/cubb/model/SendQueue$Item;->packetID I
+  
+
+### METHOD <init> (Ldk/lego/cubb/model/SendQueue; Landroid/bluetooth/BluetoothGattCharacteristic; [B I I I Ldk/lego/cubb/model/SendQueue$1;)V
+  v0 ... v6, Ldk/lego/cubb/model/SendQueue$Item;-><init>(Ldk/lego/cubb/model/SendQueue; Landroid/bluetooth/BluetoothGattCharacteristic; [B I I I)V
+  
+
+### METHOD access$000 (Ldk/lego/cubb/model/SendQueue$Item;)Landroid/bluetooth/BluetoothGattCharacteristic;
+  v0, v0, Ldk/lego/cubb/model/SendQueue$Item;->gattCharacteristic Landroid/bluetooth/BluetoothGattCharacteristic;
+  v0
+
+### METHOD access$100 (Ldk/lego/cubb/model/SendQueue$Item;)I
+  v0, v0, Ldk/lego/cubb/model/SendQueue$Item;->packetID I
+  v0
+
+### METHOD getData ()[B
+  v0, v1, Ldk/lego/cubb/model/SendQueue$Item;->data [B
+  v0
+
+### METHOD getGattCharacteristic ()Landroid/bluetooth/BluetoothGattCharacteristic;
+  v0, v1, Ldk/lego/cubb/model/SendQueue$Item;->gattCharacteristic Landroid/bluetooth/BluetoothGattCharacteristic;
+  v0
+
+### METHOD getGroup ()I
+  v0, v1, Ldk/lego/cubb/model/SendQueue$Item;->group I
+  v0
+
+### METHOD isNonReplaceable ()Z
+  v0, v2, Ldk/lego/cubb/model/SendQueue$Item;->flags I
+  v1, 1
+  v0, v1
+  v0, +003h
+  +2h
+  v1, 0
+  v1
+
+### METHOD replaceContents (Landroid/bluetooth/BluetoothGattCharacteristic; [B I I I)V
+  v1, v0, Ldk/lego/cubb/model/SendQueue$Item;->gattCharacteristic Landroid/bluetooth/BluetoothGattCharacteristic;
+  v2, v0, Ldk/lego/cubb/model/SendQueue$Item;->data [B
+  v3, v0, Ldk/lego/cubb/model/SendQueue$Item;->group I
+  v4, v0, Ldk/lego/cubb/model/SendQueue$Item;->flags I
+  v5, v0, Ldk/lego/cubb/model/SendQueue$Item;->packetID I
+  

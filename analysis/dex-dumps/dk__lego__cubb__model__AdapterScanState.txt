@@ -1,0 +1,58 @@
+
+### METHOD <clinit> ()V
+  v0, Ldk/lego/cubb/model/AdapterScanState;
+  v1, 0
+  v2, "NotScanning"
+  v0, v2, v1, Ldk/lego/cubb/model/AdapterScanState;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/model/AdapterScanState;->NotScanning Ldk/lego/cubb/model/AdapterScanState;
+  v0, Ldk/lego/cubb/model/AdapterScanState;
+  v2, 1
+  v3, "TurningOnScanning"
+  v0, v3, v2, Ldk/lego/cubb/model/AdapterScanState;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/model/AdapterScanState;->TurningOnScanning Ldk/lego/cubb/model/AdapterScanState;
+  v0, Ldk/lego/cubb/model/AdapterScanState;
+  v3, 2
+  v4, "Scanning"
+  v0, v4, v3, Ldk/lego/cubb/model/AdapterScanState;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/model/AdapterScanState;->Scanning Ldk/lego/cubb/model/AdapterScanState;
+  v0, Ldk/lego/cubb/model/AdapterScanState;
+  v4, 3
+  v5, "BluetoothDisabled"
+  v0, v5, v4, Ldk/lego/cubb/model/AdapterScanState;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/model/AdapterScanState;->BluetoothDisabled Ldk/lego/cubb/model/AdapterScanState;
+  v0, Ldk/lego/cubb/model/AdapterScanState;
+  v5, 4
+  v6, "BluetoothUnavailable"
+  v0, v6, v5, Ldk/lego/cubb/model/AdapterScanState;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/model/AdapterScanState;->BluetoothUnavailable Ldk/lego/cubb/model/AdapterScanState;
+  v6, 5
+  v6, v6, [Ldk/lego/cubb/model/AdapterScanState;
+  v7, Ldk/lego/cubb/model/AdapterScanState;->NotScanning Ldk/lego/cubb/model/AdapterScanState;
+  v7, v6, v1
+  v1, Ldk/lego/cubb/model/AdapterScanState;->TurningOnScanning Ldk/lego/cubb/model/AdapterScanState;
+  v1, v6, v2
+  v1, Ldk/lego/cubb/model/AdapterScanState;->Scanning Ldk/lego/cubb/model/AdapterScanState;
+  v1, v6, v3
+  v1, Ldk/lego/cubb/model/AdapterScanState;->BluetoothDisabled Ldk/lego/cubb/model/AdapterScanState;
+  v1, v6, v4
+  v0, v6, v5
+  v6, Ldk/lego/cubb/model/AdapterScanState;->$VALUES [Ldk/lego/cubb/model/AdapterScanState;
+  
+
+### METHOD <init> (Ljava/lang/String; I)V
+  v0, v1, v2, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V
+  
+
+### METHOD valueOf (Ljava/lang/String;)Ldk/lego/cubb/model/AdapterScanState;
+  v0, Ldk/lego/cubb/model/AdapterScanState;
+  v0, v1, Ljava/lang/Enum;->valueOf(Ljava/lang/Class; Ljava/lang/String;)Ljava/lang/Enum;
+  v1
+  v1, Ldk/lego/cubb/model/AdapterScanState;
+  v1
+
+### METHOD values ()[Ldk/lego/cubb/model/AdapterScanState;
+  v0, Ldk/lego/cubb/model/AdapterScanState;->$VALUES [Ldk/lego/cubb/model/AdapterScanState;
+  v0, [Ldk/lego/cubb/model/AdapterScanState;->clone()Ljava/lang/Object;
+  v0
+  v0, [Ldk/lego/cubb/model/AdapterScanState;
+  v0

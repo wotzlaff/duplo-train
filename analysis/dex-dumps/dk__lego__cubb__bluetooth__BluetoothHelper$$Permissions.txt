@@ -1,0 +1,86 @@
+
+### METHOD <clinit> ()V
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v1, 0
+  v2, "PERMISSION_READ"
+  v0, v2, v1, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;->PERMISSION_READ Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v2, 1
+  v3, "PERMISSION_READ_ENCRYPTED"
+  v0, v3, v2, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;->PERMISSION_READ_ENCRYPTED Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v3, 2
+  v4, "PERMISSION_READ_ENCRYPTED_MITM"
+  v0, v4, v3, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;->PERMISSION_READ_ENCRYPTED_MITM Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v4, 3
+  v5, "UNUSED"
+  v0, v5, v4, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;->UNUSED Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v5, 4
+  v6, "PERMISSION_WRITE"
+  v0, v6, v5, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;->PERMISSION_WRITE Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v6, 5
+  v7, "PERMISSION_WRITE_ENCRYPTED"
+  v0, v7, v6, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;->PERMISSION_WRITE_ENCRYPTED Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v7, 6
+  v8, "PERMISSION_WRITE_ENCRYPTED_MITM"
+  v0, v8, v7, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;->PERMISSION_WRITE_ENCRYPTED_MITM Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v8, 7
+  v9, "PERMISSION_WRITE_SIGNED"
+  v0, v9, v8, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;->PERMISSION_WRITE_SIGNED Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v9, 8
+  v10, "PERMISSION_WRITE_SIGNED_MITM"
+  v0, v10, v9, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;->PERMISSION_WRITE_SIGNED_MITM Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v10, 9
+  v10, v10, [Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v11, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;->PERMISSION_READ Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v11, v10, v1
+  v1, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;->PERMISSION_READ_ENCRYPTED Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v1, v10, v2
+  v1, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;->PERMISSION_READ_ENCRYPTED_MITM Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v1, v10, v3
+  v1, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;->UNUSED Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v1, v10, v4
+  v1, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;->PERMISSION_WRITE Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v1, v10, v5
+  v1, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;->PERMISSION_WRITE_ENCRYPTED Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v1, v10, v6
+  v1, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;->PERMISSION_WRITE_ENCRYPTED_MITM Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v1, v10, v7
+  v1, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;->PERMISSION_WRITE_SIGNED Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v1, v10, v8
+  v0, v10, v9
+  v10, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;->$VALUES [Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  
+
+### METHOD <init> (Ljava/lang/String; I)V
+  v0, v1, v2, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V
+  
+
+### METHOD valueOf (Ljava/lang/String;)Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v0, v1, Ljava/lang/Enum;->valueOf(Ljava/lang/Class; Ljava/lang/String;)Ljava/lang/Enum;
+  v1
+  v1, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v1
+
+### METHOD values ()[Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;->$VALUES [Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v0, [Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;->clone()Ljava/lang/Object;
+  v0
+  v0, [Ldk/lego/cubb/bluetooth/BluetoothHelper$Permissions;
+  v0

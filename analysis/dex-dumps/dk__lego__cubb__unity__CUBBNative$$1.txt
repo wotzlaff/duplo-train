@@ -1,0 +1,12 @@
+
+### METHOD <init> (Ldk/lego/cubb/unity/CUBBNative; Ljava/lang/String;)V
+  v1, v0, Ldk/lego/cubb/unity/CUBBNative$1;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v2, v0, Ldk/lego/cubb/unity/CUBBNative$1;->val$s Ljava/lang/String;
+  v0, Ljava/lang/Object;-><init>()V
+  
+
+### METHOD run ()V
+  v0, v2, Ldk/lego/cubb/unity/CUBBNative$1;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v1, v2, Ldk/lego/cubb/unity/CUBBNative$1;->val$s Ljava/lang/String;
+  v0, v1, Ldk/lego/cubb/unity/CUBBNative;->access$200(Ldk/lego/cubb/unity/CUBBNative; Ljava/lang/String;)V
+  

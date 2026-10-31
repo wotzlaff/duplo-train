@@ -1,0 +1,143 @@
+
+### METHOD <init> (Ljava/util/UUID; [Ldk/lego/cubb/bluetooth/GattCharacteristic;)V
+  v3, Ljava/lang/Object;-><init>()V
+  v0, Ljava/util/HashMap;
+  v0, Ljava/util/HashMap;-><init>()V
+  v0, v3, Ldk/lego/cubb/bluetooth/GattService;->characteristics Ljava/util/Map;
+  v4, v3, Ldk/lego/cubb/bluetooth/GattService;->uuid Ljava/util/UUID;
+  v4, 0
+  v0, v5
+  v4, v0, +010h
+  v0, v5, v4
+  v1, v3, Ldk/lego/cubb/bluetooth/GattService;->characteristics Ljava/util/Map;
+  v0, Ldk/lego/cubb/bluetooth/GattCharacteristic;->getUuid()Ljava/util/UUID;
+  v2
+  v1, v2, v0, Ljava/util/Map;->put(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;
+  v4, v4, 1
+  -10h
+  
+
+### METHOD create (Lorg/json/JSONObject;)Ldk/lego/cubb/bluetooth/GattService;
+  v0, "Uuid"
+  v4, v0, Lorg/json/JSONObject;->getString(Ljava/lang/String;)Ljava/lang/String;
+  v0
+  v0, Ljava/util/UUID;->fromString(Ljava/lang/String;)Ljava/util/UUID;
+  v0
+  v1, "Characteristics"
+  v4, v1, Lorg/json/JSONObject;->getJSONArray(Ljava/lang/String;)Lorg/json/JSONArray;
+  v4
+  v1, Ljava/util/ArrayList;
+  v1, Ljava/util/ArrayList;-><init>()V
+  v2, 0
+  v4, Lorg/json/JSONArray;->length()I
+  v3
+  v2, v3, +012h
+  v4, v2, Lorg/json/JSONArray;->getJSONObject(I)Lorg/json/JSONObject;
+  v3
+  v3, Ldk/lego/cubb/bluetooth/GattCharacteristic;->create(Lorg/json/JSONObject;)Ldk/lego/cubb/bluetooth/GattCharacteristic;
+  v3
+  v3, +005h
+  v1, v3, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  v2, v2, 1
+  -15h
+  v4, Ldk/lego/cubb/bluetooth/GattService;
+  v1, Ljava/util/ArrayList;->size()I
+  v2
+  v2, v2, [Ldk/lego/cubb/bluetooth/GattCharacteristic;
+  v1, v2, Ljava/util/ArrayList;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+  v1
+  v1, [Ldk/lego/cubb/bluetooth/GattCharacteristic;
+  v4, v0, v1, Ldk/lego/cubb/bluetooth/GattService;-><init>(Ljava/util/UUID; [Ldk/lego/cubb/bluetooth/GattCharacteristic;)V
+  v4
+
+### METHOD create (Ljava/lang/String;)Ljava/util/Map;
+  v0, Lorg/json/JSONObject;
+  v0, Lorg/json/JSONObject;-><init>()V
+  v1, Lorg/json/JSONObject;
+  v1, v6, Lorg/json/JSONObject;-><init>(Ljava/lang/String;)V
+  v0, v1
+  +6h
+  v6, "Received an empty array of BLE services"
+  v6, Ldk/lego/cubb/logging/LDSDKLogger;->e(Ljava/lang/String;)V
+  v6, Lorg/json/JSONArray;
+  v6, Lorg/json/JSONArray;-><init>()V
+  v1, "GattServices"
+  v0, v1, Lorg/json/JSONObject;->getJSONArray(Ljava/lang/String;)Lorg/json/JSONArray;
+  v6
+  +6h
+  v0, "No BLE services found"
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->e(Ljava/lang/String;)V
+  v0, Ljava/util/HashMap;
+  v0, Ljava/util/HashMap;-><init>()V
+  v1, 0
+  v6, Lorg/json/JSONArray;->length()I
+  v2
+  v1, v2, +045h
+  v6, v1, Lorg/json/JSONArray;->getJSONObject(I)Lorg/json/JSONObject;
+  v2
+  v3, 0
+  v2, Ldk/lego/cubb/bluetooth/GattService;->create(Lorg/json/JSONObject;)Ldk/lego/cubb/bluetooth/GattService;
+  v3
+  +19h
+  v4, Ljava/lang/StringBuilder;
+  v4, Ljava/lang/StringBuilder;-><init>()V
+  v5, "Cannot parse some of the BLE services. Source: "
+  v4, v5, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v2, Lorg/json/JSONObject;->toString()Ljava/lang/String;
+  v2
+  v4, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v4, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v2
+  v2, Ldk/lego/cubb/logging/LDSDKLogger;->e(Ljava/lang/String;)V
+  v3, +01eh
+  v3, Ldk/lego/cubb/bluetooth/GattService;->getUuid()Ljava/util/UUID;
+  v2
+  v0, v2, v3, Ljava/util/Map;->put(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;
+  +15h
+  v2, Ljava/lang/StringBuilder;
+  v2, Ljava/lang/StringBuilder;-><init>()V
+  v3, "Unable to get service as JSON Object on index "
+  v2, v3, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v2, v1, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  v2, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v2
+  v2, Ldk/lego/cubb/logging/LDSDKLogger;->e(Ljava/lang/String;)V
+  v1, v1, 1
+  -48h
+  v0
+
+### METHOD containsCharacteristic (Ljava/util/UUID;)Z
+  v0, v1, Ldk/lego/cubb/bluetooth/GattService;->characteristics Ljava/util/Map;
+  v0, v2, Ljava/util/Map;->containsKey(Ljava/lang/Object;)Z
+  v2
+  v2
+
+### METHOD getCharacteristic (Ljava/util/UUID;)Ldk/lego/cubb/bluetooth/GattCharacteristic;
+  v0, v1, Ldk/lego/cubb/bluetooth/GattService;->characteristics Ljava/util/Map;
+  v0, v2, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  v2
+  v2, Ldk/lego/cubb/bluetooth/GattCharacteristic;
+  v2
+
+### METHOD getCharacteristics ()[Ldk/lego/cubb/bluetooth/GattCharacteristic;
+  v0, v2, Ldk/lego/cubb/bluetooth/GattService;->characteristics Ljava/util/Map;
+  v0, Ljava/util/Map;->values()Ljava/util/Collection;
+  v0
+  v1, v2, Ldk/lego/cubb/bluetooth/GattService;->characteristics Ljava/util/Map;
+  v1, Ljava/util/Map;->size()I
+  v1
+  v1, v1, [Ldk/lego/cubb/bluetooth/GattCharacteristic;
+  v0, v1, Ljava/util/Collection;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+  v0
+  v0, [Ldk/lego/cubb/bluetooth/GattCharacteristic;
+  v0
+
+### METHOD getUuid ()Ljava/util/UUID;
+  v0, v1, Ldk/lego/cubb/bluetooth/GattService;->uuid Ljava/util/UUID;
+  v0
+
+### METHOD hashCode ()I
+  v0, v1, Ldk/lego/cubb/bluetooth/GattService;->uuid Ljava/util/UUID;
+  v0, Ljava/util/UUID;->hashCode()I
+  v0
+  v0

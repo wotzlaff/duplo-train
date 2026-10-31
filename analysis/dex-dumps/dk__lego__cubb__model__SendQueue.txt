@@ -1,0 +1,113 @@
+
+### METHOD <init> (Ldk/lego/cubb/model/SendQueue$SendQueueCallbacks;)V
+  v1, Ljava/lang/Object;-><init>()V
+  v0, Ljava/util/ArrayDeque;
+  v0, Ljava/util/ArrayDeque;-><init>()V
+  v0, v1, Ldk/lego/cubb/model/SendQueue;->items Ljava/util/Deque;
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0, "SendQueue ctor"
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->i(Ljava/lang/String;)V
+  v2, v1, Ldk/lego/cubb/model/SendQueue;->callbacks Ldk/lego/cubb/model/SendQueue$SendQueueCallbacks;
+  
+
+### METHOD doEnqueuePacket (Landroid/bluetooth/BluetoothGattCharacteristic; [B I I I)V
+  v10, v13, v14, Ldk/lego/cubb/model/SendQueue;->whereToPutPacket(I I)Ldk/lego/cubb/model/SendQueue$Item;
+  v0
+  v0, +018h
+  v0, Ldk/lego/cubb/model/SendQueue$Item;->access$000(Ldk/lego/cubb/model/SendQueue$Item;)Landroid/bluetooth/BluetoothGattCharacteristic;
+  v6
+  v0, Ldk/lego/cubb/model/SendQueue$Item;->access$100(Ldk/lego/cubb/model/SendQueue$Item;)I
+  v7
+  v1, v11
+  v2, v12
+  v3, v13
+  v4, v14
+  v5, v15
+  v0 ... v5, Ldk/lego/cubb/model/SendQueue$Item;->replaceContents(Landroid/bluetooth/BluetoothGattCharacteristic; [B I I I)V
+  v11, v10, Ldk/lego/cubb/model/SendQueue;->callbacks Ldk/lego/cubb/model/SendQueue$SendQueueCallbacks;
+  v11, v6, v7, Ldk/lego/cubb/model/SendQueue$SendQueueCallbacks;->onPacketReplaced(Landroid/bluetooth/BluetoothGattCharacteristic; I)V
+  +13h
+  v0, v10, Ldk/lego/cubb/model/SendQueue;->items Ljava/util/Deque;
+  v9, Ldk/lego/cubb/model/SendQueue$Item;
+  v8, 0
+  v1, v9
+  v2, v10
+  v3, v11
+  v4, v12
+  v5, v13
+  v6, v14
+  v7, v15
+  v1 ... v8, Ldk/lego/cubb/model/SendQueue$Item;-><init>(Ldk/lego/cubb/model/SendQueue; Landroid/bluetooth/BluetoothGattCharacteristic; [B I I I Ldk/lego/cubb/model/SendQueue$1;)V
+  v0, v9, Ljava/util/Deque;->addLast(Ljava/lang/Object;)V
+  
+
+### METHOD whereToPutPacket (I I)Ldk/lego/cubb/model/SendQueue$Item;
+  v0, 0
+  v6, +003h
+  v0
+  v1, v5, Ldk/lego/cubb/model/SendQueue;->items Ljava/util/Deque;
+  v1, Ljava/util/Deque;->descendingIterator()Ljava/util/Iterator;
+  v1
+  v1, Ljava/util/Iterator;->hasNext()Z
+  v2
+  v2, +00fh
+  v1, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  v2
+  v2, Ldk/lego/cubb/model/SendQueue$Item;
+  v2, Ldk/lego/cubb/model/SendQueue$Item;->getGroup()I
+  v3
+  v3, v6, -010h
+  +2h
+  v2, v0
+  v2, +003h
+  v0
+  v2, Ldk/lego/cubb/model/SendQueue$Item;->isNonReplaceable()Z
+  v3
+  v3, +003h
+  v0
+  v7, v7, 2
+  v3, 1
+  v4, 0
+  v7, +004h
+  v7, 1
+  +2h
+  v7, 0
+  v7, +01eh
+  v1, Ljava/util/Iterator;->hasNext()Z
+  v7
+  v7, +00fh
+  v1, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  v7
+  v7, Ldk/lego/cubb/model/SendQueue$Item;
+  v7, Ldk/lego/cubb/model/SendQueue$Item;->getGroup()I
+  v7
+  v7, v6, -010h
+  +2h
+  v3, 0
+  v3, +007h
+  v6, v5, Ldk/lego/cubb/model/SendQueue;->items Ljava/util/Deque;
+  v6, v2, Ljava/util/Deque;->removeLastOccurrence(Ljava/lang/Object;)Z
+  v0
+  v2
+
+### METHOD enqueuePacket (Landroid/bluetooth/BluetoothGattCharacteristic; [B I I I)V
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0 ... v5, Ldk/lego/cubb/model/SendQueue;->doEnqueuePacket(Landroid/bluetooth/BluetoothGattCharacteristic; [B I I I)V
+  v1, v0, Ldk/lego/cubb/model/SendQueue;->callbacks Ldk/lego/cubb/model/SendQueue$SendQueueCallbacks;
+  v1, Ldk/lego/cubb/model/SendQueue$SendQueueCallbacks;->onContentAvailable()V
+  
+
+### METHOD onThrottlerQueueEmpty ()V
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0, v3, Ldk/lego/cubb/model/SendQueue;->items Ljava/util/Deque;
+  v0, Ljava/util/Deque;->pollFirst()Ljava/lang/Object;
+  v0
+  v0, Ldk/lego/cubb/model/SendQueue$Item;
+  v0, +00fh
+  v1, v3, Ldk/lego/cubb/model/SendQueue;->callbacks Ldk/lego/cubb/model/SendQueue$SendQueueCallbacks;
+  v0, Ldk/lego/cubb/model/SendQueue$Item;->getGattCharacteristic()Landroid/bluetooth/BluetoothGattCharacteristic;
+  v2
+  v0, Ldk/lego/cubb/model/SendQueue$Item;->getData()[B
+  v0
+  v1, v2, v0, Ldk/lego/cubb/model/SendQueue$SendQueueCallbacks;->send(Landroid/bluetooth/BluetoothGattCharacteristic; [B)V
+  

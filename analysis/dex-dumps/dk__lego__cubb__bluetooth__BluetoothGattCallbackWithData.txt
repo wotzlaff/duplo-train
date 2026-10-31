@@ -1,0 +1,18 @@
+
+### METHOD onCharacteristicChanged (Landroid/bluetooth/BluetoothGatt; Landroid/bluetooth/BluetoothGattCharacteristic; [B)V
+   (abstract/native)
+
+### METHOD onCharacteristicWrite (Landroid/bluetooth/BluetoothGatt; Landroid/bluetooth/BluetoothGattCharacteristic; I)V
+   (abstract/native)
+
+### METHOD onConnectionStateChange (Landroid/bluetooth/BluetoothGatt; I I)V
+   (abstract/native)
+
+### METHOD onDescriptorWrite (Landroid/bluetooth/BluetoothGatt; Landroid/bluetooth/BluetoothGattDescriptor; I)V
+   (abstract/native)
+
+### METHOD onMtuChanged (Landroid/bluetooth/BluetoothGatt; I I)V
+   (abstract/native)
+
+### METHOD onServicesDiscovered (Landroid/bluetooth/BluetoothGatt; I)V
+   (abstract/native)

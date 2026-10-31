@@ -1,0 +1,184 @@
+
+### METHOD <init> (Ldk/lego/cubb/unity/CUBBNative; Ljava/lang/String; Ldk/lego/cubb/bluetooth/ConnectionOptions; Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapper; Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;)V
+  v1, v0, Ldk/lego/cubb/unity/CUBBNative$2;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v2, v0, Ldk/lego/cubb/unity/CUBBNative$2;->val$deviceID Ljava/lang/String;
+  v3, v0, Ldk/lego/cubb/unity/CUBBNative$2;->val$connectionOptions Ldk/lego/cubb/bluetooth/ConnectionOptions;
+  v4, v0, Ldk/lego/cubb/unity/CUBBNative$2;->val$device Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapper;
+  v5, v0, Ldk/lego/cubb/unity/CUBBNative$2;->val$deviceEntry Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;
+  v0, Ljava/lang/Object;-><init>()V
+  
+
+### METHOD onCharacteristicChanged (Landroid/bluetooth/BluetoothGatt; Landroid/bluetooth/BluetoothGattCharacteristic; [B)V
+  v3, v2, Ldk/lego/cubb/unity/CUBBNative$2;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v3, Ldk/lego/cubb/unity/CUBBNative;->access$300(Ldk/lego/cubb/unity/CUBBNative;)Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;
+  v3
+  v0, v2, Ldk/lego/cubb/unity/CUBBNative$2;->val$deviceID Ljava/lang/String;
+  v4, Landroid/bluetooth/BluetoothGattCharacteristic;->getService()Landroid/bluetooth/BluetoothGattService;
+  v1
+  v1, Landroid/bluetooth/BluetoothGattService;->getUuid()Ljava/util/UUID;
+  v1
+  v4, Landroid/bluetooth/BluetoothGattCharacteristic;->getUuid()Ljava/util/UUID;
+  v4
+  v3, v0, v1, v4, v5, Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;->sendReceivedPacket(Ljava/lang/String; Ljava/util/UUID; Ljava/util/UUID; [B)V
+  
+
+### METHOD onCharacteristicWrite (Landroid/bluetooth/BluetoothGatt; Landroid/bluetooth/BluetoothGattCharacteristic; I)V
+  v1, v0, Ldk/lego/cubb/unity/CUBBNative$2;->val$deviceEntry Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;
+  v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->getWrapper()Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapper;
+  v1
+  v1, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapper;->getSendThrottler()Ldk/lego/cubb/bluetooth/SendThrottler;
+  v1
+  v1, Ldk/lego/cubb/bluetooth/SendThrottler;->onGattActionPerformed()V
+  
+
+### METHOD onConnectionStateChange (Landroid/bluetooth/BluetoothGatt; I I)V
+  v0, Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;-><init>()V
+  v1, "onConnectionStateChange for "
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v1, v4, Ldk/lego/cubb/unity/CUBBNative$2;->val$deviceID Ljava/lang/String;
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v1, ": status="
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, v6, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  v1, "/newState="
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, v7, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->i(Ljava/lang/String;)V
+  v7, +08ch
+  v0, 1
+  v7, v0, +086h
+  v1, 2
+  v7, v1, +01ah
+  v5, 3
+  v7, v5, +083h
+  v5, Ljava/lang/StringBuilder;
+  v5, Ljava/lang/StringBuilder;-><init>()V
+  v6, "Unhandled gatt connection state: "
+  v5, v6, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v5, v7, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  v5, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v5
+  v5, Ldk/lego/cubb/logging/LDSDKLogger;->e(Ljava/lang/String;)V
+  
+  v7, Ldk/lego/cubb/model/DeviceConnectionState;->Connecting Ldk/lego/cubb/model/DeviceConnectionState;
+  v1, "Connected to device"
+  v1, Ldk/lego/cubb/logging/LDSDKLogger;->i(Ljava/lang/String;)V
+  v1, v4, Ldk/lego/cubb/unity/CUBBNative$2;->val$connectionOptions Ldk/lego/cubb/bluetooth/ConnectionOptions;
+  v1, v1, Ldk/lego/cubb/bluetooth/ConnectionOptions;->connectionPriority Ljava/lang/Integer;
+  v1, +02ah
+  v1, v4, Ldk/lego/cubb/unity/CUBBNative$2;->val$connectionOptions Ldk/lego/cubb/bluetooth/ConnectionOptions;
+  v1, v1, Ldk/lego/cubb/bluetooth/ConnectionOptions;->connectionPriority Ljava/lang/Integer;
+  v1, Ljava/lang/Integer;->intValue()I
+  v1
+  v5, v0, Landroid/bluetooth/BluetoothGatt;->requestConnectionPriority(I)Z
+  v0
+  v2, Ljava/lang/StringBuilder;
+  v2, Ljava/lang/StringBuilder;-><init>()V
+  v3, "Setting priority of BT connection to "
+  v2, v3, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v2, v1, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  v1, ". Result: "
+  v2, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v2, v0, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  v2, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->i(Ljava/lang/String;)V
+  v5, Landroid/bluetooth/BluetoothGatt;->discoverServices()Z
+  v5
+  v5, +03ah
+  v5, "Gatt discoverServices initiation failed"
+  v5, Ldk/lego/cubb/logging/LDSDKLogger;->e(Ljava/lang/String;)V
+  v5, v4, Ldk/lego/cubb/unity/CUBBNative$2;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v5, Ldk/lego/cubb/unity/CUBBNative;->access$300(Ldk/lego/cubb/unity/CUBBNative;)Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;
+  v5
+  v0, Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;-><init>()V
+  v1, "Gatt discoverServices initiation failed on device "
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v1, v4, Ldk/lego/cubb/unity/CUBBNative$2;->val$deviceID Ljava/lang/String;
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v1, "; disconnecting"
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v5, v0, Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;->sendError(Ljava/lang/String;)V
+  v5, v4, Ldk/lego/cubb/unity/CUBBNative$2;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v0, v4, Ldk/lego/cubb/unity/CUBBNative$2;->val$deviceID Ljava/lang/String;
+  v5, v0, Ldk/lego/cubb/unity/CUBBNative;->access$400(Ldk/lego/cubb/unity/CUBBNative; Ljava/lang/String;)V
+  +bh
+  v7, Ldk/lego/cubb/model/DeviceConnectionState;->Connecting Ldk/lego/cubb/model/DeviceConnectionState;
+  +8h
+  v7, Ldk/lego/cubb/model/DeviceConnectionState;->Disconnected Ldk/lego/cubb/model/DeviceConnectionState;
+  v5, v4, Ldk/lego/cubb/unity/CUBBNative$2;->val$device Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapper;
+  v5, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapper;->closeGatt()V
+  v6, +004h
+  v5, 0
+  +12h
+  v5, Ljava/lang/StringBuilder;
+  v5, Ljava/lang/StringBuilder;-><init>()V
+  v0, "Error code: "
+  v5, v0, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v5, v6, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  v5, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v5
+  v6, v4, Ldk/lego/cubb/unity/CUBBNative$2;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v6, Ldk/lego/cubb/unity/CUBBNative;->access$100(Ldk/lego/cubb/unity/CUBBNative;)Ldk/lego/cubb/model/Model;
+  v6
+  v0, v4, Ldk/lego/cubb/unity/CUBBNative$2;->val$deviceEntry Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;
+  v6, v0, v7, v5, Ldk/lego/cubb/model/Model;->updateDeviceConnectivity(Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry; Ldk/lego/cubb/model/DeviceConnectionState; Ljava/lang/String;)V
+  
+
+### METHOD onDescriptorWrite (Landroid/bluetooth/BluetoothGatt; Landroid/bluetooth/BluetoothGattDescriptor; I)V
+  v1, v0, Ldk/lego/cubb/unity/CUBBNative$2;->val$deviceEntry Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;
+  v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->getWrapper()Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapper;
+  v1
+  v1, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapper;->getSendThrottler()Ldk/lego/cubb/bluetooth/SendThrottler;
+  v1
+  v1, Ldk/lego/cubb/bluetooth/SendThrottler;->onGattActionPerformed()V
+  
+
+### METHOD onMtuChanged (Landroid/bluetooth/BluetoothGatt; I I)V
+  v1, v0, Ldk/lego/cubb/unity/CUBBNative$2;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v1, Ldk/lego/cubb/unity/CUBBNative;->access$300(Ldk/lego/cubb/unity/CUBBNative;)Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;
+  v1
+  v3, v0, Ldk/lego/cubb/unity/CUBBNative$2;->val$deviceID Ljava/lang/String;
+  v1, v3, v2, Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;->sendMtuSizeChanged(Ljava/lang/String; I)V
+  
+
+### METHOD onServicesDiscovered (Landroid/bluetooth/BluetoothGatt; I)V
+  v4, +030h
+  v3, "Gatt discoverServices failed"
+  v3, Ldk/lego/cubb/logging/LDSDKLogger;->e(Ljava/lang/String;)V
+  v3, v2, Ldk/lego/cubb/unity/CUBBNative$2;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v3, Ldk/lego/cubb/unity/CUBBNative;->access$300(Ldk/lego/cubb/unity/CUBBNative;)Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;
+  v3
+  v4, Ljava/lang/StringBuilder;
+  v4, Ljava/lang/StringBuilder;-><init>()V
+  v0, "Gatt discoverServices failed on device "
+  v4, v0, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, v2, Ldk/lego/cubb/unity/CUBBNative$2;->val$deviceID Ljava/lang/String;
+  v4, v0, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, "; disconnecting"
+  v4, v0, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v4, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v4
+  v3, v4, Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;->sendError(Ljava/lang/String;)V
+  v3, v2, Ldk/lego/cubb/unity/CUBBNative$2;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v4, v2, Ldk/lego/cubb/unity/CUBBNative$2;->val$deviceID Ljava/lang/String;
+  v3, v4, Ldk/lego/cubb/unity/CUBBNative;->access$400(Ldk/lego/cubb/unity/CUBBNative; Ljava/lang/String;)V
+  
+  v3, v2, Ldk/lego/cubb/unity/CUBBNative$2;->val$deviceEntry Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;
+  v3, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->getWrapper()Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapper;
+  v3
+  v3, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapper;->handleServicesDiscovered()V
+  v3, v2, Ldk/lego/cubb/unity/CUBBNative$2;->this$0 Ldk/lego/cubb/unity/CUBBNative;
+  v3, Ldk/lego/cubb/unity/CUBBNative;->access$100(Ldk/lego/cubb/unity/CUBBNative;)Ldk/lego/cubb/model/Model;
+  v3
+  v4, v2, Ldk/lego/cubb/unity/CUBBNative$2;->val$deviceEntry Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;
+  v0, Ldk/lego/cubb/model/DeviceConnectionState;->Connected Ldk/lego/cubb/model/DeviceConnectionState;
+  v1, 0
+  v3, v4, v0, v1, Ldk/lego/cubb/model/Model;->updateDeviceConnectivity(Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry; Ldk/lego/cubb/model/DeviceConnectionState; Ljava/lang/String;)V
+  

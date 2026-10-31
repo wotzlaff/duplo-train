@@ -1,0 +1,13 @@
+
+### METHOD <clinit> ()V
+  Ldk/lego/cubb/model/DeviceConnectionState;->values()[Ldk/lego/cubb/model/DeviceConnectionState;
+  v0
+  v0, v0
+  v0, v0, [I
+  v0, Ldk/lego/cubb/model/DeviceDatabase$1;->$SwitchMap$dk$lego$cubb$model$DeviceConnectionState [I
+  v1, Ldk/lego/cubb/model/DeviceConnectionState;->Connected Ldk/lego/cubb/model/DeviceConnectionState;
+  v1, Ldk/lego/cubb/model/DeviceConnectionState;->ordinal()I
+  v1
+  v2, 1
+  v2, v0, v1
+  

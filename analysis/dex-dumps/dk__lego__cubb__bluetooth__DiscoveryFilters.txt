@@ -1,0 +1,56 @@
+
+### METHOD <clinit> ()V
+  v0, Ljava/util/HashMap;
+  v0, Ljava/util/HashMap;-><init>()V
+  v0, Ldk/lego/cubb/bluetooth/DiscoveryFilters;->services Ljava/util/Map;
+  
+
+### METHOD <init> ()V
+  v0, Ljava/lang/Object;-><init>()V
+  
+
+### METHOD getService (Ljava/util/UUID;)Ldk/lego/cubb/bluetooth/GattService;
+  v0, Ldk/lego/cubb/bluetooth/DiscoveryFilters;->services Ljava/util/Map;
+  v0, v1, Ljava/util/Map;->containsKey(Ljava/lang/Object;)Z
+  v0
+  v0, +00bh
+  v0, Ldk/lego/cubb/bluetooth/DiscoveryFilters;->services Ljava/util/Map;
+  v0, v1, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  v1
+  v1, Ldk/lego/cubb/bluetooth/GattService;
+  v1
+  v1, 0
+  v1
+
+### METHOD isRecognizedCharacteristic (Ljava/util/UUID;)Z
+  v0, Ldk/lego/cubb/bluetooth/DiscoveryFilters;->services Ljava/util/Map;
+  v0, Ljava/util/Map;->entrySet()Ljava/util/Set;
+  v0
+  v0, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+  v0
+  v0, Ljava/util/Iterator;->hasNext()Z
+  v1
+  v1, +016h
+  v0, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  v1
+  v1, Ljava/util/Map$Entry;
+  v1, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+  v1
+  v1, Ldk/lego/cubb/bluetooth/GattService;
+  v1, v2, Ldk/lego/cubb/bluetooth/GattService;->containsCharacteristic(Ljava/util/UUID;)Z
+  v1
+  v1, -016h
+  v2, 1
+  v2
+  v2, 0
+  v2
+
+### METHOD isRecognizedService (Ljava/util/UUID;)Z
+  v0, Ldk/lego/cubb/bluetooth/DiscoveryFilters;->services Ljava/util/Map;
+  v0, v1, Ljava/util/Map;->containsKey(Ljava/lang/Object;)Z
+  v1
+  v1
+
+### METHOD setServices (Ljava/util/Map;)V
+  v0, Ldk/lego/cubb/bluetooth/DiscoveryFilters;->services Ljava/util/Map;
+  

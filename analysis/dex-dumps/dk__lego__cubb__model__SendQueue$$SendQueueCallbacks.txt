@@ -1,0 +1,9 @@
+
+### METHOD onContentAvailable ()V
+   (abstract/native)
+
+### METHOD onPacketReplaced (Landroid/bluetooth/BluetoothGattCharacteristic; I)V
+   (abstract/native)
+
+### METHOD send (Landroid/bluetooth/BluetoothGattCharacteristic; [B)V
+   (abstract/native)

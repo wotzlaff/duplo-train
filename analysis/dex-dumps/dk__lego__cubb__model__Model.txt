@@ -1,0 +1,133 @@
+
+### METHOD <init> (Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;)V
+  v2, Ljava/lang/Object;-><init>()V
+  v0, 10
+  v0, v2, Ldk/lego/cubb/model/Model;->lastAdapterState I
+  v0, 0
+  v0, v2, Ldk/lego/cubb/model/Model;->lastDiscoveryMode Z
+  v0, 0
+  v0, v2, Ldk/lego/cubb/model/Model;->lastPublishedState Ldk/lego/cubb/model/AdapterScanState;
+  v3, v2, Ldk/lego/cubb/model/Model;->upwardComm Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;
+  v1, Ldk/lego/cubb/model/DeviceDatabase;
+  v1, v3, Ldk/lego/cubb/model/DeviceDatabase;-><init>(Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;)V
+  v1, v2, Ldk/lego/cubb/model/Model;->deviceDatabase Ldk/lego/cubb/model/DeviceDatabase;
+  v3, Ldk/lego/cubb/model/Model$PeriodicChecker;
+  v3, v2, v0, Ldk/lego/cubb/model/Model$PeriodicChecker;-><init>(Ldk/lego/cubb/model/Model; Ldk/lego/cubb/model/Model$1;)V
+  Ldk/lego/cubb/utils/HandlerHelper;->getMainHandler()Landroid/os/Handler;
+  v0
+  v3, v0, Ldk/lego/cubb/model/Model$PeriodicChecker;->start(Landroid/os/Handler;)V
+  
+
+### METHOD access$100 (Ldk/lego/cubb/model/Model;)Ldk/lego/cubb/model/DeviceDatabase;
+  v0, v0, Ldk/lego/cubb/model/Model;->deviceDatabase Ldk/lego/cubb/model/DeviceDatabase;
+  v0
+
+### METHOD adapterScanStateChanged (Ldk/lego/cubb/model/AdapterScanState;)V
+  v0, Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;-><init>()V
+  v1, "Possibly publishing adapter state: "
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, v3, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v0, v2, Ldk/lego/cubb/model/Model;->lastPublishedState Ldk/lego/cubb/model/AdapterScanState;
+  v3, v0, +01dh
+  v0, Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;-><init>()V
+  v1, "Publishing adapter state: "
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, v3, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v0, v2, Ldk/lego/cubb/model/Model;->upwardComm Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;
+  v0, v3, Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;->sendAdapterStateChanged(Ldk/lego/cubb/model/AdapterScanState;)V
+  v3, v2, Ldk/lego/cubb/model/Model;->lastPublishedState Ldk/lego/cubb/model/AdapterScanState;
+  v0, Ldk/lego/cubb/model/Model$1;->$SwitchMap$dk$lego$cubb$model$AdapterScanState [I
+  v3, Ldk/lego/cubb/model/AdapterScanState;->ordinal()I
+  v3
+  v3, v0, v3
+  v0, 1
+  v3, v0, +006h
+  v0, 2
+  v3, v0, +003h
+  +6h
+  v3, v2, Ldk/lego/cubb/model/Model;->deviceDatabase Ldk/lego/cubb/model/DeviceDatabase;
+  v3, Ldk/lego/cubb/model/DeviceDatabase;->forgetAllNonconnectedDevices()V
+  
+
+### METHOD calculateAdapterScanState (I Z)Ldk/lego/cubb/model/AdapterScanState;
+  v0, -2147483648
+  v2, v0, +013h
+  v2, +0000014h
+  v2, Ldk/lego/cubb/model/AdapterScanState;->BluetoothUnavailable Ldk/lego/cubb/model/AdapterScanState;
+  v2
+  v3, +005h
+  v2, Ldk/lego/cubb/model/AdapterScanState;->Scanning Ldk/lego/cubb/model/AdapterScanState;
+  +3h
+  v2, Ldk/lego/cubb/model/AdapterScanState;->NotScanning Ldk/lego/cubb/model/AdapterScanState;
+  v2
+  v2, Ldk/lego/cubb/model/AdapterScanState;->BluetoothDisabled Ldk/lego/cubb/model/AdapterScanState;
+  v2
+  v2, Ldk/lego/cubb/model/AdapterScanState;->BluetoothUnavailable Ldk/lego/cubb/model/AdapterScanState;
+  v2
+  a b c d
+
+### METHOD updateAdapterState ()V
+  v0, v2, Ldk/lego/cubb/model/Model;->lastAdapterState I
+  v1, v2, Ldk/lego/cubb/model/Model;->lastDiscoveryMode Z
+  v2, v0, v1, Ldk/lego/cubb/model/Model;->calculateAdapterScanState(I Z)Ldk/lego/cubb/model/AdapterScanState;
+  v0
+  v2, v0, Ldk/lego/cubb/model/Model;->adapterScanStateChanged(Ldk/lego/cubb/model/AdapterScanState;)V
+  
+
+### METHOD aboutToStartScanning ()V
+  v0, Ldk/lego/cubb/model/AdapterScanState;->TurningOnScanning Ldk/lego/cubb/model/AdapterScanState;
+  v1, v0, Ldk/lego/cubb/model/Model;->adapterScanStateChanged(Ldk/lego/cubb/model/AdapterScanState;)V
+  
+
+### METHOD adapterStateChanged (I)V
+  v1, v0, Ldk/lego/cubb/model/Model;->lastAdapterState I
+  v0, Ldk/lego/cubb/model/Model;->updateAdapterState()V
+  
+
+### METHOD discoveryModeChanged (Z)V
+  v1, v0, Ldk/lego/cubb/model/Model;->lastDiscoveryMode Z
+  v0, Ldk/lego/cubb/model/Model;->updateAdapterState()V
+  
+
+### METHOD getDeviceEntryByID (Ljava/lang/String;)Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0, v1, Ldk/lego/cubb/model/Model;->deviceDatabase Ldk/lego/cubb/model/DeviceDatabase;
+  v0, v2, Ldk/lego/cubb/model/DeviceDatabase;->getDeviceEntryByID(Ljava/lang/String;)Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;
+  v2
+  v2
+
+### METHOD initScanState (I Z)V
+  v1, v0, Ldk/lego/cubb/model/Model;->lastAdapterState I
+  v2, v0, Ldk/lego/cubb/model/Model;->lastDiscoveryMode Z
+  v0, Ldk/lego/cubb/model/Model;->updateAdapterState()V
+  
+
+### METHOD updateDeviceConnectivity (Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry; Ldk/lego/cubb/model/DeviceConnectionState; Ljava/lang/String;)V
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v2, v3, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->update(Ldk/lego/cubb/model/DeviceConnectionState;)Z
+  v0
+  v0, +004h
+  v4, +009h
+  v0, v1, Ldk/lego/cubb/model/Model;->upwardComm Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;
+  v2, v2, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->id Ljava/lang/String;
+  v0, v2, v3, v4, Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;->sendDeviceConnectionStateChanged(Ljava/lang/String; Ldk/lego/cubb/model/DeviceConnectionState; Ljava/lang/String;)V
+  
+
+### METHOD updateDeviceProperties (Landroid/bluetooth/BluetoothDevice; Ldk/lego/cubb/model/DeviceVisibilityState; Ljava/util/UUID; I [B)V
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0, v6, Ldk/lego/cubb/model/Model;->deviceDatabase Ldk/lego/cubb/model/DeviceDatabase;
+  v2, Ldk/lego/cubb/model/DeviceVisibilityState;->Visible Ldk/lego/cubb/model/DeviceVisibilityState;
+  v1, v7
+  v3, v9
+  v4, v10
+  v5, v11
+  v0 ... v5, Ldk/lego/cubb/model/DeviceDatabase;->update(Landroid/bluetooth/BluetoothDevice; Ldk/lego/cubb/model/DeviceVisibilityState; Ljava/util/UUID; I [B)V
+  

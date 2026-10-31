@@ -1,0 +1,58 @@
+
+### METHOD <init> (Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;)V
+  v1, v0, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry$Callbacks;->this$1 Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;
+  v0, Ljava/lang/Object;-><init>()V
+  
+
+### METHOD <init> (Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry; Ldk/lego/cubb/model/DeviceDatabase$1;)V
+  v0, v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry$Callbacks;-><init>(Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;)V
+  
+
+### METHOD onContentAvailable ()V
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0, v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry$Callbacks;->this$1 Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;
+  v0, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->access$400(Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;)Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapper;
+  v0
+  v0, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapper;->getSendThrottler()Ldk/lego/cubb/bluetooth/SendThrottler;
+  v0
+  v0, +005h
+  v0, Ldk/lego/cubb/bluetooth/SendThrottler;->onContentAvailable()V
+  
+
+### METHOD onPacketReplaced (Landroid/bluetooth/BluetoothGattCharacteristic; I)V
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0, v3, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry$Callbacks;->this$1 Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;
+  v0, v0, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->this$0 Ldk/lego/cubb/model/DeviceDatabase;
+  v0, Ldk/lego/cubb/model/DeviceDatabase;->access$300(Ldk/lego/cubb/model/DeviceDatabase;)Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;
+  v0
+  v1, v3, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry$Callbacks;->this$1 Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;
+  v1, v1, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->id Ljava/lang/String;
+  v4, Landroid/bluetooth/BluetoothGattCharacteristic;->getService()Landroid/bluetooth/BluetoothGattService;
+  v2
+  v2, Landroid/bluetooth/BluetoothGattService;->getUuid()Ljava/util/UUID;
+  v2
+  v4, Landroid/bluetooth/BluetoothGattCharacteristic;->getUuid()Ljava/util/UUID;
+  v4
+  v0, v1, v2, v4, v5, Ldk/lego/cubb/model/IModel$IModelUpwardMessageSender;->sendPacketDropped(Ljava/lang/String; Ljava/util/UUID; Ljava/util/UUID; I)V
+  
+
+### METHOD send (Landroid/bluetooth/BluetoothGattCharacteristic; [B)V
+  Ldk/lego/cubb/unity/CUBBNative;->assertSerialAccess()V
+  v0, Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;-><init>()V
+  v1, "DeviceEntry: Sending "
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v1, v4
+  v0, v1, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  v1, " bytes"
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v0, v2, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry$Callbacks;->this$1 Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;
+  v0, Ldk/lego/cubb/model/DeviceDatabase$DeviceEntry;->getWrapper()Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapper;
+  v0
+  v0, Ldk/lego/cubb/bluetooth/wrappers/AndroidBluetoothDeviceWrapper;->getSendThrottler()Ldk/lego/cubb/bluetooth/SendThrottler;
+  v0
+  v0, v3, v4, Ldk/lego/cubb/bluetooth/SendThrottler;->sendUnacked(Landroid/bluetooth/BluetoothGattCharacteristic; [B)V
+  

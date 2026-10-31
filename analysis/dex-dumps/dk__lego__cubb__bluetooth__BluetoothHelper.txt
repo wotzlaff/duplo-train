@@ -1,0 +1,63 @@
+
+### METHOD <init> ()V
+  v0, Ljava/lang/Object;-><init>()V
+  
+
+### METHOD arrayOfStringsFromCharacteristicProperties (I)Ljava/util/List;
+  v0, Ljava/util/ArrayList;
+  v0, Ljava/util/ArrayList;-><init>()V
+  Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;->values()[Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v1
+  v2, v1
+  v3, 0
+  v3, v2, +014h
+  v4, v1, v3
+  v4, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;->ordinal()I
+  v5
+  v6, 1
+  v5, v6, v5
+  v5, v7
+  v5, +005h
+  v0, v4, Ljava/util/List;->add(Ljava/lang/Object;)Z
+  v3, v3, 1
+  -13h
+  v7, Ljava/util/ArrayList;
+  v7, Ljava/util/ArrayList;-><init>()V
+  v0, Ljava/util/List;->size()I
+  v1
+  v1, +01eh
+  v0, Ljava/util/EnumSet;->copyOf(Ljava/util/Collection;)Ljava/util/EnumSet;
+  v0
+  v0, Ljava/util/EnumSet;->iterator()Ljava/util/Iterator;
+  v0
+  v0, Ljava/util/Iterator;->hasNext()Z
+  v1
+  v1, +010h
+  v0, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  v1
+  v1, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v1, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;->name()Ljava/lang/String;
+  v1
+  v7, v1, Ljava/util/List;->add(Ljava/lang/Object;)Z
+  -13h
+  v7
+
+### METHOD create (Ljava/util/UUID; Landroid/bluetooth/BluetoothGattService;)Landroid/bluetooth/BluetoothGattCharacteristic;
+  v3, Landroid/bluetooth/BluetoothGattService;->getCharacteristics()Ljava/util/List;
+  v3
+  v3, Ljava/util/List;->iterator()Ljava/util/Iterator;
+  v3
+  v3, Ljava/util/Iterator;->hasNext()Z
+  v0
+  v0, +013h
+  v3, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  v0
+  v0, Landroid/bluetooth/BluetoothGattCharacteristic;
+  v0, Landroid/bluetooth/BluetoothGattCharacteristic;->getUuid()Ljava/util/UUID;
+  v1
+  v2, v1, Ljava/util/UUID;->equals(Ljava/lang/Object;)Z
+  v1
+  v1, -014h
+  v0
+  v2, 0
+  v2

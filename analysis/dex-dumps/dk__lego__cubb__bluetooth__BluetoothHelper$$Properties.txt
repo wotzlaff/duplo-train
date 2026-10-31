@@ -1,0 +1,79 @@
+
+### METHOD <clinit> ()V
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v1, 0
+  v2, "PROPERTY_BROADCAST"
+  v0, v2, v1, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;->PROPERTY_BROADCAST Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v2, 1
+  v3, "PROPERTY_READ"
+  v0, v3, v2, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;->PROPERTY_READ Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v3, 2
+  v4, "PROPERTY_WRITE_NO_RESPONSE"
+  v0, v4, v3, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;->PROPERTY_WRITE_NO_RESPONSE Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v4, 3
+  v5, "PROPERTY_WRITE"
+  v0, v5, v4, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;->PROPERTY_WRITE Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v5, 4
+  v6, "PROPERTY_NOTIFY"
+  v0, v6, v5, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;->PROPERTY_NOTIFY Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v6, 5
+  v7, "PROPERTY_INDICATE"
+  v0, v7, v6, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;->PROPERTY_INDICATE Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v7, 6
+  v8, "PROPERTY_SIGNED_WRITE"
+  v0, v8, v7, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;->PROPERTY_SIGNED_WRITE Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v8, 7
+  v9, "PROPERTY_EXTENDED_PROPS"
+  v0, v9, v8, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;-><init>(Ljava/lang/String; I)V
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;->PROPERTY_EXTENDED_PROPS Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v9, 8
+  v9, v9, [Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v10, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;->PROPERTY_BROADCAST Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v10, v9, v1
+  v1, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;->PROPERTY_READ Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v1, v9, v2
+  v1, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;->PROPERTY_WRITE_NO_RESPONSE Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v1, v9, v3
+  v1, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;->PROPERTY_WRITE Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v1, v9, v4
+  v1, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;->PROPERTY_NOTIFY Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v1, v9, v5
+  v1, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;->PROPERTY_INDICATE Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v1, v9, v6
+  v1, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;->PROPERTY_SIGNED_WRITE Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v1, v9, v7
+  v0, v9, v8
+  v9, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;->$VALUES [Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  
+
+### METHOD <init> (Ljava/lang/String; I)V
+  v0, v1, v2, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V
+  
+
+### METHOD valueOf (Ljava/lang/String;)Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v0, v1, Ljava/lang/Enum;->valueOf(Ljava/lang/Class; Ljava/lang/String;)Ljava/lang/Enum;
+  v1
+  v1, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v1
+
+### METHOD values ()[Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v0, Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;->$VALUES [Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v0, [Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;->clone()Ljava/lang/Object;
+  v0
+  v0, [Ldk/lego/cubb/bluetooth/BluetoothHelper$Properties;
+  v0

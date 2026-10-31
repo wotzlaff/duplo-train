@@ -1,0 +1,30 @@
+
+### METHOD sendAdapterStateChanged (Ldk/lego/cubb/model/AdapterScanState;)V
+   (abstract/native)
+
+### METHOD sendDeviceConnectionStateChanged (Ljava/lang/String; Ldk/lego/cubb/model/DeviceConnectionState; Ljava/lang/String;)V
+   (abstract/native)
+
+### METHOD sendDeviceDisappeared (Ljava/lang/String;)V
+   (abstract/native)
+
+### METHOD sendDeviceStateChanged (Ljava/lang/String; Ldk/lego/cubb/model/DeviceVisibilityState; Ljava/lang/String; Ljava/util/UUID; I [B)V
+   (abstract/native)
+
+### METHOD sendError (Ljava/lang/String;)V
+   (abstract/native)
+
+### METHOD sendLogMessage (Ljava/lang/String; Ljava/lang/String;)V
+   (abstract/native)
+
+### METHOD sendMtuSizeChanged (Ljava/lang/String; I)V
+   (abstract/native)
+
+### METHOD sendPacketDropped (Ljava/lang/String; Ljava/util/UUID; Ljava/util/UUID; I)V
+   (abstract/native)
+
+### METHOD sendPacketTransmitted (Ljava/lang/String; Ljava/util/UUID; Ljava/util/UUID; I)V
+   (abstract/native)
+
+### METHOD sendReceivedPacket (Ljava/lang/String; Ljava/util/UUID; Ljava/util/UUID; [B)V
+   (abstract/native)

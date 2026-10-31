@@ -1,0 +1,70 @@
+
+### METHOD <init> (Landroid/os/Handler; Ldk/lego/cubb/bluetooth/BluetoothGattCallbackWithData;)V
+  v0, Landroid/bluetooth/BluetoothGattCallback;-><init>()V
+  v1, v0, Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback;->handler Landroid/os/Handler;
+  v2, v0, Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback;->wrapped Ldk/lego/cubb/bluetooth/BluetoothGattCallbackWithData;
+  
+
+### METHOD access$000 (Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback;)Ldk/lego/cubb/bluetooth/BluetoothGattCallbackWithData;
+  v0, v0, Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback;->wrapped Ldk/lego/cubb/bluetooth/BluetoothGattCallbackWithData;
+  v0
+
+### METHOD onCharacteristicChanged (Landroid/bluetooth/BluetoothGatt; Landroid/bluetooth/BluetoothGattCharacteristic;)V
+  v5, Landroid/bluetooth/BluetoothGattCharacteristic;->getValue()[B
+  v0
+  v1, v3, Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback;->handler Landroid/os/Handler;
+  v2, Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback$4;
+  v2, v3, v4, v5, v0, Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback$4;-><init>(Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback; Landroid/bluetooth/BluetoothGatt; Landroid/bluetooth/BluetoothGattCharacteristic; [B)V
+  v1, v2, Landroid/os/Handler;->post(Ljava/lang/Runnable;)Z
+  
+
+### METHOD onCharacteristicWrite (Landroid/bluetooth/BluetoothGatt; Landroid/bluetooth/BluetoothGattCharacteristic; I)V
+  v0, v2, Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback;->handler Landroid/os/Handler;
+  v1, Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback$3;
+  v1, v2, v3, v4, v5, Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback$3;-><init>(Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback; Landroid/bluetooth/BluetoothGatt; Landroid/bluetooth/BluetoothGattCharacteristic; I)V
+  v0, v1, Landroid/os/Handler;->post(Ljava/lang/Runnable;)Z
+  
+
+### METHOD onConnectionStateChange (Landroid/bluetooth/BluetoothGatt; I I)V
+  v0, v2, Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback;->handler Landroid/os/Handler;
+  v1, Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback$1;
+  v1, v2, v3, v4, v5, Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback$1;-><init>(Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback; Landroid/bluetooth/BluetoothGatt; I I)V
+  v0, v1, Landroid/os/Handler;->post(Ljava/lang/Runnable;)Z
+  
+
+### METHOD onDescriptorWrite (Landroid/bluetooth/BluetoothGatt; Landroid/bluetooth/BluetoothGattDescriptor; I)V
+  v0, v2, Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback;->handler Landroid/os/Handler;
+  v1, Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback$6;
+  v1, v2, v3, v4, v5, Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback$6;-><init>(Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback; Landroid/bluetooth/BluetoothGatt; Landroid/bluetooth/BluetoothGattDescriptor; I)V
+  v0, v1, Landroid/os/Handler;->post(Ljava/lang/Runnable;)Z
+  
+
+### METHOD onMtuChanged (Landroid/bluetooth/BluetoothGatt; I I)V
+  v0, Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;-><init>()V
+  v1, "onMtuChanged: "
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v3, Ljava/lang/Object;->toString()Ljava/lang/String;
+  v1
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v1, " mtu: "
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, v4, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  v1, " status: "
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, v5, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->i(Ljava/lang/String;)V
+  v0, v2, Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback;->handler Landroid/os/Handler;
+  v1, Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback$5;
+  v1, v2, v3, v4, v5, Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback$5;-><init>(Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback; Landroid/bluetooth/BluetoothGatt; I I)V
+  v0, v1, Landroid/os/Handler;->post(Ljava/lang/Runnable;)Z
+  
+
+### METHOD onServicesDiscovered (Landroid/bluetooth/BluetoothGatt; I)V
+  v0, v2, Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback;->handler Landroid/os/Handler;
+  v1, Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback$2;
+  v1, v2, v3, v4, Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback$2;-><init>(Ldk/lego/cubb/bluetooth/SerializingBluetoothGattCallback; Landroid/bluetooth/BluetoothGatt; I)V
+  v0, v1, Landroid/os/Handler;->post(Ljava/lang/Runnable;)Z
+  

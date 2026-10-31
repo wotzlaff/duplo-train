@@ -1,0 +1,79 @@
+
+### METHOD <clinit> ()V
+  v0, "00002902-0000-1000-8000-00805f9b34fb"
+  v0, Ljava/util/UUID;->fromString(Ljava/lang/String;)Ljava/util/UUID;
+  v0
+  v0, Ldk/lego/cubb/bluetooth/BluetoothGattHelper;->CHARACTERISTIC_UPDATE_NOTIFICATION_DESCRIPTOR_UUID Ljava/util/UUID;
+  
+
+### METHOD <init> ()V
+  v0, Ljava/lang/Object;-><init>()V
+  
+
+### METHOD closeGatt ()V
+  v0, Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;-><init>()V
+  v1, "closeGatt: bluetoothGatt="
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v1, v3, Ldk/lego/cubb/bluetooth/BluetoothGattHelper;->bluetoothGatt Landroid/bluetooth/BluetoothGatt;
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v1, "GattHelper"
+  v1, v0, Landroid/util/Log;->i(Ljava/lang/String; Ljava/lang/String;)I
+  v0, v3, Ldk/lego/cubb/bluetooth/BluetoothGattHelper;->bluetoothGatt Landroid/bluetooth/BluetoothGatt;
+  v0, +003h
+  
+  v0, "Closing BluetoothGatt"
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->d(Ljava/lang/String;)V
+  v0, v3, Ldk/lego/cubb/bluetooth/BluetoothGattHelper;->bluetoothGatt Landroid/bluetooth/BluetoothGatt;
+  v0, Landroid/bluetooth/BluetoothGatt;->close()V
+  v0, 0
+  v0, v3, Ldk/lego/cubb/bluetooth/BluetoothGattHelper;->bluetoothGatt Landroid/bluetooth/BluetoothGatt;
+  +1ah
+  v0
+  v1, Ljava/lang/StringBuilder;
+  v1, Ljava/lang/StringBuilder;-><init>()V
+  v2, "An exception has occurred while closing BluetoothGatt: "
+  v1, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/Exception;->getMessage()Ljava/lang/String;
+  v0
+  v1, v0, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v1, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v0, Ldk/lego/cubb/logging/LDSDKLogger;->e(Ljava/lang/String;)V
+  
+
+### METHOD disconnect ()V
+  v0, Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;-><init>()V
+  v1, "disconnect: bluetoothGatt="
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  v1, v2, Ldk/lego/cubb/bluetooth/BluetoothGattHelper;->bluetoothGatt Landroid/bluetooth/BluetoothGatt;
+  v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  v0
+  v1, "GattHelper"
+  v1, v0, Landroid/util/Log;->i(Ljava/lang/String; Ljava/lang/String;)I
+  v0, v2, Ldk/lego/cubb/bluetooth/BluetoothGattHelper;->bluetoothGatt Landroid/bluetooth/BluetoothGatt;
+  v0, +005h
+  v0, Landroid/bluetooth/BluetoothGatt;->disconnect()V
+  
+
+### METHOD getBluetoothGatt ()Landroid/bluetooth/BluetoothGatt;
+  v0, v1, Ldk/lego/cubb/bluetooth/BluetoothGattHelper;->bluetoothGatt Landroid/bluetooth/BluetoothGatt;
+  v0
+
+### METHOD getServices ()Ljava/util/List;
+  v0, v1, Ldk/lego/cubb/bluetooth/BluetoothGattHelper;->bluetoothGatt Landroid/bluetooth/BluetoothGatt;
+  v0, +007h
+  v0, Landroid/bluetooth/BluetoothGatt;->getServices()Ljava/util/List;
+  v0
+  v0
+  Ljava/util/Collections;->emptyList()Ljava/util/List;
+  v0
+  v0
+
+### METHOD setBluetoothGatt (Landroid/bluetooth/BluetoothGatt;)V
+  v1, v0, Ldk/lego/cubb/bluetooth/BluetoothGattHelper;->bluetoothGatt Landroid/bluetooth/BluetoothGatt;
+  
