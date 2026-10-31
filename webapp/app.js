@@ -158,25 +158,32 @@ class SendThrottler {
     this.queue = [];
     this.sentStamps = [];
     this.timer = null;
+    this.writing = false;
     this.onDrained = null;
   }
   writeCharacteristic(data) { /* default impl, replaced at runtime */ }
 
   enqueue(data) { this.queue.push(data); this.flush(); }
 
-  flush() {
-    while (this.timer === null && this.queue.length && this.canSendNow()) {
-      const next = this.queue.shift();
-      this.sentStamps.push(performance.now());
-      try {
-        const r = this.writeCharacteristic(next);
-        if (r && typeof r.catch === 'function') r.catch(err => log('write failed: ' + (err?.message || err), 'err'));
-      } catch (e) { log('write failed: ' + (e?.message || e), 'err'); }
-    }
-    if (this.queue.length && this.timer === null) {
-      const oldest = this.sentStamps.length ? this.sentStamps[0] : performance.now();
-      const wait = Math.max(1, this.windowMillis - (performance.now() - oldest));
-      this.timer = setTimeout(() => { this.timer = null; this.flush(); }, wait);
+  async flush() {
+    if (this.writing || this.timer !== null) return;
+    this.writing = true;
+    try {
+      while (this.queue.length && this.canSendNow()) {
+        const next = this.queue.shift();
+        this.sentStamps.push(performance.now());
+        try {
+          /* Web Bluetooth rejects overlapping writes with "GATT operation already in progress". */
+          await this.writeCharacteristic(next);
+        } catch (e) { log('write failed: ' + (e?.message || e), 'err'); }
+      }
+    } finally {
+      this.writing = false;
+      if (this.queue.length && this.timer === null) {
+        const oldest = this.sentStamps.length ? this.sentStamps[0] : performance.now();
+        const wait = Math.max(1, this.windowMillis - (performance.now() - oldest));
+        this.timer = setTimeout(() => { this.timer = null; this.flush(); }, wait);
+      }
     }
   }
   canSendNow() {
@@ -463,22 +470,19 @@ function decodeAttachedIO(u8) {
   /* sensors: subscribe like the app feeds the game — delta=1 */
   if (kind === 'color' || kind === 'speedo' || kind === 'voltage') {
     state.portModes[port] = { kind, mode: 0 };
-    throttler.enqueue(cmdSubscribe(port, 0, 1, true));
+    const subscribe = cmdSubscribe(port, 0, 1, true);
+    bytesOf(subscribe, 'TX', 'tx');
+    throttler.enqueue(subscribe);
     requestModeInfo(port, 0);
-    requestPortValue(port); // fetch an initial reading as well as subscribing to changes
   }
   renderPorts();
 }
 
 function requestModeInfo(port, mode) {
   /* Port Mode Information Request: [len,hub,0x22,port,mode,info] info=0x80 VALUE FORMAT */
-  throttler.enqueue(lwp3Build(0x22, [port, mode, 0x80]));
-}
-
-function requestPortValue(port) {
-  /* Port Information Request, info type 0x00 asks for the current 0x45 value. */
-  throttler.enqueue(lwp3Build(0x21, [port, 0x00]));
-  log(`→ requested current sensor value on port 0x${port.toString(16)}`, 'info');
+  const msg = lwp3Build(0x22, [port, mode, 0x80]);
+  bytesOf(msg, 'TX', 'tx');
+  throttler.enqueue(msg);
 }
 
 function decodeInputFormat(u8) {
