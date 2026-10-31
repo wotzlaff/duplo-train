@@ -235,6 +235,17 @@ decoded by the format brought back by `0x22/0x44` Port Mode Info (`info_type 0x8
 datasets/type/figures/decimals). LWP3 colour indices: 0 black, 1 pink, 2 purple,
 3 blue, 4 light blue, 5 cyan, 6 green, 7 yellow, 8 orange, 9 red, 10 white, 255 none.
 
+### 5.1. 2018 front-light modes (observed; RGB write still unverified)
+
+The web app's port probe on a 2018 hub reported port `0x11` / device type `0x17`
+with two output modes (`output mask 0x0003`). Mode 0 returned a one-dataset,
+8-bit value format and is the known palette mode used by the official app.
+Mode 1 was named `RGB O`, but the hub did not return a value format for it.
+An experimental direct RGB write was not reliable on the tested train, so the
+free RGB picker was removed. The app keeps the confirmed palette buttons and
+re-activates output mode 0 before each palette write. The exact mode-1 frame and
+whether this hub supports it remain unconfirmed.
+
 Sources cross-checked: official [LEGO BLE protocol docs](https://lego.github.io/lego-ble-wireless-protocol-docs/)
 and community captures ([codecat's DUPLO train work](https://codecat.io/projects/lego-train/protocol/),
 [JorgePe/BOOSTreveng](https://github.com/JorgePe/BOOSTreveng), node-poweredup).
