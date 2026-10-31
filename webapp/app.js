@@ -624,14 +624,17 @@ function decodePortValue(u8) {
       const channels = Array.from({ length: Math.min(fmt.datasets || 3, 3) }, (_, i) => readSensorNumber(dv, 4 + i * width, fmt, u8.length));
       if (channels.length !== 3 || channels.some(value => value === null)) return;
       const range = state.portRanges[port]?.[map.mode];
-      const peak = Math.max(...channels, 1);
-      const rgb = channels.map(value => Math.max(0, Math.min(255, Math.round(range && range.max > range.min
-        ? (value - range.min) * 255 / (range.max - range.min)
-        : value * 255 / peak))));
-      const label = `R ${channels[0]} · G ${channels[1]} · B ${channels[2]}`;
-      if (el.textContent !== label) log(`RGB sensor: ${label}`, 'info');
+      const hasRange = range && Number.isFinite(range.min) && Number.isFinite(range.max) && range.max > range.min;
+      const rgb = hasRange
+        ? channels.map(value => Math.max(0, Math.min(255, Math.round((value - range.min) * 255 / (range.max - range.min)))))
+        : null;
+      const label = hasRange
+        ? `R ${rgb[0]} · G ${rgb[1]} · B ${rgb[2]}`
+        : `RAW R ${channels[0]} · G ${channels[1]} · B ${channels[2]}`;
+      if (el.textContent !== label) log(`RGB sensor${hasRange ? '' : ' (raw; range unavailable)'}: ${label}`, 'info');
       el.textContent = label;
-      $('color-swatch').style.backgroundColor = `rgb(${rgb.join(',')})`;
+      el.title = hasRange ? `RAW: ${channels.join(' · ')} (s16)` : 'Rohintensitäten (s16); Farbbereich noch unbekannt';
+      $('color-swatch').style.backgroundColor = hasRange ? `rgb(${rgb.join(',')})` : '#535866';
     } else {
       if (u8.length < 5) return;
       const idx = dv.getUint8(4);
