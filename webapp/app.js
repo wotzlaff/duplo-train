@@ -857,6 +857,16 @@ function mountedControls() {
       playSoundReliable(parseInt(b.dataset.sound, 10));
     };
   });
+  $('btn-testsound').onclick = () => {
+    const id = Number($('sound-id').value);
+    if (!Number.isInteger(id) || id < 0 || id > 255) {
+      log('Sound-ID muss eine ganze Zahl von 0 bis 255 sein', 'warn');
+      return;
+    }
+    if (!connectedGuard()) return;
+    log(`testing unlisted sound ID ${id}`, 'info');
+    playSoundReliable(id);
+  };
 
   /* LED colours — LWP3 palette */
   const wrap = $('ledcolors');
