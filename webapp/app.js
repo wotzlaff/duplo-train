@@ -79,6 +79,7 @@ const state = {
   versions: { fw: null, hw: null },
   desiredSpeed: 0,      /* last commanded motor setpoint (keepalive source) */
   keepalive: null,      /* keepalive interval id */
+  rssiInterval: null,   /* periodic hub RSSI request */
   sawFeedback: false,   /* hub emitted 0x82 at least once */
   soundPending: null,   /* retry book-keeping for the lossy sound channel */
   preferWrite: false,   /* fall back to writeValue after WWR failures */
@@ -362,10 +363,13 @@ async function connectGatt() {
 
   /* keepalive loop for the hub's drop-happy motor channel (see class comment) */
   startMotorKeepalive();
+  requestRssi();
+  state.rssiInterval = setInterval(requestRssi, 5000);
 }
 
 function disconnectNow() {
   stopMotorKeepalive();
+  stopRssiPolling();
   state.desiredSpeed = 0;
   clearSoundPending();
   if (state.characteristic) { try { state.characteristic.stopNotifications(); } catch (e) {} }
@@ -374,6 +378,7 @@ function disconnectNow() {
 
 function onDisconnected() {
   stopMotorKeepalive();
+  stopRssiPolling();
   state.desiredSpeed = 0;
   clearSoundPending();
   state.sawFeedback = false;
@@ -566,7 +571,9 @@ function decodeHubProperties(u8) {
       renderVersions(); break;
     }
     case 5: { /* rssi */
-      log('hub RSSI: ' + dv.getInt8(valStart) + ' dBm', 'info'); break;
+      const rssi = dv.getInt8(valStart);
+      $('val-rssi').textContent = rssi + ' dBm';
+      log('hub RSSI: ' + rssi + ' dBm', 'info'); break;
     }
     case 6: { /* battery % */
       const p = dv.getUint8(valStart);
@@ -636,6 +643,18 @@ function updateStats() {
   if (el) el.textContent = 'writes ok ' + s.tx + ' · write errors ' + s.txErr +
     ' · hub feedback ' + s.fb + ' · discarded ' + s.discard +
     (state.preferWrite ? ' · writeValue fallback ACTIVE' : '');
+}
+
+function requestRssi() {
+  if (!state.connected) return;
+  throttler.enqueue(cmdHubPropRequest(5));
+}
+
+function stopRssiPolling() {
+  if (state.rssiInterval !== null) {
+    clearInterval(state.rssiInterval);
+    state.rssiInterval = null;
+  }
 }
 
 /* ============================================================== UI wiring */
@@ -739,7 +758,7 @@ function mountedControls() {
 
   $('btn-battery').onclick = () => { if (connectedGuard()) { throttler.enqueue(cmdHubPropRequest(6)); log('→ Hub Properties: request battery(6)', 'info'); } };
   $('btn-versions').onclick = () => { if (connectedGuard()) { throttler.enqueue(cmdHubPropRequest(3)); throttler.enqueue(cmdHubPropRequest(4)); log('→ Hub Properties: request fw(3), hw(4)', 'info'); } };
-  $('btn-rssi').onclick = () => { if (connectedGuard()) { throttler.enqueue(cmdHubPropRequest(5)); log('→ Hub Properties: request rssi(5) — link quality probe', 'info'); } };
+  $('btn-rssi').onclick = () => { if (connectedGuard()) { requestRssi(); log('→ Hub Properties: request rssi(5) — link quality probe', 'info'); } };
   $('btn-choose').onclick = findAndConnect;
   $('btn-disconnect').onclick = disconnectNow;
   $('btn-poweroff').onclick = () => {
