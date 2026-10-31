@@ -89,6 +89,7 @@ const state = {
   keepalive: null,      /* keepalive interval id */
   rssiInterval: null,   /* periodic hub RSSI request */
   speedoPrimeTimer: null,
+  colorPrimeTimer: null,
   sawFeedback: false,   /* hub emitted 0x82 at least once */
   soundPending: null,   /* retry book-keeping for the lossy sound channel */
   preferWrite: false,   /* fall back to writeValue after WWR failures */
@@ -395,6 +396,7 @@ function disconnectNow() {
   stopMotorKeepalive();
   stopRssiPolling();
   if (state.speedoPrimeTimer !== null) { clearTimeout(state.speedoPrimeTimer); state.speedoPrimeTimer = null; }
+  if (state.colorPrimeTimer !== null) { clearTimeout(state.colorPrimeTimer); state.colorPrimeTimer = null; }
   state.desiredSpeed = 0;
   clearSoundPending();
   if (state.characteristic) { try { state.characteristic.stopNotifications(); } catch (e) {} }
@@ -405,6 +407,7 @@ function onDisconnected() {
   stopMotorKeepalive();
   stopRssiPolling();
   if (state.speedoPrimeTimer !== null) { clearTimeout(state.speedoPrimeTimer); state.speedoPrimeTimer = null; }
+  if (state.colorPrimeTimer !== null) { clearTimeout(state.colorPrimeTimer); state.colorPrimeTimer = null; }
   state.desiredSpeed = 0;
   clearSoundPending();
   state.sawFeedback = false;
@@ -498,11 +501,22 @@ function decodeAttachedIO(u8) {
   if (kind === 'color' || kind === 'speedo' || kind === 'voltage') {
     const mode = kind === 'color' ? 3 : 0;
     state.portModes[port] = { kind, mode };
-    const subscribe = cmdSubscribe(port, mode, kind === 'speedo' ? 0 : 1, true);
+    const subscribe = cmdSubscribe(port, mode, (kind === 'speedo' || kind === 'color') ? 0 : 1, true);
     bytesOf(subscribe, 'TX', 'tx');
     throttler.enqueue(subscribe);
     requestModeInfo(port, mode);
     if (kind === 'color') requestModeInfo(port, mode, 0x01);
+    if (kind === 'color') {
+      if (state.colorPrimeTimer !== null) clearTimeout(state.colorPrimeTimer);
+      state.colorPrimeTimer = setTimeout(() => {
+        state.colorPrimeTimer = null;
+        if (!state.connected || state.ports.color?.port !== port) return;
+        const steady = cmdSubscribe(port, mode, 1, true);
+        bytesOf(steady, 'TX', 'tx');
+        throttler.enqueue(steady);
+        log('RGB sensor switched to change-only updates (delta 1)', 'info');
+      }, 300);
+    }
     if (kind === 'speedo') {
       if (state.speedoPrimeTimer !== null) clearTimeout(state.speedoPrimeTimer);
       state.speedoPrimeTimer = setTimeout(() => {
@@ -971,6 +985,7 @@ function mountedControls() {
     b.textContent = name;
     b.onclick = () => {
       if (!connectedGuard()) return;
+      if (state.ports.rgb) throttler.enqueue(cmdSubscribe(state.ports.rgb.port, 0, 1, false));
       const msg = cmdLed(id);
       bytesOf(msg, 'TX', 'tx');
       log(`→ LED colour: ${name} (${id})`, 'info');
@@ -985,7 +1000,6 @@ function mountedControls() {
     const red = parseInt(hexColor.slice(1, 3), 16);
     const green = parseInt(hexColor.slice(3, 5), 16);
     const blue = parseInt(hexColor.slice(5, 7), 16);
-    throttler.enqueue(cmdSubscribe(state.ports.rgb.port, 1, 1, false));
     const msg = cmdLedRgb(red, green, blue);
     bytesOf(msg, 'TX', 'tx');
     throttler.enqueue(msg);
