@@ -82,7 +82,8 @@ const state = {
   connected: false,
   ports: {},            /* kind -> {port, type, name} resolved from Attached I/O */
   portModes: {},        /* port -> mode currently subscribed (decode format) */
-  portFormats: {},      /* port -> {datasets, type, figures, decimals} from Mode Info 0x80 */
+  portFormats: {},      /* port -> mode -> {datasets, type, figures, decimals} */
+  portRanges: {},       /* port -> mode -> {min,max} from RAW range info */
   versions: { fw: null, hw: null },
   desiredSpeed: 0,      /* last commanded motor setpoint (keepalive source) */
   keepalive: null,      /* keepalive interval id */
@@ -404,7 +405,7 @@ function onDisconnected() {
   updateStats();
   state.connected = false;
   state.characteristic = null;
-  state.ports = {}; state.portModes = {}; state.portFormats = {};
+  state.ports = {}; state.portModes = {}; state.portFormats = {}; state.portRanges = {};
   state.versions = { fw: null, hw: null };
   $('btn-disconnect').disabled = true;
   $('btn-poweroff').disabled = true;
@@ -428,7 +429,7 @@ function onNotify(e) {
   if (u8.length < 3) return;
   const type = u8[2];
   const name = MSG_TYPES[type] || ('?0x' + type.toString(16));
-  if (type !== 0x82) log('← ' + name, 'info');    /* 0x82 is logged by decodeFeedback selectively */
+  if (type !== 0x82 && type !== 0x45 && type !== 0x01) log('← ' + name, 'info'); // high-volume updates stay quiet
 
   switch (type) {
     case 0x04: return decodeAttachedIO(u8);
@@ -483,13 +484,15 @@ function decodeAttachedIO(u8) {
    if (kind === 'speaker') { throttler.enqueue(cmdSubscribe(port, 1, 1, false)); }
    if (kind === 'rgb')     { throttler.enqueue(cmdSubscribe(port, 0, 1, false)); }
 
-  /* Sensors use mode 0; the speedometer is primed with delta=0 below. */
+  /* Sensors use mode 0; the color sensor uses its RGB mode 3. */
   if (kind === 'color' || kind === 'speedo' || kind === 'voltage') {
-    state.portModes[port] = { kind, mode: 0 };
-    const subscribe = cmdSubscribe(port, 0, kind === 'speedo' ? 0 : 1, true);
+    const mode = kind === 'color' ? 3 : 0;
+    state.portModes[port] = { kind, mode };
+    const subscribe = cmdSubscribe(port, mode, kind === 'speedo' ? 0 : 1, true);
     bytesOf(subscribe, 'TX', 'tx');
     throttler.enqueue(subscribe);
-    requestModeInfo(port, 0);
+    requestModeInfo(port, mode);
+    if (kind === 'color') requestModeInfo(port, mode, 0x01);
     if (kind === 'speedo') {
       if (state.speedoPrimeTimer !== null) clearTimeout(state.speedoPrimeTimer);
       state.speedoPrimeTimer = setTimeout(() => {
@@ -545,6 +548,7 @@ function decodePortInformation(u8) {
   }
   for (const mode of modes) {
     requestModeInfo(port, mode, 0x00); // mode name
+    requestModeInfo(port, mode, 0x01); // raw range
     requestModeInfo(port, mode, 0x04); // SI unit/symbol
     requestModeInfo(port, mode, 0x80); // value format
   }
@@ -572,11 +576,19 @@ function decodeModeInfo(u8) {
     log(`port 0x${port.toString(16)} mode ${mode} unit: ${symbol || '(none)'}`, 'info');
     return;
   }
+  if (u8[5] === 0x01 && u8.length >= 14) {
+    const rangeView = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+    const range = { min: rangeView.getFloat32(6, true), max: rangeView.getFloat32(10, true) };
+    state.portRanges[port] ||= {};
+    state.portRanges[port][mode] = range;
+    log(`port 0x${port.toString(16)} mode ${mode} raw range: ${range.min}…${range.max}`, 'info');
+    return;
+  }
   if (u8[5] !== 0x80 || u8.length < 10) return;
   const fmt = { datasets: u8[6], type: u8[7], figures: u8[8], decimals: u8[9] };
-  state.portFormats[port] = fmt;
-  const map = state.portModes[port];
-  if (map) log(`Value format port 0x${port.toString(16)}: ${fmt.datasets}×${['s8','s16','s32','f32'][fmt.type] || '?'} (${fmt.figures} figures, ${fmt.decimals} decimals)`, 'info');
+  state.portFormats[port] ||= {};
+  state.portFormats[port][mode] = fmt;
+  log(`Value format port 0x${port.toString(16)} mode ${mode}: ${fmt.datasets}×${['s8','s16','s32','f32'][fmt.type] || '?'} (${fmt.figures} figures, ${fmt.decimals} decimals)`, 'info');
 }
 
 function readSensorNumber(dv, offset, fmt, length) {
@@ -605,23 +617,39 @@ function decodePortValue(u8) {
   if (!map) { log('Port Value for unsubscribed port 0x' + port.toString(16), 'warn'); return; }
 
   if (map.kind === 'color') {
-    if (u8.length < 5) return;
-    const idx = dv.getUint8(4);
-    const name = (LWP3_COLORS.find(c => c[0] === idx) || [idx, 'unknown'])[1];
     const el = $('val-color');
-    const background = COLOR_SWATCHES[idx] || '#6b7280';
-    el.textContent = `${name} (${idx})`;
-    el.style.color = 'var(--text)';
-    $('color-swatch').style.backgroundColor = background === 'transparent' ? '#535866' : background;
-    log(`colour sensor: ${name} (${idx})`, 'info');
+    if (map.mode === 3) {
+      const fmt = state.portFormats[port]?.[map.mode] || { datasets: 3, type: 1, decimals: 0 };
+      const width = [1, 2, 4, 4][fmt.type] || 2;
+      const channels = Array.from({ length: Math.min(fmt.datasets || 3, 3) }, (_, i) => readSensorNumber(dv, 4 + i * width, fmt, u8.length));
+      if (channels.length !== 3 || channels.some(value => value === null)) return;
+      const range = state.portRanges[port]?.[map.mode];
+      const peak = Math.max(...channels, 1);
+      const rgb = channels.map(value => Math.max(0, Math.min(255, Math.round(range && range.max > range.min
+        ? (value - range.min) * 255 / (range.max - range.min)
+        : value * 255 / peak))));
+      const label = `R ${channels[0]} · G ${channels[1]} · B ${channels[2]}`;
+      if (el.textContent !== label) log(`RGB sensor: ${label}`, 'info');
+      el.textContent = label;
+      $('color-swatch').style.backgroundColor = `rgb(${rgb.join(',')})`;
+    } else {
+      if (u8.length < 5) return;
+      const idx = dv.getUint8(4);
+      const name = (LWP3_COLORS.find(c => c[0] === idx) || [idx, 'unknown'])[1];
+      const label = `${name} (${idx})`;
+      if (el.textContent !== label) log(`colour sensor: ${name} (${idx})`, 'info');
+      el.textContent = label;
+      const background = COLOR_SWATCHES[idx] || '#6b7280';
+      $('color-swatch').style.backgroundColor = background === 'transparent' ? '#535866' : background;
+    }
   } else if (map.kind === 'speedo') {
-    const fmt = state.portFormats[port];
+    const fmt = state.portFormats[port]?.[map.mode];
     const raw = readSensorNumber(dv, 4, fmt, u8.length);
     if (raw === null) return;
     const value = raw / (10 ** (fmt?.decimals || 0));
     $('val-speedo').textContent = Number.isInteger(value) ? String(value) : value.toFixed(fmt?.decimals || 2);
   } else if (map.kind === 'voltage') {
-    const fmt = state.portFormats[port];
+    const fmt = state.portFormats[port]?.[map.mode];
     const raw = readSensorNumber(dv, 4, fmt, u8.length);
     if (raw === null) return;
     /* Older hubs send a 16-bit ADC reading; newer hubs send millivolts or volts. */
