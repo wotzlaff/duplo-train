@@ -80,6 +80,7 @@ const state = {
   desiredSpeed: 0,      /* last commanded motor setpoint (keepalive source) */
   keepalive: null,      /* keepalive interval id */
   rssiInterval: null,   /* periodic hub RSSI request */
+  speedoPrimeTimer: null,
   sawFeedback: false,   /* hub emitted 0x82 at least once */
   soundPending: null,   /* retry book-keeping for the lossy sound channel */
   preferWrite: false,   /* fall back to writeValue after WWR failures */
@@ -377,6 +378,7 @@ async function connectGatt() {
 function disconnectNow() {
   stopMotorKeepalive();
   stopRssiPolling();
+  if (state.speedoPrimeTimer !== null) { clearTimeout(state.speedoPrimeTimer); state.speedoPrimeTimer = null; }
   state.desiredSpeed = 0;
   clearSoundPending();
   if (state.characteristic) { try { state.characteristic.stopNotifications(); } catch (e) {} }
@@ -386,6 +388,7 @@ function disconnectNow() {
 function onDisconnected() {
   stopMotorKeepalive();
   stopRssiPolling();
+  if (state.speedoPrimeTimer !== null) { clearTimeout(state.speedoPrimeTimer); state.speedoPrimeTimer = null; }
   state.desiredSpeed = 0;
   clearSoundPending();
   state.sawFeedback = false;
@@ -467,13 +470,24 @@ function decodeAttachedIO(u8) {
    if (kind === 'speaker') { throttler.enqueue(cmdSubscribe(port, 1, 1, false)); }
    if (kind === 'rgb')     { throttler.enqueue(cmdSubscribe(port, 0, 1, false)); }
 
-  /* sensors: subscribe like the app feeds the game — delta=1 */
+  /* Sensors use mode 0; the speedometer is primed with delta=0 below. */
   if (kind === 'color' || kind === 'speedo' || kind === 'voltage') {
     state.portModes[port] = { kind, mode: 0 };
-    const subscribe = cmdSubscribe(port, 0, 1, true);
+    const subscribe = cmdSubscribe(port, 0, kind === 'speedo' ? 0 : 1, true);
     bytesOf(subscribe, 'TX', 'tx');
     throttler.enqueue(subscribe);
     requestModeInfo(port, 0);
+    if (kind === 'speedo') {
+      if (state.speedoPrimeTimer !== null) clearTimeout(state.speedoPrimeTimer);
+      state.speedoPrimeTimer = setTimeout(() => {
+        state.speedoPrimeTimer = null;
+        if (!state.connected || state.ports.speedo?.port !== port) return;
+        const steady = cmdSubscribe(port, 0, 1, true);
+        bytesOf(steady, 'TX', 'tx');
+        throttler.enqueue(steady);
+        log('speedometer switched to change-only updates (delta 1)', 'info');
+      }, 300);
+    }
   }
   renderPorts();
 }
@@ -538,7 +552,7 @@ function decodePortValue(u8) {
     const raw = readSensorNumber(dv, 4, fmt, u8.length);
     if (raw === null) return;
     const value = raw / (10 ** (fmt?.decimals || 0));
-    $('val-speedo').textContent = `${Number.isInteger(value) ? value : value.toFixed(fmt?.decimals || 2)}${fmt?.type === 1 ? ' tics/10' : ''}`;
+    $('val-speedo').textContent = Number.isInteger(value) ? String(value) : value.toFixed(fmt?.decimals || 2);
   } else if (map.kind === 'voltage') {
     const fmt = state.portFormats[port];
     const raw = readSensorNumber(dv, 4, fmt, u8.length);
