@@ -40,6 +40,10 @@ header {
 }
 header h1 { margin: 0; font-size: 22px; letter-spacing: .5px; }
 header h1 span { display: block; font-size: 12.5px; color: var(--dim); font-weight: 400; }
+.header-status { display: grid; gap: 7px; justify-items: end; }
+.sensor-pins { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.sensor-pin { border: 1px solid var(--border); border-radius: 999px; padding: 3px 9px; background: var(--card); color: var(--dim); font-size: 11px; white-space: nowrap; }
+.sensor-pin b { color: var(--text); font-variant-numeric: tabular-nums; margin-left: 3px; }
 
 .pills { display: flex; gap: 8px; flex-wrap: wrap; }
 .pill {
@@ -172,3 +176,9 @@ footer {
   background: #12151f;
 }
 footer a { color: var(--accent2); }
+
+@media (max-width: 760px) {
+  header { align-items: flex-start; }
+  .header-status { justify-items: start; width: 100%; }
+  .sensor-pins { justify-content: flex-start; }
+}

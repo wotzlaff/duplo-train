@@ -392,6 +392,7 @@ function onDisconnected() {
   $('btn-disconnect').disabled = true;
   $('btn-poweroff').disabled = true;
   $('device-info').classList.add('hidden');
+  ['val-color', 'val-speedo', 'val-voltage', 'val-battery', 'val-rssi'].forEach(id => { $(id).textContent = '–'; });
   $('ports-grid').innerHTML = '<p class="hint">Connect first — the train announces its own ports.</p>';
   setPill('pill-conn', 'Disconnected', 'pill-off');
   log('GATT disconnected', 'warn');
@@ -542,7 +543,6 @@ function decodePortValue(u8) {
     const volts = fmt?.type === 1 ? raw * 6.4 / 3047 : fmt?.type === 2 ? raw / 1000 :
       fmt?.type === 3 ? raw / (10 ** (fmt.decimals || 0)) : raw * 6.4 / 3047;
     $('val-voltage').textContent = volts.toFixed(2) + ' V';
-    $('di-battery').textContent = volts.toFixed(2) + ' V (measured)';
   }
 }
 
@@ -578,6 +578,7 @@ function decodeHubProperties(u8) {
     case 6: { /* battery % */
       const p = dv.getUint8(valStart);
       $('di-battery').textContent = p + ' %';
+      $('val-battery').textContent = p + ' %';
       break;
     }
     default: log('Hub property 0x' + prop.toString(16) + ' → ' + hex(u8.slice(valStart)), 'info');
