@@ -1,0 +1,23 @@
+import React, { useEffect } from 'react';
+import { createRoot } from 'react-dom/client';
+import '../style.css';
+import '../app.js';
+
+const screen = `
+<header><h1>🚂 DUPLO Train<span>Web-Bluetooth-Steuerung</span></h1><div class="pills"><span id="pill-bt" class="pill pill-off">Web Bluetooth</span><span id="pill-scan" class="pill pill-off">NotScanning</span><span id="pill-conn" class="pill pill-off">Disconnected</span></div></header>
+<main>
+<section class="card" id="card-connect"><h2>1 · Finden & verbinden</h2><p class="hint">Suche nach dem LEGO-Hub-Dienst <code>1623</code>. Der Zug muss eingeschaltet und darf nicht mit einer anderen App verbunden sein.</p><div class="row"><button id="btn-choose" class="primary">📡 Zug suchen …</button><button id="btn-advscan" class="ghost" title="Experimentelle Chrome-Funktion">🔭 Advert watch</button><button id="btn-disconnect" class="danger" disabled>Trennen</button><button id="btn-poweroff" class="danger" disabled>⏻ Hub ausschalten</button></div><div class="row"><label class="chk"><input type="checkbox" id="chk-throttle" checked /> Schreibvorgänge wie in der App drosseln (<b>4 Pakete / 80 ms</b>)</label></div><div id="device-info" class="hidden"><h3>Gerät</h3><table><tbody><tr><td>ID</td><td id="di-id">–</td></tr><tr><td>Name</td><td id="di-name">–</td></tr><tr><td>Hub-Typ</td><td id="di-hubtype">–</td></tr><tr><td>Werbung (LEGO 6 B)</td><td id="di-mfr">–</td></tr><tr><td>Akku</td><td id="di-battery">–</td></tr><tr><td>Taste</td><td id="di-button">–</td></tr><tr><td>FW / HW</td><td id="di-versions">–</td></tr></tbody></table></div></section>
+<section class="card" id="card-ports"><h2>2 · Anschlüsse <small>(vom Hub erkannt)</small></h2><div class="grid" id="ports-grid"><p class="hint">Zuerst verbinden – der Zug meldet seine Anschlüsse selbst.</p></div></section>
+<section class="card"><h2>3 · Fahren</h2><div class="drive"><button class="stepper" id="btn-slowdown" aria-label="Langsamer">−</button><input type="range" id="speed" min="-100" max="100" value="0" step="10" aria-label="Zuggeschwindigkeit" /><button class="stepper" id="btn-speedup" aria-label="Schneller">+</button><span id="speed-readout" class="readout">0</span><button id="btn-stop" class="danger">■ Stopp</button></div><p class="hint">Schieberegler: rückwärts (−100) bis vorwärts (+100).</p></section>
+<section class="card"><h2>4 · Geräusche <small>(Lautsprecher)</small></h2><div class="row wrap" id="sounds"><button data-sound="3">🛑 Bremsen</button><button data-sound="5">🚉 Abfahrt</button><button data-sound="7">💧 Wasser</button><button data-sound="9">📣 Hupe</button><button data-sound="10">☁️ Dampf</button></div></section>
+<section class="card"><h2>5 · LED <small>(RGB-Anschluss)</small></h2><div class="row wrap" id="ledcolors"></div></section>
+<section class="card"><h2>6 · Sensoren</h2><div class="sensors"><div class="sensor"><span class="k">Farbe</span><span id="val-color" class="big">–</span></div><div class="sensor"><span class="k">Tacho</span><span id="val-speedo" class="big">–</span></div><div class="sensor"><span class="k">Akkuspannung</span><span id="val-voltage" class="big">–</span></div><div class="row"><button id="btn-battery" class="ghost">Akku-% abfragen</button><button id="btn-versions" class="ghost">FW/HW abfragen</button><button id="btn-rssi" class="ghost" title="Signalstärke abfragen">Signal (RSSI)</button></div></div></section>
+<section class="card"><h2>Inspector <small>(Bluetooth & LWP3-Protokoll)</small></h2><div class="row"><label class="chk"><input type="checkbox" id="chk-hexlogging" checked /> TX/RX-Bytes anzeigen</label><button id="btn-clearlog" class="ghost">Leeren</button></div><p id="bt-stats" class="hint">writes ok 0 · write errors 0 · hub feedback 0 · discarded 0</p><pre id="log" class="logbox"></pre></section>
+</main><footer><p>Protokoll: <a href="https://lego.github.io/lego-ble-wireless-protocol-docs/">LEGO® Wireless Protocol v3</a> · Chrome oder Edge erforderlich · HTTPS oder localhost</p><p>Web Bluetooth benötigt eine sichere Verbindung. Schließe die LEGO-App, bevor du den Zug verbindest.</p></footer>`;
+
+function App() {
+  useEffect(() => { window.dispatchEvent(new Event('duplo-ui-ready')); }, []);
+  return <div dangerouslySetInnerHTML={{ __html: screen }} />;
+}
+
+createRoot(document.getElementById('root')).render(<App />);

@@ -1,120 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DUPLO Train Web Control — BLE reverse-engineered</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-<header>
-  <h1>🚂 DUPLO Train<span>Web Bluetooth control</span></h1>
-  <div class="pills">
-    <span id="pill-bt" class="pill pill-off">Web Bluetooth</span>
-    <span id="pill-scan" class="pill pill-off">NotScanning</span>
-    <span id="pill-conn" class="pill pill-off">Disconnected</span>
-  </div>
-</header>
-
-<main>
-  <!-- ===== Connection card ===== -->
-  <section class="card" id="card-connect">
-    <h2>1 · Find & connect</h2>
-    <p class="hint">
-      Mirrors the app: LE scan filtered on the LEGO hub service
-      <code>1623</code>… Train must be switched on & not connected to another app.
-    </p>
-    <div class="row">
-      <button id="btn-choose" class="primary">📡 Find train…</button>
-      <button id="btn-advscan" class="ghost" title="requestLEScan + watchAdvertisements (Chrome flag)">🔭 Advert watch</button>
-      <button id="btn-disconnect" class="danger" disabled>Disconnect</button>
-      <button id="btn-poweroff" class="danger" disabled>⏻ Switch hub off</button>
-    </div>
-    <div class="row">
-      <label class="chk"><input type="checkbox" id="chk-throttle" checked> Throttle writes like the app
-        (<b>4 packets / 80 ms</b>, write-without-response)</label>
-    </div>
-
-    <div id="device-info" class="hidden">
-      <h3>Device</h3>
-      <table>
-        <tr><td>ID</td><td id="di-id">–</td></tr>
-        <tr><td>Name</td><td id="di-name">–</td></tr>
-        <tr><td>Hub type</td><td id="di-hubtype">–</td></tr>
-        <tr><td>Advert (LEGO 6 B)</td><td id="di-mfr">–</td></tr>
-        <tr><td>Battery</td><td id="di-battery">–</td></tr>
-        <tr><td>Button</td><td id="di-button">–</td></tr>
-        <tr><td>FW / HW</td><td id="di-versions">–</td></tr>
-      </table>
-    </div>
-  </section>
-
-  <!-- ===== Ports card ===== -->
-  <section class="card" id="card-ports">
-    <h2>2 · Ports <small>(from Hub Attached I/O, resolved by type)</small></h2>
-    <div class="grid" id="ports-grid"><p class="hint">Connect first — the train announces its own ports.</p></div>
-  </section>
-
-  <!-- ===== Controls card ===== -->
-  <section class="card">
-    <h2>3 · Drive</h2>
-    <div class="drive">
-      <button class="stepper" id="btn-slowdown">−</button>
-      <input type="range" id="speed" min="-100" max="100" value="0" step="10">
-      <button class="stepper" id="btn-speedup">+</button>
-      <span id="speed-readout" class="readout">0</span>
-      <button id="btn-stop" class="danger">■ Stop</button>
-    </div>
-    <p class="hint">Each write is <code>08 00 81 <port> 11 51 00 <speed s8></code> — Port Output Command / WriteDirectModeData.</p>
-  </section>
-
-  <section class="card">
-    <h2>4 · Sounds <small>(speaker port)</small></h2>
-    <div class="row wrap" id="sounds">
-      <button data-sound="3">🛑 Brake</button>
-      <button data-sound="5">🚉 Depart</button>
-      <button data-sound="7">💧 Water</button>
-      <button data-sound="9">📣 Horn</button>
-      <button data-sound="10">☁️ Steam</button>
-    </div>
-  </section>
-
-  <section class="card">
-    <h2>5 · LED <small>(RGB port)</small></h2>
-    <div class="row wrap" id="ledcolors"></div>
-  </section>
-
-  <section class="card">
-    <h2>6 · Sensors</h2>
-    <div class="sensors">
-      <div class="sensor"><span class="k">Colour (p0x12)</span><span id="val-color" class="big">–</span></div>
-      <div class="sensor"><span class="k">Speedometer (p0x13)</span><span id="val-speedo" class="big">–</span></div>
-      <div class="sensor"><span class="k">Battery voltage</span><span id="val-voltage" class="big">–</span></div>
-      <div class="row">
-        <button id="btn-battery" class="ghost">Request battery %</button>
-        <button id="btn-versions" class="ghost">Request FW/HW versions</button>
-      </div>
-    </div>
-    <p class="hint">Sensors are subscribed with <code>0A 00 41 <port> 00 <delta u32> 01</code> (delta = 1, exactly as the app feeds sensor values to the game).</p>
-  </section>
-
-  <!-- ===== Log card ===== -->
-  <section class="card">
-    <h2>Inspector <small>(Bluetooth & LWP3 decode, throttler state)</small></h2>
-    <div class="row">
-      <label class="chk"><input type="checkbox" id="chk-hexlogging" checked> byte-level hex of TX/RX</label>
-      <button id="btn-clearlog" class="ghost">Clear</button>
-    </div>
-    <pre id="log" class="logbox"></pre>
-  </section>
-</main>
-
-<footer>
-  <p>Protocol reference: <a href="https://lego.github.io/lego-ble-wireless-protocol-docs/">LEGO® Wireless Protocol v3</a>
-  · reverse-engineered from <code>com.lego.duplo.train</code> 1.8.16 (see <code>../BLE-MECHANICS.md</code>).</p>
-  <p>Chrome or Edge required · HTTPS or localhost · Web Bluetooth needs a user gesture — the LEGO app must be closed (the train only advertises while free).</p>
-</footer>
-
-<script src="app.js"></script>
-</body>
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#101319" />
+    <title>DUPLO Train – Web-Steuerung</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>

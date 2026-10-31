@@ -9,8 +9,9 @@ were reverse-engineered from that APK — the full evidence trail is in
 
 ```bash
 cd webapp
-python3 -m http.server 8000        # or any static file server
-# open http://localhost:8000 in Chrome or Edge
+npm install
+npm run dev
+# open the URL shown by Vite (typically http://localhost:5173)
 ```
 
 - **HTTPS or `localhost` is mandatory** (Web Bluetooth is a secure-context API).
@@ -80,7 +81,9 @@ Enable it first at `chrome://flags/#enable-experimental-web-platform-features`
 
 ## Files
 
-- `index.html` — UI + inspector log
+- `src/main.jsx` — React entry point and UI
+- `index.html` — Vite document shell
+- `vite.config.js` — React/Vite configuration
 - `app.js` — the whole implementation (LWP3 framing, throttler, decoding)
 - `style.css` — styling
 - Validation: `../analysis/webapp_smoke.py` runs the command builders, throttler and

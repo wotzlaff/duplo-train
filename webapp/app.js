@@ -81,6 +81,8 @@ const state = {
   keepalive: null,      /* keepalive interval id */
   sawFeedback: false,   /* hub emitted 0x82 at least once */
   soundPending: null,   /* retry book-keeping for the lossy sound channel */
+  preferWrite: false,   /* fall back to writeValue after WWR failures */
+  stats: { tx: 0, txErr: 0, fb: 0, discard: 0 },
   lastSeenAdvert: null, /* hex of LEGO 6 bytes, from advert watch when available */
 };
 
@@ -186,8 +188,28 @@ class SendThrottler {
 const throttler = new SendThrottler();
 throttler.writeCharacteristic = async (data) => {
   if (!state.connected || !state.characteristic) return;
-  /* write-without-response, exactly as the app uses on characteristic 1624 */
-  await state.characteristic.writeValueWithoutResponse(data);
+  try {
+    if (state.preferWrite) {                                     /* previous WWR attempt failed hard */
+      await state.characteristic.writeValue(data);
+    } else {
+      /* write-without-response, exactly as the app uses on characteristic 1624 */
+      await state.characteristic.writeValueWithoutResponse(data);
+    }
+    state.stats.tx++;
+  } catch (e) {
+    /* Some Linux/BlueZ setups drop write-without-response — fall back to the
+     * acked write (slightly slower, but reliable). Flip once, log loudly. */
+    if (!state.preferWrite) {
+      state.preferWrite = true;
+      log('writeValueWithoutResponse failed (' + (e?.message || e) + ') — switching to writeValue (with response)', 'warn');
+      try { await state.characteristic.writeValue(data); state.stats.tx++; }
+      catch (e2) { state.stats.txErr++; throw e2; }
+    } else {
+      state.stats.txErr++;
+      throw e;
+    }
+  }
+  updateStats();
 };
 
 /* ========================================================= motor keepalive
@@ -223,7 +245,6 @@ function stopMotorKeepalive() {
  *     are gated on it: resend only while no "completed" came back.
  *   - If it never sends feedback, fall back to a fixed small number of spaced
  *     resends (same idea as the PS3/Legoino loop, kept gentle). */
-const SOUND_RESEND_MS = 250;
 
 function clearSoundPending() {
   if (state.soundPending && state.soundPending.timer) clearTimeout(state.soundPending.timer);
@@ -240,7 +261,8 @@ function playSoundReliable(id) {
 
   clearSoundPending();                       /* a fresh click supersedes the old retry */
   let tries = 0;
-  const maxTries = state.sawFeedback ? 3 : 2; /* conservative if the hub gives no feedback */
+  const gap = state.sawFeedback ? 250 : 350;  /* wider gaps for feedback-less hubs */
+  const maxTries = state.sawFeedback ? 3 : 4; /* conservative if the hub gives no feedback */
 
   const attempt = () => {
     if (!state.soundPending || state.soundPending.stale) return;
@@ -248,9 +270,9 @@ function playSoundReliable(id) {
     log('→ Sound retry #' + tries + ' (' + name + ') — no hub feedback yet', 'warn');
     bytesOf(msg, 'TX', 'tx');
     throttler.enqueue(msg);
-    state.soundPending.timer = setTimeout(attempt, SOUND_RESEND_MS);
+    state.soundPending.timer = setTimeout(attempt, gap);
   };
-  state.soundPending = { port, stale: false, timer: setTimeout(attempt, SOUND_RESEND_MS) };
+  state.soundPending = { port, stale: false, timer: setTimeout(attempt, gap) };
 }
 
 /* ============================================================== BLE plumbing */
@@ -355,6 +377,9 @@ function onDisconnected() {
   state.desiredSpeed = 0;
   clearSoundPending();
   state.sawFeedback = false;
+  state.preferWrite = false;
+  state.stats = { tx: 0, txErr: 0, fb: 0, discard: 0 };
+  updateStats();
   state.connected = false;
   state.characteristic = null;
   state.ports = {}; state.portModes = {}; state.portFormats = {};
@@ -559,20 +584,36 @@ function decodeFeedback(u8) {
    * rejects the write!), 0x08 idle. Observed/decoded per LWP3 spec and
    * community captures (Legoino issue #90 / micschr0). */
   const port = u8[3], bits = u8[4];
-  state.sawFeedback = true;
+  state.stats.fb++;
+  if (!state.sawFeedback) {
+    state.sawFeedback = true;
+    log('hub sends output feedback (0x82) — sound/motor retry gating is now confirmed-ack-based', 'info');
+  }
 
   const isSpeakerPort = !!(state.soundPending && state.soundPending.port === port);
   if (isSpeakerPort && (bits & 0x01)) {                     /* completed → stop retrying */
     log('sound confirmed by hub feedback (port 0x' + port.toString(16) + ')', 'info');
     clearSoundPending();
   }
-  if (bits & 0x04) log('port feedback: command DISCARDED by hub (port 0x' + port.toString(16) + ' status 0x' + bits.toString(16) + ')', 'err');
-  /* completed/in-progress spam (keepalive) stays silent — visible in RX hex */
+  if (bits & 0x04) {
+    state.stats.discard++;
+    log('port feedback: command DISCARDED by hub (port 0x' + port.toString(16) + ' status 0x' + bits.toString(16) + ')', 'err');
+  }
+  /* completed/in-progress spam (keepalive) stays silent — see the bt-stats line */
+  updateStats();
 }
 
 function decodeGenericError(u8) {
   const offending = u8[3], code = u8[4];
   log(`Generic error: cmd 0x${offending.toString(16)} → ${ERROR_CODES[code] || 'code ' + code}`, 'err');
+}
+
+function updateStats() {
+  const s = state.stats;
+  const el = $('bt-stats');
+  if (el) el.textContent = 'writes ok ' + s.tx + ' · write errors ' + s.txErr +
+    ' · hub feedback ' + s.fb + ' · discarded ' + s.discard +
+    (state.preferWrite ? ' · writeValue fallback ACTIVE' : '');
 }
 
 /* ============================================================== UI wiring */
@@ -611,6 +652,21 @@ function updateSpeedReadout() {
 }
 
 function mountedControls() {
+  /* ---- catch-up after tab throttling ----------------------------------
+   * Chrome slows setInterval in background/hidden tabs to >=1000 ms — long
+   * enough for a moving train to notice. When the page becomes visible or
+   * focused again, immediately push the current setpoint so the train only
+   * "misses" while nobody is looking. */
+  const catchUp = () => {
+    if (!state.connected || !state.characteristic || state.desiredSpeed === 0) return;
+    throttler.enqueue(cmdMotor(state.desiredSpeed));
+  };
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) { catchUp(); log('tab back in foreground — motor setpoint catch-up sent', 'info'); }
+  });
+  window.addEventListener('focus', catchUp);
+  window.addEventListener('pageshow', catchUp);
+
   /* drive slider — track the setpoint for the keepalive; send change + one
    * immediate repeat (the hub drops single motor writes, see keepalive block) */
   $('speed').addEventListener('input', updateSpeedReadout);
@@ -661,6 +717,7 @@ function mountedControls() {
 
   $('btn-battery').onclick = () => { if (connectedGuard()) { throttler.enqueue(cmdHubPropRequest(6)); log('→ Hub Properties: request battery(6)', 'info'); } };
   $('btn-versions').onclick = () => { if (connectedGuard()) { throttler.enqueue(cmdHubPropRequest(3)); throttler.enqueue(cmdHubPropRequest(4)); log('→ Hub Properties: request fw(3), hw(4)', 'info'); } };
+  $('btn-rssi').onclick = () => { if (connectedGuard()) { throttler.enqueue(cmdHubPropRequest(5)); log('→ Hub Properties: request rssi(5) — link quality probe', 'info'); } };
   $('btn-choose').onclick = findAndConnect;
   $('btn-disconnect').onclick = disconnectNow;
   $('btn-poweroff').onclick = () => {
@@ -730,7 +787,8 @@ async function advancedAdvertWatch() {
 }
 
 /* ================================================================= bootstrap */
-window.addEventListener('DOMContentLoaded', () => {
+function bootstrapDuplo() {
+  if (!$('btn-choose')) return; // React mounts the controls before its ready event.
   mountedControls();
   updateSpeedReadout();
   if (!webBluetoothAvailable()) {
@@ -742,4 +800,6 @@ window.addEventListener('DOMContentLoaded', () => {
   setPill('pill-scan', 'NotScanning', 'pill-off');
   setPill('pill-conn', 'Disconnected', 'pill-off');
   log('Names/protocol mirrored 1:1 from the LEGO DUPLO Train app: scan→' + LWP3.SERVICE.slice(4, 8) + '…, mfr id 919 (0x0397), throttler 4/80ms.', 'info');
-});
+}
+window.addEventListener('DOMContentLoaded', bootstrapDuplo);
+window.addEventListener('duplo-ui-ready', bootstrapDuplo);
