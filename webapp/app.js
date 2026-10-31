@@ -467,12 +467,25 @@ function requestModeInfo(port, mode) {
 
 function decodeModeInfo(u8) {
   /* [len,hub,0x44,port,mode,0x80,datasets,type,figures,decimals] */
-  if (u8[5] !== 0x80) return;
+  if (u8.length < 10 || u8[5] !== 0x80) return;
   const port = u8[3], mode = u8[4];
   const fmt = { datasets: u8[6], type: u8[7], figures: u8[8], decimals: u8[9] };
   state.portFormats[port] = fmt;
   const map = state.portModes[port];
-  if (map) log(`Value format port 0x${port.toString(16)}: ${fmt.datasets}×${['s8','s16','s32','f32'][fmt.type] || '?'}`, 'info');
+  if (map) log(`Value format port 0x${port.toString(16)}: ${fmt.datasets}×${['s8','s16','s32','f32'][fmt.type] || '?'} (${fmt.figures} figures, ${fmt.decimals} decimals)`, 'info');
+}
+
+function readSensorNumber(dv, offset, fmt, length) {
+  const type = fmt?.type ?? 1;
+  const bytes = [1, 2, 4, 4][type];
+  if (!bytes || offset + bytes > length) return null;
+  switch (type) {
+    case 0: return dv.getInt8(offset);
+    case 1: return dv.getInt16(offset, true);
+    case 2: return dv.getInt32(offset, true);
+    case 3: return dv.getFloat32(offset, true);
+    default: return null;
+  }
 }
 
 function decodePortValue(u8) {
@@ -493,27 +506,18 @@ function decodePortValue(u8) {
     const name = (LWP3_COLORS.find(c => c[0] === idx) || [idx, 'unknown'])[1];
     $('val-color').textContent = `${name} (${idx})`;
   } else if (map.kind === 'speedo') {
-    /* VALUE FORMAT usually s16 (tics per decisecond); fall back per received format */
     const fmt = state.portFormats[port];
-    let v = 0, unit = '';
-    switch (fmt?.type) {
-      case 0: if (u8.length < 5) return; v = dv.getInt8(4); unit = ''; break;
-      case undefined:
-      case 1: if (u8.length < 6) return; v = dv.getInt16(4, true); unit = ' tics/10'; break;
-      case 2: if (u8.length < 8) return; v = dv.getInt32(4, true); unit = ''; break;
-      default: if (u8.length < 8) return; v = dv.getFloat32(4, true); unit = ''; break;
-    }
-    $('val-speedo').textContent = v + unit;
+    const raw = readSensorNumber(dv, 4, fmt, u8.length);
+    if (raw === null) return;
+    const value = raw / (10 ** (fmt?.decimals || 0));
+    $('val-speedo').textContent = `${Number.isInteger(value) ? value : value.toFixed(fmt?.decimals || 2)}${fmt?.type === 1 ? ' tics/10' : ''}`;
   } else if (map.kind === 'voltage') {
-    /* 2018 hub: u16 raw → Volts = raw*6.4/3047 ; 2025 hub reports mV directly */
-    if (u8.length < 6) return;
     const fmt = state.portFormats[port];
-    let volts;
-    if (fmt && fmt.type === 2) volts = dv.getInt32(4, true) / 1000;
-    else {
-      const raw = dv.getUint16(4, true);
-      volts = raw * 6.4 / 3047;
-    }
+    const raw = readSensorNumber(dv, 4, fmt, u8.length);
+    if (raw === null) return;
+    /* Older hubs send a 16-bit ADC reading; newer hubs send millivolts or volts. */
+    const volts = fmt?.type === 1 ? raw * 6.4 / 3047 : fmt?.type === 2 ? raw / 1000 :
+      fmt?.type === 3 ? raw / (10 ** (fmt.decimals || 0)) : raw * 6.4 / 3047;
     $('val-voltage').textContent = volts.toFixed(2) + ' V';
     $('di-battery').textContent = volts.toFixed(2) + ' V (measured)';
   }
