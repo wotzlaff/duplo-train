@@ -146,6 +146,9 @@ function cmdSound(id, port = ports()) {
 function cmdLed(color, port = ports()) {
   return lwp3Build(0x81, [port.rgb, 0x11, 0x51, 0x00, color]);
 }
+function cmdLedRgb(red, green, blue, port = ports()) {
+  return lwp3Build(0x81, [port.rgb, 0x11, 0x51, 0x01, red, green, blue]);
+}
 /* Port Input Format Setup (Single): port, mode, delta(u32 LE), notify flag */
 function cmdSubscribe(port, mode, delta = 1, notify = true) {
   return lwp3Build(0x41, [port, mode, delta & 0xff, (delta >> 8) & 0xff, (delta >> 16) & 0xff, (delta >> 24) & 0xff, notify ? 1 : 0]);
@@ -975,6 +978,19 @@ function mountedControls() {
     };
     wrap.appendChild(b);
   }
+  $('btn-led-rgb').onclick = () => {
+    if (!connectedGuard()) return;
+    if (!state.ports.rgb) { log('No RGB light port is attached to this hub', 'warn'); return; }
+    const hexColor = $('led-rgb').value;
+    const red = parseInt(hexColor.slice(1, 3), 16);
+    const green = parseInt(hexColor.slice(3, 5), 16);
+    const blue = parseInt(hexColor.slice(5, 7), 16);
+    throttler.enqueue(cmdSubscribe(state.ports.rgb.port, 1, 1, false));
+    const msg = cmdLedRgb(red, green, blue);
+    bytesOf(msg, 'TX', 'tx');
+    throttler.enqueue(msg);
+    log(`→ LED RGB: ${red}, ${green}, ${blue} (${hexColor.toUpperCase()})`, 'info');
+  };
 
   $('btn-battery').onclick = () => { if (connectedGuard()) { throttler.enqueue(cmdHubPropRequest(6)); log('→ Hub Properties: request battery(6)', 'info'); } };
   $('btn-versions').onclick = () => { if (connectedGuard()) { throttler.enqueue(cmdHubPropRequest(3)); throttler.enqueue(cmdHubPropRequest(4)); log('→ Hub Properties: request fw(3), hw(4)', 'info'); } };

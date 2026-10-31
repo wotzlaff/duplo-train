@@ -114,6 +114,7 @@ table td:first-child { color: var(--dim); white-space: nowrap; }
 
 input[type=range] { flex: 1; accent-color: var(--accent); height: 28px; }
 input[type=number] { width: 84px; padding: 8px 9px; border: 1px solid var(--border); border-radius: 9px; background: var(--card2); color: var(--text); font: inherit; }
+input[type=color] { width: 52px; height: 40px; padding: 3px; border: 1px solid var(--border); border-radius: 9px; background: var(--card2); cursor: pointer; }
 .readout { min-width: 56px; text-align: center; font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .drive { display: flex; gap: 10px; align-items: center; }
 
