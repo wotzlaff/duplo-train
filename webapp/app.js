@@ -93,8 +93,10 @@ const state = {
   soundPending: null,   /* retry book-keeping for the lossy sound channel */
   preferWrite: false,   /* fall back to writeValue after WWR failures */
   stats: { tx: 0, txErr: 0, fb: 0, discard: 0 },
+  sensorHistory: { speedo: [], rssi: [] },
   lastSeenAdvert: null, /* hex of LEGO 6 bytes, from advert watch when available */
 };
+let uiBootstrapped = false;
 
 /* ================================================================== helpers */
 
@@ -244,7 +246,7 @@ function startMotorKeepalive() {
   if (state.keepalive !== null) return;
   state.keepalive = setInterval(() => {
     if (!state.connected || !state.characteristic || state.desiredSpeed === 0) return;
-    throttler.enqueue(cmdMotor(state.desiredSpeed));
+    enqueueLatestMotor(state.desiredSpeed);
   }, MOTOR_KEEPALIVE_MS);
 }
 
@@ -368,6 +370,9 @@ async function connectGatt() {
 
   /* mirror the app side-effect: zero the drive slider + reset UI */
   $('speed').value = 0; updateSpeedReadout();
+  state.desiredSpeed = 0;
+  state.sensorHistory = { speedo: [], rssi: [] };
+  drawSensorChart();
 
   /* kick off hub scaffolding exactly like the game:
      button updates on, battery request, versions request */
@@ -412,6 +417,8 @@ function onDisconnected() {
   $('device-info').classList.add('hidden');
   ['val-color', 'val-speedo', 'val-voltage', 'val-battery', 'val-rssi'].forEach(id => { $(id).textContent = '–'; });
   $('color-swatch').style.backgroundColor = '#535866';
+  state.sensorHistory = { speedo: [], rssi: [] };
+  drawSensorChart();
   $('ports-grid').innerHTML = '<p class="hint">Connect first — the train announces its own ports.</p>';
   setPill('pill-conn', 'Disconnected', 'pill-off');
   log('GATT disconnected', 'warn');
@@ -651,6 +658,7 @@ function decodePortValue(u8) {
     if (raw === null) return;
     const value = raw / (10 ** (fmt?.decimals || 0));
     $('val-speedo').textContent = Number.isInteger(value) ? String(value) : value.toFixed(fmt?.decimals || 2);
+    recordSensorSample('speedo', value);
   } else if (map.kind === 'voltage') {
     const fmt = state.portFormats[port]?.[map.mode];
     const raw = readSensorNumber(dv, 4, fmt, u8.length);
@@ -689,7 +697,9 @@ function decodeHubProperties(u8) {
     case 5: { /* rssi */
       const rssi = dv.getInt8(valStart);
       $('val-rssi').textContent = rssi + ' dBm';
-      log('hub RSSI: ' + rssi + ' dBm', 'info'); break;
+      recordSensorSample('rssi', rssi);
+      if ($('chk-hexlogging').checked) log('hub RSSI: ' + rssi + ' dBm', 'info');
+      break;
     }
     case 6: { /* battery % */
       const p = dv.getUint8(valStart);
@@ -762,6 +772,66 @@ function updateStats() {
     (state.preferWrite ? ' · writeValue fallback ACTIVE' : '');
 }
 
+const CHART_WINDOW_MS = 60_000;
+function recordSensorSample(sensor, value) {
+  const now = Date.now();
+  const samples = state.sensorHistory[sensor];
+  samples.push({ time: now, value });
+  state.sensorHistory[sensor] = samples.filter(sample => now - sample.time <= CHART_WINDOW_MS);
+  drawSensorChart(now);
+}
+
+function drawSensorChart(now = Date.now()) {
+  const canvas = $('sensor-chart');
+  if (!canvas) return;
+  const width = canvas.clientWidth, height = canvas.clientHeight;
+  if (!width || !height) return;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = Math.round(width * dpr);
+  canvas.height = Math.round(height * dpr);
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, width, height);
+
+  const panels = [
+    { key: 'speedo', label: 'Tacho', color: '#ffd500', top: 8, bottom: 124 },
+    { key: 'rssi', label: 'RSSI (dBm)', color: '#71b7ff', top: 145, bottom: 261 },
+  ];
+  for (const panel of panels) {
+    const left = 58, right = width - 12;
+    const samples = state.sensorHistory[panel.key].filter(sample => now - sample.time <= CHART_WINDOW_MS);
+    const values = samples.map(sample => sample.value);
+    let min = panel.key === 'rssi' ? -100 : Math.min(0, ...values);
+    let max = panel.key === 'rssi' ? 0 : Math.max(1, ...values);
+    if (panel.key === 'speedo') {
+      const padding = Math.max(1, (max - min) * 0.1);
+      min -= padding; max += padding;
+    }
+    ctx.font = '11px system-ui, sans-serif';
+    ctx.fillStyle = '#9aa0b0';
+    ctx.fillText(panel.label, 8, panel.top + 12);
+    ctx.strokeStyle = '#303647'; ctx.lineWidth = 1;
+    for (let i = 0; i <= 2; i++) {
+      const y = panel.top + 25 + i * 34;
+      ctx.beginPath(); ctx.moveTo(left, y); ctx.lineTo(right, y); ctx.stroke();
+      ctx.fillStyle = '#858b9b';
+      ctx.fillText((max - (max - min) * i / 2).toFixed(0), 8, y + 4);
+    }
+    ctx.fillStyle = '#73798a';
+    ctx.fillText('−60 s', left, panel.bottom - 3);
+    ctx.fillText('jetzt', Math.max(left, right - 30), panel.bottom - 3);
+    if (!samples.length) continue;
+    ctx.strokeStyle = panel.color; ctx.lineWidth = 2; ctx.beginPath();
+    samples.forEach((sample, index) => {
+      const x = left + Math.max(0, Math.min(1, 1 - (now - sample.time) / CHART_WINDOW_MS)) * (right - left);
+      const y = panel.top + 25 + (max - sample.value) / (max - min || 1) * 68;
+      if (index === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+  }
+}
+
 function requestRssi() {
   if (!state.connected) return;
   throttler.enqueue(cmdHubPropRequest(5));
@@ -809,7 +879,24 @@ function updateSpeedReadout() {
   $('speed-readout').style.color = v === 0 ? 'var(--dim)' : v > 0 ? 'var(--ok)' : 'var(--bad)';
 }
 
+function removeQueuedMotorCommands() {
+  const motorPort = ports().motor;
+  throttler.queue = throttler.queue.filter(msg =>
+    !(msg[2] === 0x81 && msg[3] === motorPort && msg[5] === 0x51 && msg[6] === 0x00));
+}
+
+function enqueueLatestMotor(speed) {
+  removeQueuedMotorCommands();
+  throttler.enqueue(cmdMotor(speed));
+}
+
 function mountedControls() {
+  window.addEventListener('resize', drawSensorChart);
+  drawSensorChart();
+  $('btn-clearchart').onclick = () => {
+    state.sensorHistory = { speedo: [], rssi: [] };
+    drawSensorChart();
+  };
   /* ---- catch-up after tab throttling ----------------------------------
    * Chrome slows setInterval in background/hidden tabs to >=1000 ms — long
    * enough for a moving train to notice. When the page becomes visible or
@@ -817,7 +904,7 @@ function mountedControls() {
    * "misses" while nobody is looking. */
   const catchUp = () => {
     if (!state.connected || !state.characteristic || state.desiredSpeed === 0) return;
-    throttler.enqueue(cmdMotor(state.desiredSpeed));
+    enqueueLatestMotor(state.desiredSpeed);
   };
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) { catchUp(); log('tab back in foreground — motor setpoint catch-up sent', 'info'); }
@@ -825,9 +912,13 @@ function mountedControls() {
   window.addEventListener('focus', catchUp);
   window.addEventListener('pageshow', catchUp);
 
-  /* drive slider — track the setpoint for the keepalive; send change + one
-   * immediate repeat (the hub drops single motor writes, see keepalive block) */
-  $('speed').addEventListener('input', updateSpeedReadout);
+  /* Send while dragging. Coalesce queued motor values so only the freshest target waits. */
+  $('speed').addEventListener('input', () => {
+    updateSpeedReadout();
+    const v = parseInt($('speed').value, 10);
+    state.desiredSpeed = v;
+    if (state.connected && state.characteristic) enqueueLatestMotor(v);
+  });
   $('speed').addEventListener('change', () => {
     const v = parseInt($('speed').value, 10);
     state.desiredSpeed = v;
@@ -835,8 +926,9 @@ function mountedControls() {
     const msg = cmdMotor(v), again = cmdMotor(v);
     bytesOf(msg, 'TX', 'tx');
     log(`→ Port Output: motor ${v > 0 ? 'forward' : v < 0 ? 'reverse' : 'stop'} ${Math.abs(v)}` + (v !== 0 ? ' (+repeat, +100 ms keepalive)' : ''), 'info');
+    removeQueuedMotorCommands();
     throttler.enqueue(msg);
-    if (v !== 0) throttler.enqueue(again);
+    throttler.enqueue(again);
   });
   $('btn-slowdown').onclick = () => { $('speed').value = Math.max(-100, parseInt($('speed').value, 10) - 10); $('speed').dispatchEvent(new Event('change')); };
   $('btn-speedup').onclick  = () => { $('speed').value = Math.min(100, parseInt($('speed').value, 10) + 10); $('speed').dispatchEvent(new Event('change')); };
@@ -846,6 +938,7 @@ function mountedControls() {
     if (!connectedGuard()) return;
     const msg = cmdMotor(0), again = cmdMotor(0);
     bytesOf(msg, 'TX', 'tx');
+    removeQueuedMotorCommands();
     throttler.enqueue(msg); throttler.enqueue(again);   /* stop twice — also drop-prone */
     log('→ motor stop (speed 0, sent twice)', 'info');
   };

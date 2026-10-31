@@ -167,6 +167,11 @@ input[type=number] { width: 84px; padding: 8px 9px; border: 1px solid var(--bord
 .logbox .warn { color: var(--warn); }
 .logbox .err { color: var(--bad); }
 .logbox .info { color: var(--dim); }
+.chart-card { min-width: 0; }
+#sensor-chart { display: block; width: 100%; height: 270px; background: #10131a; border: 1px solid var(--border); border-radius: 10px; }
+.chart-legend { font-size: 12px; }
+.speedo-legend { color: #ffd500; }
+.rssi-legend { color: #71b7ff; }
 
 .hidden { display: none; }
 
