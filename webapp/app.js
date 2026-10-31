@@ -409,6 +409,7 @@ function onDisconnected() {
   $('btn-poweroff').disabled = true;
   $('device-info').classList.add('hidden');
   ['val-color', 'val-speedo', 'val-voltage', 'val-battery', 'val-rssi'].forEach(id => { $(id).textContent = '–'; });
+  $('color-swatch').style.backgroundColor = '#535866';
   $('ports-grid').innerHTML = '<p class="hint">Connect first — the train announces its own ports.</p>';
   setPill('pill-conn', 'Disconnected', 'pill-off');
   log('GATT disconnected', 'warn');
@@ -555,9 +556,9 @@ function decodePortValue(u8) {
     const el = $('val-color');
     const [background, foreground] = COLOR_SWATCHES[idx] || ['#6b7280', '#ffffff'];
     el.textContent = `${name} (${idx})`;
-    el.style.backgroundColor = background;
     el.style.color = foreground;
-    el.classList.add('color-value');
+    $('color-swatch').style.backgroundColor = background === 'transparent' ? '#535866' : background;
+    log(`colour sensor: ${name} (${idx})`, 'info');
   } else if (map.kind === 'speedo') {
     const fmt = state.portFormats[port];
     const raw = readSensorNumber(dv, 4, fmt, u8.length);
