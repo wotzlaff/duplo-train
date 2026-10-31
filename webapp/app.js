@@ -414,6 +414,7 @@ function onNotify(e) {
     case 0x82: return decodeFeedback(u8);
     case 0x05: return decodeGenericError(u8);
     case 0x44: return decodeModeInfo(u8);
+    case 0x47: return decodeInputFormat(u8);
     default:
       /* 0x43 Port Information, 0x47 … also tolerated */
   }
@@ -454,15 +455,32 @@ function decodeAttachedIO(u8) {
    if (kind === 'rgb')     { throttler.enqueue(cmdSubscribe(port, 0, 1, false)); }
 
   /* sensors: subscribe like the app feeds the game — delta=1 */
-  if (kind === 'color') { state.portModes[port] = { kind, mode: 0 }; throttler.enqueue(cmdSubscribe(port, 0, 1, true)); requestModeInfo(port, 0); }
-  if (kind === 'speedo') { state.portModes[port] = { kind, mode: 0 }; throttler.enqueue(cmdSubscribe(port, 0, 1, true)); requestModeInfo(port, 0); }
-  if (kind === 'voltage') { state.portModes[port] = { kind, mode: 0 }; throttler.enqueue(cmdSubscribe(port, 0, 1, true)); requestModeInfo(port, 0); }
+  if (kind === 'color' || kind === 'speedo' || kind === 'voltage') {
+    state.portModes[port] = { kind, mode: 0 };
+    throttler.enqueue(cmdSubscribe(port, 0, 1, true));
+    requestModeInfo(port, 0);
+    requestPortValue(port); // fetch an initial reading as well as subscribing to changes
+  }
   renderPorts();
 }
 
 function requestModeInfo(port, mode) {
   /* Port Mode Information Request: [len,hub,0x22,port,mode,info] info=0x80 VALUE FORMAT */
   throttler.enqueue(lwp3Build(0x22, [port, mode, 0x80]));
+}
+
+function requestPortValue(port) {
+  /* Port Information Request, info type 0x00 asks for the current 0x45 value. */
+  throttler.enqueue(lwp3Build(0x21, [port, 0x00]));
+  log(`→ requested current sensor value on port 0x${port.toString(16)}`, 'info');
+}
+
+function decodeInputFormat(u8) {
+  /* [len,hub,0x47,port,mode,delta(u32 LE),notify] */
+  if (u8.length < 10) return;
+  const port = u8[3], mode = u8[4];
+  const delta = new DataView(u8.buffer, u8.byteOffset, u8.byteLength).getUint32(5, true);
+  log(`sensor subscription confirmed: port 0x${port.toString(16)} mode ${mode}, delta ${delta}, notifications ${u8[9] ? 'on' : 'off'}`, u8[9] ? 'info' : 'warn');
 }
 
 function decodeModeInfo(u8) {
