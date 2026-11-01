@@ -6,6 +6,10 @@ Koppeln, fahren, hupen, Licht umschalten – ohne App-Store, ohne Konto, ohne Cl
 Die Web-App spricht das **LEGO Wireless Protocol v3 (LWP3)** und wurde aus der
 offiziellen Android-App `com.lego.duplo.train` (1.8.16) reverse-engineert.
 
+**Live (nach Aktivierung von GitHub Pages):**
+[Projektseite](https://wotzlaff.github.io/duplo-train/) ·
+[Steuerung](https://wotzlaff.github.io/duplo-train/control/)
+
 > Unabhängiges Projekt. Keine Verbindung zur LEGO Gruppe. LEGO und DUPLO sind
 > Marken der LEGO Gruppe.
 
@@ -115,17 +119,19 @@ Einmalig im Repository:
 Die Seite ist danach unter folgender Adresse erreichbar:
 
 ```
-https://<dein-benutzername>.github.io/<repo-name>/
+https://wotzlaff.github.io/duplo-train/
 ```
 
 Die Steuerung liegt unter:
 
 ```
-https://<dein-benutzername>.github.io/<repo-name>/control/
+https://wotzlaff.github.io/duplo-train/control/
 ```
 
 Der Workflow setzt `BASE_PATH` automatisch auf `/<repo-name>/`. Bei einem
 User-/Organisations-Repository (`<name>.github.io`) bleibt es bei `/`.
+Bei einem **privaten** Repository muss GitHub Pages im Plan freigeschaltet sein
+(oder das Repository öffentlich gestellt werden).
 
 Lokaler Build mit Pages-Basispfad:
 
