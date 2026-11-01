@@ -230,6 +230,9 @@ Downstream commands used by the game (`sendPacket`/throttler → 1624):
 
 `0x11` = startup-and-send-feedback; feedback arrives as `0x82 Port Output Command Feedback`.
 
+For the 2025 hubs these frames change: the motor moves to port `0x32`, and
+sound/light are addressed through the EVENTS port `0x34` (see §5a).
+
 Upstream sensor values: `0x45 Port Value (Single)` `[len,0,0x45,port,fmt-dependent data]`,
 decoded by the format brought back by `0x22/0x44` Port Mode Info (`info_type 0x80` =
 datasets/type/figures/decimals). LWP3 colour indices: 0 black, 1 pink, 2 purple,
@@ -283,17 +286,30 @@ and community captures ([codecat's DUPLO train work](https://codecat.io/projects
   write (observed + decoded by micschr0 in Legoino #90). If the hub never
   emits `0x82` (2018 hub; fredlcore never found feedback there), a small
   fixed number (≤2) of 250 ms spaced resends is used instead.
-* **2025 hub (10427/10428) — NOT yet implemented in the web app**: per Legoino
-  issue #90 the new trains put motor on port `0x32` (device type `0x29`,
-  so the web app's port resolution already finds it) but address light and
-  sound on a different port (`0x34` in app captures) with a different,
-  longer frame, e.g. horn `0B 00 81 34 11 51 01 07 01 00 00`, light
-  `0B 00 81 34 11 51 01 04 01 <color> 00` with a new color palette
-  (01 white, 07 green, 08 yellow, 09 light blue, 0F dark blue, 0A purple,
-  0E purple-pink, 0B light pink, 0D red-pink, 0C red). The app also drives
-  the motor through port `0x34` (`0B 00 81 34 11 51 01 01 01 45 00` = forward).
-  Bonding is mandatory (already handled by Chrome's pairing dialog). Support
-  for these frames is pending — the current web app speaks the 2018 dialect.
+* **2025 hub (10427/10428) — implemented in the web app**:
+  per Legoino issue #90 and community captures, the new trains use a
+  renumbered port map and a different sound/light channel. The app detects
+  the generation from the Attached I/O port range (`0x3x`) and switches
+  dialects automatically:
+  * motor: port **`0x32`**, same 8-byte frame
+    `08 00 81 32 11 51 00 <speed>`;
+  * sound + light: port **`0x34`** (device type `0x5A`, "EVENTS"), a
+    bidirectional mode-1 port with two little-endian u16 values:
+    `0B 00 81 34 11 51 01 <opLo> <opHi> <parLo> <parHi>`
+    * horn: opcode **`0x0107`**, parameter `0` → `0B 00 81 34 11 51 01 07 01 00 00`
+    * light: opcode **`0x0104`**, parameter = colour index →
+      e.g. white `0B 00 81 34 11 51 01 04 01 01 00`, off `… 04 01 00 00`
+  * the hub only accepts writes on `0x34` after EVENTS mode 1 has been
+    subscribed: `0A 00 41 34 01 01 00 00 00 01`;
+  * 2025 colour palette: `0` off, `1` white, `7` green, `8` yellow,
+    `9` light blue, `0F` dark blue, `0A` purple, `0E` purple-pink,
+    `0B` light pink, `0D` red-pink, `0C` red;
+  * the 10427 keeps its beeper on the internal speaker port `0x01`, so the
+    non-horn sound IDs (3, 5, 7, 9, 10) still use the 8-byte speaker frame.
+    For the 10428 the remaining sound IDs are not fully catalogued yet
+    (horn is confirmed); the app sends the corresponding speaker frames and
+    logs the EVENTS feedback so it can be extended once captures exist.
+  * Bonding is mandatory (Chrome's pairing dialog).
 
 ---
 

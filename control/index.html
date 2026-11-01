@@ -192,6 +192,7 @@
                 <tr><td>ID</td><td id="di-id">–</td></tr>
                 <tr><td>Name</td><td id="di-name">–</td></tr>
                 <tr><td>Hub-Typ</td><td id="di-hubtype">–</td></tr>
+                <tr><td>Generation</td><td id="di-generation">–</td></tr>
                 <tr><td>Werbung (LEGO 6 B)</td><td id="di-mfr">–</td></tr>
                 <tr><td>Akku</td><td id="di-battery">–</td></tr>
                 <tr><td>Taster</td><td id="di-button">–</td></tr>
@@ -215,12 +216,16 @@
             <input id="sound-id" type="number" min="0" max="255" step="1" value="0" />
             <button id="btn-testsound" class="ghost">ID abspielen</button>
           </div>
+          <p class="hint">
+            Beim 2025er-Hub läuft die Hupe über den EVENTS-Port (0x34). Die übrigen Sounds
+            nutzen den Lautsprecherkanal (10427); beim 10428 sind noch nicht alle IDs dokumentiert.
+          </p>
         </section>
 
         <section class="card">
           <h2>LED-Farben <small>RGB-Anschluss</small></h2>
           <div class="row wrap led-grid" id="ledcolors"></div>
-          <p class="hint">Die Schnellansicht nutzt die zuletzt gewählte Farbe. „Keine Farbe“ schaltet das Licht aus.</p>
+          <p class="hint">Die Palette passt sich automatisch an den erkannten Hub an (2018–2024 oder 2025). „Aus“ schaltet das Licht aus.</p>
         </section>
 
         <section class="card">

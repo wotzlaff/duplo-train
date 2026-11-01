@@ -349,6 +349,16 @@
                 <td><code>0xFF</code> bedeutet „keine Farbe“.</td>
               </tr>
               <tr>
+                <td>2025 · Hupe</td>
+                <td><code>0B 00 81 34 11 51 01 07 01 00 00</code></td>
+                <td>EVENTS-Port <code>0x34</code>, Opcode <code>0x0107</code>. Wird automatisch erkannt.</td>
+              </tr>
+              <tr>
+                <td>2025 · Licht</td>
+                <td><code>0B 00 81 34 11 51 01 04 01 CC 00</code></td>
+                <td>Opcode <code>0x0104</code>; <code>CC</code> ist die 2025er Palette (1 = weiß, 0 = aus).</td>
+              </tr>
+              <tr>
                 <td>Sensor abonnieren</td>
                 <td><code>0A 00 41 PP MM D1 D2 D3 D4 01</code></td>
                 <td>Port Input Format Setup; Delta als little-endian u32, zuletzt Notify-Flag.</td>
@@ -379,7 +389,7 @@
               <div>
                 <b>2025</b>
                 <span>Hub No. 16 · <code>0x21</code></span>
-                <small>Set 10427 · Bonding erforderlich, Chrome zeigt einen Pairing-Dialog</small>
+                <small>Sets 10427, 10428 · Bonding erforderlich; Motor <code>0x32</code>, Sound/Licht EVENTS <code>0x34</code></small>
               </div>
             </div>
           </article>
@@ -469,6 +479,16 @@ npm run dev</code></pre>
               Der Audio-Kanal ist verlustbehafteter als der Motor-Kanal. Die App wartet auf
               Hub-Feedback und wiederholt nur, wenn keine Fertigmeldung kam – blindes Wiederholen
               würde laufende Sounds unterbrechen.
+            </p>
+          </details>
+          <details>
+            <summary>Die Töne funktionieren beim 2025er-Zug nicht.</summary>
+            <p>
+              2025er-Hubs (10427/10428) adressieren Hupe und Licht über den EVENTS-Port
+              <code>0x34</code> mit einem längeren Frame. Die App erkennt die Generation an den
+              gemeldeten Ports und schaltet automatisch um. Beim 10427 laufen die übrigen Sounds
+              über den Lautsprecherport; beim 10428 sind noch nicht alle Sound-IDs öffentlich
+              dokumentiert.
             </p>
           </details>
           <details>

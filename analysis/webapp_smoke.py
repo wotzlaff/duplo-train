@@ -185,6 +185,27 @@ test_js = r"""
   out.push('light-reuse=' + state.lightOn + ':' + state.lightColor);
   out.push('light-writes=' + lightWrites);
 
+  /* ---- 2025 hub dialect: motor 0x32, horn/light on EVENTS 0x34 ---- */
+  state.hubGeneration = null;
+  state.eventsPort = null;
+  state.ports = {};
+  decodeAttachedIO(new Uint8Array([8, 0, 0x04, 0x32, 0x01, 0x29, 0, 0, 0, 0, 0]));
+  out.push('modern-detect=' + state.hubGeneration + ':' + ports().motor);
+  state.eventsPort = 0x34;
+  state.ports.events = { port: 0x34, type: 0x5A, name: 'Events' };
+  out.push('modern-horn=' + h(cmdSound(9)));
+  out.push('modern-brake=' + h(cmdSound(3)));
+  out.push('modern-led-white=' + h(cmdLed(0x01)));
+  out.push('modern-led-off=' + h(cmdLed(0)));
+  out.push('modern-sub=' + h(cmdSubscribe(0x34, 1, 1, true)));
+  out.push('modern-sound-port=' + soundTargetPort(9) + ':' + soundTargetPort(3));
+  state.lightOn = false;
+  state.lightColor = null;
+  toggleLight(); await flush();
+  out.push('modern-light-on=' + state.lightOn + ':' + state.lightColor);
+  toggleLight(); await flush();
+  out.push('modern-light-off=' + state.lightOn + ':' + state.lightColor);
+
   __testResult = JSON.stringify(out);
 })().catch((error) => { __testError = String((error && error.stack) || error); });
 """
@@ -232,6 +253,15 @@ expect = [
     "light-off-blue=false:3",                               # off after blue
     "light-reuse=true:3",                                   # toggle reuses blue
     "light-writes=5",                                       # one LED write per action
+    "modern-detect=modern:50",                             # motor port 0x32 reveals 2025
+    "modern-horn=0b00813411510107010000",                  # 2025 EVENTS horn
+    "modern-brake=0800810111510103",                       # 10427 speaker port 0x01
+    "modern-led-white=0b00813411510104010100",             # 2025 EVENTS white
+    "modern-led-off=0b00813411510104010000",               # 2025 EVENTS off
+    "modern-sub=0a004134010100000001",                     # EVENTS mode 1 + notify
+    "modern-sound-port=52:1",                              # horn 0x34, others 0x01
+    "modern-light-on=true:1",                              # 2025 default white
+    "modern-light-off=false:1",                            # off keeps last colour
 ]
 
 got = json.loads(result)

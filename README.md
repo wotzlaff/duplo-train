@@ -172,13 +172,13 @@ Vite übernimmt nur Dev-Server und Multi-Page-Build.
 | Notifications | `startNotifications()` → CCCD `0100` |
 | Writes | `writeValueWithoutResponse`, Fallback auf `writeValue` |
 | Drosselung | 4 Pakete / 80 ms, Queue mit „Overtake“ für den Motor |
-| Motor | `[08 00 81 PP 11 51 00 SS]`, `SS` als signed byte |
-| Hupe | `[08 00 81 PP 11 51 01 09]` |
-| Licht | LWP3-Farben 0–10, `0xFF` = aus |
+| Motor | 2018: `[08 00 81 PP 11 51 00 SS]` · 2025: Port `0x32`, gleiches Frame |
+| Hupe | 2018: `[08 00 81 PP 11 51 01 09]` · 2025: `[0B 00 81 34 11 51 01 07 01 00 00]` |
+| Licht | 2018: LWP3-Farben 0–10, `0xFF` = aus · 2025: EVENTS-Opcode `0x0104` mit 2025er Palette |
 | Keepalive | letzter Motorsollwert alle 100 ms, solange ≠ 0 |
-| Ports | Auflösung über *Hub Attached I/O* nach Gerätetyp |
+| Ports | Auflösung über *Hub Attached I/O*; 2025 wird am `0x3x`-Portbereich erkannt |
 | Sensoren | Port Input Format Setup, Decoding nach gemeldetem Wertformat |
-| Sounds | Retry nur ohne `0x82`-Fertigfeedback, damit nichts doppelt startet |
+| Sounds | Retry nur ohne `0x82`-Fertigfeedback; 2025er EVENTS-Feedback wird mit ausgewertet |
 | Ausschalten | Hub Action `0x01` |
 
 Die vollständigen Details, Byte-Tabellen und die Beweiskette aus dem APK stehen
@@ -190,8 +190,13 @@ in [BLE-MECHANICS.md](BLE-MECHANICS.md).
 
 | Generation | Hub | Sets | Besonderheit |
 |---|---|---|---|
-| 2018–2024 | Hub No. 5 (`0x20`) | 10874, 10875, 10877, 10882 | kein Bonding, leerer Advertise-Name |
-| 2025 | Hub No. 16 (`0x21`) | 10427 | Bonding erforderlich, Chrome-Pairing bestätigen |
+| 2018–2024 | Hub No. 5 (`0x20`) | 10874, 10875, 10877, 10882 | kein Bonding, leerer Advertise-Name; Sounds auf Port `0x01`, LED auf `0x11` |
+| 2025 | Hub No. 16 (`0x21`) | 10427, 10428 | Bonding erforderlich, Chrome-Pairing bestätigen; Motor `0x32`, Sound/Licht `0x34` (EVENTS) |
+
+Die App erkennt die Generation automatisch an den gemeldeten Ports und schaltet
+den passenden Befehlsdialekt. Beim 10427 laufen die übrigen Sounds weiter über
+den internen Lautsprecherport; beim 10428 ist bislang vor allem die Hupe
+bestätigt, die restlichen Sound-IDs werden noch kartiert.
 
 Beide Hubs werden über dieselbe LWP3-Schicht angesprochen. Die Ports werden zur
 Laufzeit aus den *Attached I/O*-Events ermittelt.
@@ -206,6 +211,7 @@ Laufzeit aus den *Attached I/O*-Events ermittelt.
 | Verbindung schlägt beim 2025er-Hub fehl | Pairing abgelehnt – erneut auswählen und bestätigen |
 | Zug fährt an und stoppt sofort | bekanntes Verlustverhalten der Hubs; die App sendet den Sollwert alle 100 ms erneut |
 | Sounds kommen unregelmäßig | Audio-Kanal ist verlustbehaftet; Retry wartet auf Hub-Feedback |
+| Töne beim 2025er-Hub | Hupe läuft über EVENTS `0x34`, Motor über `0x32`. Die App erkennt das automatisch; im Expertenmodus steht die erkannte Generation unter „Gerät“ |
 | Nichts bewegt sich | Expertenmodus → Hex-Log prüfen (`0x45`, `0x82`) |
 | `navigator.bluetooth` fehlt | Chrome/Edge verwenden und über HTTPS oder `localhost` öffnen |
 | Seite nach Reload nicht verbunden | BLE-Verbindung endet mit dem Reload; erneut „Zug suchen“ |

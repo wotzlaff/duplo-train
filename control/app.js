@@ -35,13 +35,17 @@ const DEVICE_TYPES = {
   0x2A: 'Speaker',
   0x2B: 'Colour sensor',
   0x2C: 'Speedometer',
-  0x5A: 'Hub diagnostics (2025)',
-  0x5B: 'Tile/tag sensor (2025)',
+  0x5A: 'Events — Sound + Licht (2025)',
+  0x5B: 'TAG-Sensor (2025)',
 };
 
 const PORT_FALLBACK = {  /* 2018 hub layout — used only until Attached I/O arrives */
   motor: 0x00, speaker: 0x01, rgb: 0x11, color: 0x12, speedo: 0x13, voltage: 0x14,
 };
+const PORT_FALLBACK_MODERN = {  /* 2025 hub layout (10427 / 10428) */
+  motor: 0x32, speaker: 0x01, rgb: 0x34, color: null, speedo: 0x36, voltage: 0x35,
+};
+const MODERN_EVENT = { LIGHT: 0x0104, SOUND: 0x0107 };
 
 const LWP3_COLORS = [
   [0,'Schwarz'], [1,'Pink'], [2,'Lila'], [3,'Blau'], [4,'Hellblau'],
@@ -52,7 +56,21 @@ const COLOR_SWATCHES = {
   5: '#00a9ce', 6: '#237841', 7: '#f2cd37', 8: '#fe8a18', 9: '#c91a09',
   10: '#f4f4f4', 255: 'transparent',
 };
-const LIGHT_DEFAULT_COLOR = 10;   /* white — used the first time the light is switched on */
+const LIGHT_DEFAULT_COLOR = 10;   /* 2018 palette: white — used the first time the light is switched on */
+const MODERN_LIGHT_DEFAULT = 0x01; /* 2025 palette: white */
+const MODERN_COLORS = [
+  [0x00, 'Aus', 'transparent'],
+  [0x01, 'Weiß', '#f4f4f4'],
+  [0x07, 'Grün', '#237841'],
+  [0x08, 'Gelb', '#f2cd37'],
+  [0x09, 'Hellblau', '#9fc3e9'],
+  [0x0F, 'Dunkelblau', '#0055bf'],
+  [0x0A, 'Lila', '#8f4acb'],
+  [0x0E, 'Lila-Pink', '#c870a0'],
+  [0x0B, 'Hellpink', '#ff8ab6'],
+  [0x0D, 'Rot-Pink', '#e23b32'],
+  [0x0C, 'Rot', '#c91a09'],
+];
 
 const SOUND_NAMES = {
   3: 'Brake', 5: 'Depart', 7: 'Water refill', 9: 'Horn', 10: 'Steam',
@@ -94,8 +112,10 @@ const state = {
   sawFeedback: false,   /* hub emitted 0x82 at least once */
   soundPending: null,   /* retry book-keeping for the lossy sound channel */
   preferWrite: false,   /* fall back to writeValue after WWR failures */
+  hubGeneration: null,  /* null | 'legacy' (2018–2024) | 'modern' (2025) */
+  eventsPort: null,     /* 2025 EVENTS port (sound + light), usually 0x34 */
   lightOn: false,       /* basic light toggle state */
-  lightColor: LIGHT_DEFAULT_COLOR, /* last non-off LWP3 colour */
+  lightColor: null,     /* last non-off colour in the active palette */
   stats: { tx: 0, txErr: 0, fb: 0, discard: 0 },
   sensorHistory: { speedo: [], rssi: [] },
   lastSeenAdvert: null, /* hex of LEGO 6 bytes, from advert watch when available */
@@ -129,6 +149,62 @@ function setPill(id, text, cls) {
 
 /* ========================================================= light & views */
 
+function activeColors() {
+  if (state.hubGeneration === 'modern') return MODERN_COLORS;
+  return LWP3_COLORS.map(([id, name]) => [id, name, COLOR_SWATCHES[id] || '#6b7280']);
+}
+
+function colorSwatch(id) {
+  if (state.hubGeneration === 'modern') {
+    const entry = MODERN_COLORS.find(([value]) => value === id);
+    return entry ? entry[2] : '#6b7280';
+  }
+  return COLOR_SWATCHES[id] || '#6b7280';
+}
+
+function colorName(id) {
+  const list = state.hubGeneration === 'modern' ? MODERN_COLORS : LWP3_COLORS;
+  return (list.find(([value]) => value === id) || [id, 'Farbe ' + id])[1];
+}
+
+function defaultLightColor() {
+  return state.hubGeneration === 'modern' ? MODERN_LIGHT_DEFAULT : LIGHT_DEFAULT_COLOR;
+}
+
+function isOffColor(color) {
+  return state.hubGeneration === 'modern' ? color === 0 : color === 255;
+}
+
+function setHubGeneration(gen) {
+  if (state.hubGeneration === gen) return;
+  state.hubGeneration = gen;
+  state.lightOn = false;
+  state.lightColor = null;
+  const el = $('di-generation');
+  if (el) el.textContent = gen === 'modern' ? '2025 (EVENTS, Port 0x34)' : '2018–2024';
+  const hubType = $('di-hubtype');
+  if (hubType && (!hubType.textContent || hubType.textContent === '–')) {
+    hubType.textContent = gen === 'modern' ? 'Hub No. 16 (0x21, 2025)' : 'Hub No. 5 (0x20, 2018–2024)';
+  }
+  renderLedPalette();
+  renderLightState();
+  log('Hub-Generation: ' + (gen === 'modern'
+    ? '2025 (EVENTS-Port 0x34, Sound/Licht) — Bonding muss im Browser bestätigt sein, sonst ignoriert der Hub Befehle still'
+    : '2018–2024 (klassische Ports)'), 'info');
+}
+
+function renderLedPalette() {
+  const wrap = $('ledcolors');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  for (const [id, name, swatch] of activeColors()) {
+    const b = document.createElement('button');
+    b.innerHTML = `<span class="led-dot" style="background:${swatch || '#6b7280'}"></span>${name}`;
+    b.onclick = () => setLed(id);
+    wrap.appendChild(b);
+  }
+}
+
 function renderLightState() {
   const button = $('btn-light');
   const label = $('light-state');
@@ -140,21 +216,29 @@ function renderLightState() {
   if (label) label.textContent = state.lightOn ? 'An' : 'Aus';
   if (swatch) {
     swatch.style.backgroundColor = state.lightOn
-      ? (COLOR_SWATCHES[state.lightColor] || '#ffd500')
+      ? (colorSwatch(state.lightColor ?? defaultLightColor()) || '#ffd500')
       : '#535866';
   }
 }
 
 function setLed(color, announce = true) {
   if (!connectedGuard()) return false;
-  const port = state.ports.rgb?.port ?? PORT_FALLBACK.rgb;
-  /* Legoino parity: activate the LED port's mode before writing to it. */
-  if (state.ports.rgb) throttler.enqueue(cmdSubscribe(port, 0, 1, false));
+
+  if (state.hubGeneration === 'modern') {
+    if (color === 255) color = 0;       /* 2018 "keine Farbe" → 2025 off */
+    if (!state.eventsPort) {
+      log('2025er EVENTS-Port noch nicht gemeldet – sende Lichtbefehl trotzdem an 0x34', 'warn');
+    }
+  } else if (state.ports.rgb) {
+    /* Legoino parity: activate the LED port's mode before writing to it. */
+    throttler.enqueue(cmdSubscribe(state.ports.rgb.port, 0, 1, false));
+  }
+
   const msg = cmdLed(color);
   bytesOf(msg, 'TX', 'tx');
   throttler.enqueue(msg);
 
-  if (color === 255) {
+  if (isOffColor(color)) {
     state.lightOn = false;            /* keep the last real colour for the toggle */
   } else {
     state.lightOn = true;
@@ -163,8 +247,8 @@ function setLed(color, announce = true) {
   renderLightState();
 
   if (announce) {
-    const name = (LWP3_COLORS.find(([id]) => id === color) || [color, 'Farbe ' + color])[1];
-    log(`→ LED: ${name} (${color})`, 'info');
+    log(`→ LED: ${colorName(color)} (${color})` +
+      (state.hubGeneration === 'modern' ? ' via EVENTS' : ''), 'info');
   }
   return true;
 }
@@ -174,8 +258,8 @@ function toggleLight() {
     log('Nicht verbunden – zuerst „Zug suchen“ drücken.', 'warn');
     return;
   }
-  if (state.lightOn) setLed(255);
-  else setLed(state.lightColor === 255 ? LIGHT_DEFAULT_COLOR : state.lightColor);
+  if (state.lightOn) setLed(state.hubGeneration === 'modern' ? 0 : 255);
+  else setLed(state.lightColor ?? defaultLightColor());
 }
 
 function setView(name, persist = true) {
@@ -216,11 +300,34 @@ function lwp3Build(type, payload, hub = LWP3.HUB_ID) {
 function cmdMotor(speed, port = ports()) {
   return lwp3Build(0x81, [port.motor, 0x11, 0x51, 0x00, speedSigned(speed)]);
 }
+/* 2025 EVENTS port 0x34: [len,0,0x81,port,0x11,0x51,0x01,opLo,opHi,parLo,parHi] */
+function cmdMultiEvent(opcode, value, port = state.eventsPort ?? PORT_FALLBACK_MODERN.rgb) {
+  return lwp3Build(0x81, [
+    port, 0x11, 0x51, 0x01,
+    opcode & 0xff, (opcode >> 8) & 0xff,
+    value & 0xff, (value >> 8) & 0xff,
+  ]);
+}
 function cmdSound(id, port = ports()) {
+  if (state.hubGeneration === 'modern') {
+    if (id === 9) return cmdMultiEvent(MODERN_EVENT.SOUND, 0);   /* horn lives on EVENTS */
+    return lwp3Build(0x81, [port.speaker ?? PORT_FALLBACK_MODERN.speaker, 0x11, 0x51, 0x01, id]);
+  }
   return lwp3Build(0x81, [port.speaker, 0x11, 0x51, 0x01, id]);
 }
 function cmdLed(color, port = ports()) {
+  if (state.hubGeneration === 'modern') {
+    return cmdMultiEvent(MODERN_EVENT.LIGHT, color === 255 ? 0 : color);
+  }
   return lwp3Build(0x81, [port.rgb, 0x11, 0x51, 0x00, color]);
+}
+function soundTargetPort(id) {
+  if (state.hubGeneration === 'modern') {
+    return id === 9
+      ? (state.eventsPort ?? PORT_FALLBACK_MODERN.rgb)
+      : (state.ports.speaker?.port ?? PORT_FALLBACK_MODERN.speaker);
+  }
+  return ports().speaker;
 }
 /* Port Input Format Setup (Single): port, mode, delta(u32 LE), notify flag */
 function cmdSubscribe(port, mode, delta = 1, notify = true) {
@@ -348,10 +455,11 @@ function clearSoundPending() {
 
 function playSoundReliable(id) {
   const name = SOUND_NAMES[id] || id;
-  const port = ports().speaker;
+  const port = soundTargetPort(id);
   const msg = cmdSound(id);
   bytesOf(msg, 'TX', 'tx');
-  log('→ Sound: ' + name, 'info');
+  log(`→ Sound: ${name} (Port 0x${port.toString(16)})` +
+    (state.hubGeneration === 'modern' ? ' — 2025er Dialekt' : ''), 'info');
   throttler.enqueue(msg);
 
   clearSoundPending();                       /* a fresh click supersedes the old retry */
@@ -404,6 +512,16 @@ async function findAndConnect() {
 
 async function connectGatt() {
   const d = state.device;
+  state.hubGeneration = null;
+  state.eventsPort = null;
+  state.lightColor = null;
+  state.lightOn = false;
+  renderLedPalette();
+  renderLightState();
+  const generationEl = $('di-generation');
+  if (generationEl) generationEl.textContent = '–';
+  const hubTypeEl = $('di-hubtype');
+  if (hubTypeEl) hubTypeEl.textContent = '–';
   setPill('pill-conn', 'Verbinde …', 'pill-warn');
   try {
     state.server = await d.gatt.connect();
@@ -491,8 +609,16 @@ function onDisconnected() {
   updateStats();
   state.connected = false;
   state.characteristic = null;
+  state.hubGeneration = null;
+  state.eventsPort = null;
+  state.lightColor = null;
   state.lightOn = false;
+  renderLedPalette();
   renderLightState();
+  const generationEl = $('di-generation');
+  if (generationEl) generationEl.textContent = '–';
+  const hubTypeEl = $('di-hubtype');
+  if (hubTypeEl) hubTypeEl.textContent = '–';
   state.ports = {}; state.portModes = {}; state.portFormats = {}; state.portRanges = {};
   state.versions = { fw: null, hw: null };
   $('btn-disconnect').disabled = true;
@@ -538,7 +664,10 @@ function onNotify(e) {
 }
 
 function portKindLabel(k) {
-  return { motor: 'Motor', speaker: 'Speaker', rgb: 'LED', color: 'Colour', speedo: 'Speedometer', voltage: 'Voltage' }[k] || (k.startsWith('device-') ? 'Unbekanntes Gerät' : k);
+  return {
+    motor: 'Motor', speaker: 'Lautsprecher', rgb: 'LED', color: 'Farbsensor',
+    speedo: 'Tacho', voltage: 'Spannung', events: 'Events (Sound + Licht)', tag: 'TAG-Sensor',
+  }[k] || (k.startsWith('device-') ? 'Unbekanntes Gerät' : k);
 }
 
 function decodeAttachedIO(u8) {
@@ -549,7 +678,12 @@ function decodeAttachedIO(u8) {
   const evName = { 0: 'detached', 1: 'attached', 2: 'attached (virtual)' }[event] || '?';
   log(`Attached I/O: port 0x${port.toString(16)} ${evName} — ${tName}`, 'info');
 
-  if (event === 0) { Object.keys(state.ports).forEach(k => { if (state.ports[k].port === port) delete state.ports[k]; }); renderPorts(); return; }
+  if (event === 0) {
+    Object.keys(state.ports).forEach(k => { if (state.ports[k].port === port) delete state.ports[k]; });
+    if (state.eventsPort === port) state.eventsPort = null;
+    renderPorts();
+    return;
+  }
   if (event !== 1) return;
 
   let kind = null;
@@ -560,7 +694,17 @@ function decodeAttachedIO(u8) {
     case 0x2B: kind = 'color'; break;
     case 0x2C: kind = 'speedo'; break;
     case 0x14: kind = 'voltage'; break;
+    case 0x5A: kind = 'events'; break;
+    case 0x5B: kind = 'tag'; break;
   }
+
+  /* 2025 hubs renumber every port into the 0x3x range. This is the most
+   * reliable generation signal we get before the first command. */
+  if (kind === 'events' || port >= 0x30) setHubGeneration('modern');
+  else if (!state.hubGeneration && (kind === 'speaker' || kind === 'rgb' || kind === 'color')) {
+    setHubGeneration('legacy');
+  }
+
   if (!kind) {
     state.ports[`device-${port}`] = { port, type, name: tName };
     renderPorts();
@@ -572,8 +716,24 @@ function decodeAttachedIO(u8) {
   /* Legoino parity: subscribe the output ports' modes before writing to them
    * (they do 0x41 + mode before every sound/LED command). notify = off, so
    * this only "activates" the port on the hub. */
-   if (kind === 'speaker') { throttler.enqueue(cmdSubscribe(port, 1, 1, false)); }
-   if (kind === 'rgb')     { throttler.enqueue(cmdSubscribe(port, 0, 1, false)); }
+  if (kind === 'speaker') { throttler.enqueue(cmdSubscribe(port, 1, 1, false)); }
+  if (kind === 'rgb')     { throttler.enqueue(cmdSubscribe(port, 0, 1, false)); }
+
+  /* 2025: sound + light are collapsed into the EVENTS port. The hub only
+   * accepts writes on 0x34 after EVENTS mode 1 has been subscribed. */
+  if (kind === 'events') {
+    state.eventsPort = port;
+    state.portModes[port] = { kind: 'events', mode: 1 };
+    const subscribe = cmdSubscribe(port, 1, 1, true);
+    bytesOf(subscribe, 'TX', 'tx');
+    throttler.enqueue(subscribe);
+    log(`EVENTS-Port 0x${port.toString(16)} abonniert (2025: Sound + Licht)`, 'info');
+    /* 10427 keeps its beeper on the internal port 0x01; activate it for the
+     * non-horn sounds. On the 10428 this port may not exist (harmless). */
+    const speakerSub = cmdSubscribe(0x01, 1, 1, false);
+    bytesOf(speakerSub, 'TX', 'tx');
+    throttler.enqueue(speakerSub);
+  }
 
   /* Sensors use mode 0; the color sensor uses its RGB mode 3. */
   if (kind === 'color' || kind === 'speedo' || kind === 'voltage') {
@@ -718,6 +878,19 @@ function decodePortValue(u8) {
 
   if (!map) { log('Port Value for unsubscribed port 0x' + port.toString(16), 'warn'); return; }
 
+  if (map.kind === 'events') {
+    /* 2025 EVENTS: two little-endian u16 values (opcode, parameter).
+     * Includes action-brick scans and the hub's own event stream. */
+    if (u8.length >= 8) {
+      const opcode = dv.getUint16(4, true);
+      const param = dv.getUint16(6, true);
+      if (opcode || param) {
+        log(`EVENTS: Opcode 0x${opcode.toString(16).padStart(4, '0')}, Parameter 0x${param.toString(16).padStart(4, '0')}`, 'info');
+      }
+    }
+    return;
+  }
+
   if (map.kind === 'color') {
     const el = $('val-color');
     if (map.mode === 3) {
@@ -842,8 +1015,14 @@ function decodeFeedback(u8) {
   }
 
   const isSpeakerPort = !!(state.soundPending && state.soundPending.port === port);
-  if (isSpeakerPort && (bits & 0x01)) {                     /* completed → stop retrying */
-    log('sound confirmed by hub feedback (port 0x' + port.toString(16) + ')', 'info');
+  /* 2018/2024: 0x01 = buffer empty + completed. 2025: community captures show
+   * 0x02 as "completed" and 0x01/0x08 as buffer status; accept all three so a
+   * played sound is not interrupted by an unnecessary retry. */
+  const completed = state.hubGeneration === 'modern'
+    ? !!(bits & 0x02) || !!(bits & 0x01) || !!(bits & 0x08)
+    : !!(bits & 0x01);
+  if (isSpeakerPort && completed) {
+    log('sound confirmed by hub feedback (port 0x' + port.toString(16) + ', status 0x' + bits.toString(16) + ')', 'info');
     clearSoundPending();
   }
   if (bits & 0x04) {
@@ -942,14 +1121,15 @@ function stopRssiPolling() {
 /* ============================================================== UI wiring */
 
 function ports() {
-  /* resolve by device type attached at runtime; fall back to 2018 layout */
+  /* resolve by device type attached at runtime; fall back to the known layout */
+  const modern = state.hubGeneration === 'modern';
   return {
-    motor:   state.ports.motor?.port   ?? PORT_FALLBACK.motor,
-    speaker: state.ports.speaker?.port ?? PORT_FALLBACK.speaker,
-    rgb:     state.ports.rgb?.port     ?? PORT_FALLBACK.rgb,
-    color:   state.ports.color?.port   ?? PORT_FALLBACK.color,
-    speedo:  state.ports.speedo?.port  ?? PORT_FALLBACK.speedo,
-    voltage: state.ports.voltage?.port ?? PORT_FALLBACK.voltage,
+    motor:   state.ports.motor?.port   ?? (modern ? PORT_FALLBACK_MODERN.motor   : PORT_FALLBACK.motor),
+    speaker: state.ports.speaker?.port ?? PORT_FALLBACK_MODERN.speaker,
+    rgb:     state.ports.rgb?.port     ?? (modern ? PORT_FALLBACK_MODERN.rgb     : PORT_FALLBACK.rgb),
+    color:   state.ports.color?.port   ?? (modern ? PORT_FALLBACK_MODERN.color   : PORT_FALLBACK.color),
+    speedo:  state.ports.speedo?.port  ?? (modern ? PORT_FALLBACK_MODERN.speedo  : PORT_FALLBACK.speedo),
+    voltage: state.ports.voltage?.port ?? (modern ? PORT_FALLBACK_MODERN.voltage : PORT_FALLBACK.voltage),
   };
 }
 
@@ -957,7 +1137,7 @@ function renderPorts() {
   const grid = $('ports-grid');
   grid.innerHTML = '';
   const kinds = Object.keys(state.ports);
-  if (!kinds.length) { grid.innerHTML = '<p class="hint">No ports announced yet…</p>'; return; }
+  if (!kinds.length) { grid.innerHTML = '<p class="hint">Noch keine Anschlüsse gemeldet …</p>'; return; }
   kinds.sort((a, b) => state.ports[a].port - state.ports[b].port);
   for (const k of kinds) {
     const p = state.ports[k];
@@ -1076,14 +1256,9 @@ function mountedControls() {
     playSoundReliable(id);
   };
 
-  /* LED colours — LWP3 palette (also feeds the basic light toggle) */
-  const wrap = $('ledcolors');
-  for (const [id, name] of LWP3_COLORS) {
-    const b = document.createElement('button');
-    b.innerHTML = `<span class="led-dot" style="background:${COLOR_SWATCHES[id] || '#6b7280'}"></span>${name}`;
-    b.onclick = () => setLed(id);
-    wrap.appendChild(b);
-  }
+  /* LED colours — palette follows the detected hub generation
+   * (2018 LWP3 table vs. the 2025 EVENTS colour set). */
+  renderLedPalette();
   $('btn-battery').onclick = () => { if (connectedGuard()) { throttler.enqueue(cmdHubPropRequest(6)); log('→ Hub Properties: request battery(6)', 'info'); } };
   $('btn-versions').onclick = () => { if (connectedGuard()) { throttler.enqueue(cmdHubPropRequest(3)); throttler.enqueue(cmdHubPropRequest(4)); log('→ Hub Properties: request fw(3), hw(4)', 'info'); } };
   $('btn-rssi').onclick = () => { if (connectedGuard()) { requestRssi(); log('→ Hub Properties: request rssi(5) — link quality probe', 'info'); } };
