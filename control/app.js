@@ -180,6 +180,7 @@ function toggleLight() {
 
 function setView(name, persist = true) {
   const expert = name === 'expert';
+  if (document.body) document.body.dataset.view = expert ? 'expert' : 'basic';
   $('view-basic').classList.toggle('hidden', expert);
   $('view-expert').classList.toggle('hidden', !expert);
 

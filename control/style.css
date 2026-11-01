@@ -584,6 +584,8 @@ input[type="number"] {
   .topbar { align-items: flex-start; }
   .header-status { justify-items: start; width: 100%; }
   .sensor-pins { justify-content: flex-start; }
+  body[data-view="basic"] .sensor-pins { display: none; }
+  body[data-view="basic"] #pill-scan { display: none; }
   .quick-grid { grid-template-columns: 1fr; }
   .quick-btn { min-height: 118px; }
   .drive { flex-wrap: wrap; }
