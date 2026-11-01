@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0f1117" />
+    <meta
+      name="description"
+      content="Web-Bluetooth-Steuerung für den LEGO DUPLO Zug: koppeln, fahren, hupen und Licht schalten – ohne App-Installation."
+    />
+    <title>Steuerung · DUPLO Train</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <svg class="sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+      <symbol id="i-train" viewBox="0 0 24 24">
+        <path d="M4 14V9a2 2 0 0 1 2-2h7v7" />
+        <path d="M13 14V7h4a2 2 0 0 1 2 2v5" />
+        <path d="M7 7V4h3v3" />
+        <path d="M3 14h18" />
+        <circle cx="8" cy="17.5" r="1.6" />
+        <circle cx="15.5" cy="17.5" r="1.6" />
+      </symbol>
+      <symbol id="i-bluetooth" viewBox="0 0 24 24">
+        <path d="M7 7l10 10-5 4V3l5 4L7 17" />
+      </symbol>
+      <symbol id="i-power" viewBox="0 0 24 24">
+        <path d="M12 3v9" />
+        <path d="M6.6 6.6a8 8 0 1 0 10.8 0" />
+      </symbol>
+      <symbol id="i-gamepad" viewBox="0 0 24 24">
+        <rect x="2" y="7" width="20" height="11" rx="5" />
+        <path d="M7 10v4M5 12h4" />
+        <circle cx="16" cy="11" r="1" />
+        <circle cx="18.5" cy="13.5" r="1" />
+      </symbol>
+      <symbol id="i-wrench" viewBox="0 0 24 24">
+        <path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.3 2.3-2-2 2.3-2.3z" />
+      </symbol>
+      <symbol id="i-horn" viewBox="0 0 24 24">
+        <path d="M4 10v4l5 3V7l-5 3z" />
+        <path d="M9 10h2l6-4v12l-6-4H9" />
+        <path d="M18 8a5 5 0 0 1 0 8" />
+      </symbol>
+      <symbol id="i-bulb" viewBox="0 0 24 24">
+        <path d="M9 18h6" />
+        <path d="M10 21h4" />
+        <path d="M12 3a6 6 0 0 0-4 10.5c.8.7 1 1.5 1 2.5h6c0-1 .2-1.8 1-2.5A6 6 0 0 0 12 3z" />
+      </symbol>
+      <symbol id="i-radar" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" />
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 12l5-5" />
+      </symbol>
+    </svg>
+
+    <a class="skip" href="#main">Zum Inhalt springen</a>
+
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Zur Projektseite">
+        <span class="brand-mark" aria-hidden="true"><svg class="icon"><use href="#i-train" /></svg></span>
+        <span class="brand-text"><b>DUPLO Train</b><small>Web-Steuerung</small></span>
+      </a>
+      <div class="header-status">
+        <div class="pills" aria-label="Verbindungsstatus">
+          <span id="pill-bt" class="pill pill-off">Web Bluetooth</span>
+          <span id="pill-scan" class="pill pill-off">Scan bereit</span>
+          <span id="pill-conn" class="pill pill-off">Nicht verbunden</span>
+        </div>
+        <div class="sensor-pins" aria-label="Aktuelle Sensorwerte">
+          <span class="sensor-pin">Farbe <i id="color-swatch" class="color-swatch" aria-hidden="true"></i><b id="val-color">–</b></span>
+          <span class="sensor-pin">Tacho <b id="val-speedo">–</b></span>
+          <span class="sensor-pin">Spannung <b id="val-voltage">–</b></span>
+          <span class="sensor-pin">Akku <b id="val-battery">–</b></span>
+          <span class="sensor-pin">RSSI <b id="val-rssi">–</b></span>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="card connect-card" id="card-connect">
+        <div class="card-head">
+          <div>
+            <h2>1 · Koppeln</h2>
+            <p class="hint">Zug einschalten, LEGO-App schließen, dann den Hub auswählen.</p>
+          </div>
+          <span class="badge">Web Bluetooth</span>
+        </div>
+        <div class="row connect-actions">
+          <button id="btn-choose" class="primary big">
+            <svg class="icon" aria-hidden="true"><use href="#i-bluetooth" /></svg>
+            Zug suchen …
+          </button>
+          <button id="btn-disconnect" class="danger" disabled>Trennen</button>
+          <button id="btn-poweroff" class="ghost" disabled>
+            <svg class="icon" aria-hidden="true"><use href="#i-power" /></svg>
+            Hub aus
+          </button>
+        </div>
+      </section>
+
+      <div class="modebar">
+        <div class="segmented" role="tablist" aria-label="Ansicht wählen">
+          <button id="mode-basic" class="seg active" data-view="basic" role="tab" aria-selected="true" aria-controls="view-basic">
+            <svg class="icon" aria-hidden="true"><use href="#i-gamepad" /></svg>
+            Einfach
+          </button>
+          <button id="mode-expert" class="seg" data-view="expert" role="tab" aria-selected="false" aria-controls="view-expert">
+            <svg class="icon" aria-hidden="true"><use href="#i-wrench" /></svg>
+            Experte
+          </button>
+        </div>
+        <p class="hint" id="mode-hint">Koppeln, fahren, hupen, Licht – mehr braucht es nicht.</p>
+      </div>
+
+      <section class="card drive-card" aria-labelledby="drive-title">
+        <div class="card-head">
+          <h2 id="drive-title">2 · Fahren</h2>
+          <div class="speed-display"><span id="speed-readout">0</span><small>%</small></div>
+        </div>
+        <div class="drive">
+          <button class="stepper" id="btn-slowdown" aria-label="Langsamer">−</button>
+          <input
+            type="range"
+            id="speed"
+            min="-100"
+            max="100"
+            value="0"
+            step="10"
+            aria-label="Zuggeschwindigkeit"
+          />
+          <button class="stepper" id="btn-speedup" aria-label="Schneller">+</button>
+        </div>
+        <div class="drive-foot">
+          <div class="drive-scale"><span>◀ rückwärts</span><span>vorwärts ▶</span></div>
+          <button id="btn-stop" class="danger stop-btn">■ Stopp</button>
+        </div>
+        <p class="hint">Der Regler reicht von −100 (rückwärts) bis +100 (vorwärts).</p>
+      </section>
+
+      <div id="view-basic" class="view" role="tabpanel" aria-labelledby="mode-basic">
+        <section class="card quick-card">
+          <div class="card-head">
+            <h2>3 · Schnellbefehle</h2>
+            <span class="hint">Ein Tipp genügt.</span>
+          </div>
+          <div class="quick-grid">
+            <button id="btn-horn" class="quick-btn horn">
+              <span class="quick-icon" aria-hidden="true"><svg class="icon"><use href="#i-horn" /></svg></span>
+              <b>Hupe</b>
+              <small>Signalton abspielen</small>
+            </button>
+            <button id="btn-light" class="quick-btn light" aria-pressed="false">
+              <span class="quick-icon" aria-hidden="true"><svg class="icon"><use href="#i-bulb" /></svg></span>
+              <b>Licht</b>
+              <small><i id="light-swatch" class="inline-swatch" aria-hidden="true"></i><span id="light-state">Aus</span></small>
+            </button>
+          </div>
+        </section>
+
+        <section class="card tip-card">
+          <h2>So geht's</h2>
+          <ol class="steps">
+            <li><b>Zug einschalten</b> und die LEGO-App schließen – der Hub darf mit nichts verbunden sein.</li>
+            <li><b>„Zug suchen“</b> antippen und den Hub im Auswahldialog wählen. Beim 2025er-Hub die Kopplungsanfrage bestätigen.</li>
+            <li><b>Losfahren:</b> Regler bewegen, Hupe und Licht nach Bedarf. Alles Weitere findest du im Expertenmodus.</li>
+          </ol>
+          <p class="hint">Chrome oder Edge erforderlich · HTTPS oder <code>localhost</code> · keine Installation, keine Cloud.</p>
+        </section>
+      </div>
+
+      <div id="view-expert" class="view hidden" role="tabpanel" aria-labelledby="mode-expert">
+        <section class="card">
+          <h2>Anschlüsse <small>vom Hub erkannt</small></h2>
+          <div class="grid" id="ports-grid">
+            <p class="hint">Zuerst verbinden – der Zug meldet seine Anschlüsse selbst.</p>
+          </div>
+          <div class="row">
+            <button id="btn-probeports" class="ghost" title="Fragt Port-Modi, Namen, Einheiten und Datenformate ab">
+              Ports / Modi untersuchen
+            </button>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Gerät <small>Hub-Details</small></h2>
+          <p id="device-hint" class="hint">Nach dem Koppeln erscheinen hier ID, Name, Hub-Typ, Akku, Taster und Firmware.</p>
+          <div id="device-info" class="hidden">
+            <table>
+              <tbody>
+                <tr><td>ID</td><td id="di-id">–</td></tr>
+                <tr><td>Name</td><td id="di-name">–</td></tr>
+                <tr><td>Hub-Typ</td><td id="di-hubtype">–</td></tr>
+                <tr><td>Werbung (LEGO 6 B)</td><td id="di-mfr">–</td></tr>
+                <tr><td>Akku</td><td id="di-battery">–</td></tr>
+                <tr><td>Taster</td><td id="di-button">–</td></tr>
+                <tr><td>FW / HW</td><td id="di-versions">–</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Geräusche <small>Lautsprecher</small></h2>
+          <div class="row wrap" id="sounds">
+            <button data-sound="3">Bremsen</button>
+            <button data-sound="5">Abfahrt</button>
+            <button data-sound="7">Wasser</button>
+            <button data-sound="9">Hupe</button>
+            <button data-sound="10">Dampf</button>
+          </div>
+          <div class="row sound-test">
+            <label for="sound-id" class="chk">Sound-ID testen (0–255)</label>
+            <input id="sound-id" type="number" min="0" max="255" step="1" value="0" />
+            <button id="btn-testsound" class="ghost">ID abspielen</button>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>LED-Farben <small>RGB-Anschluss</small></h2>
+          <div class="row wrap led-grid" id="ledcolors"></div>
+          <p class="hint">Die Schnellansicht nutzt die zuletzt gewählte Farbe. „Keine Farbe“ schaltet das Licht aus.</p>
+        </section>
+
+        <section class="card">
+          <h2>Sensoren &amp; Hub</h2>
+          <div class="row">
+            <button id="btn-battery" class="ghost">Akku-% abfragen</button>
+            <button id="btn-versions" class="ghost">FW/HW abfragen</button>
+            <button id="btn-rssi" class="ghost" title="Signalstärke jetzt abfragen">Signal jetzt</button>
+          </div>
+          <p class="hint">Die aktuellen Messwerte stehen oben in der Statusleiste.</p>
+        </section>
+
+        <section class="card chart-card">
+          <h2>Verlauf <small>letzte 60 Sekunden</small></h2>
+          <canvas id="sensor-chart" aria-label="Zeitverlauf von Tacho und RSSI"></canvas>
+          <div class="row">
+            <span class="chart-legend speedo-legend">● Tacho</span>
+            <span class="chart-legend rssi-legend">● RSSI</span>
+            <button id="btn-clearchart" class="ghost">Verlauf leeren</button>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Erweitert <small>Diagnose &amp; Protokoll</small></h2>
+          <div class="row">
+            <label class="chk">
+              <input type="checkbox" id="chk-throttle" checked />
+              Schreibvorgänge wie in der App drosseln (<b>4 Pakete / 80 ms</b>)
+            </label>
+            <button id="btn-advscan" class="ghost" title="Experimentelle Chrome-Funktion">
+              <svg class="icon" aria-hidden="true"><use href="#i-radar" /></svg>
+              Advert watch
+            </button>
+          </div>
+          <p class="hint">
+            Advert watch dekodiert die LEGO-Herstellerdaten (ID <code>0x0397</code>). Dafür muss
+            <code>chrome://flags/#enable-experimental-web-platform-features</code> aktiv sein.
+          </p>
+        </section>
+
+        <section class="card inspector-card">
+          <h2>Inspector <small>Bluetooth &amp; LWP3</small></h2>
+          <div class="row">
+            <label class="chk"><input type="checkbox" id="chk-hexlogging" /> Hex-Debug-Logs (TX/RX)</label>
+            <button id="btn-copylog" class="ghost">Logs kopieren</button>
+            <button id="btn-clearlog" class="ghost">Leeren</button>
+          </div>
+          <p id="bt-stats" class="hint">writes ok 0 · write errors 0 · hub feedback 0 · discarded 0</p>
+          <pre id="log" class="logbox" aria-live="polite"></pre>
+        </section>
+      </div>
+    </main>
+
+    <footer class="page-foot">
+      <p>
+        Protokoll: <a href="https://lego.github.io/lego-ble-wireless-protocol-docs/">LEGO Wireless Protocol v3</a>
+        · <a href="../">Projektseite</a> · <a href="../BLE-MECHANICS.md">Reverse-Engineering-Notizen</a>
+      </p>
+      <p>Keine Verbindung zur LEGO Gruppe. LEGO und DUPLO sind Marken der LEGO Gruppe.</p>
+    </footer>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

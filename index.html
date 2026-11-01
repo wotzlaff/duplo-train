@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b0d12" />
+    <title>DUPLO Train · Web-Bluetooth-Steuerung</title>
+    <meta
+      name="description"
+      content="Reverse-engineerte Web-Bluetooth-Steuerung für den LEGO DUPLO Zug: koppeln, fahren, hupen, Licht schalten. Ohne Installation, direkt im Browser."
+    />
+    <meta property="og:title" content="DUPLO Train · Web-Bluetooth-Steuerung" />
+    <meta
+      property="og:description"
+      content="Der LEGO DUPLO Zug, gesteuert direkt aus dem Browser. LWP3-Protokoll, Web Bluetooth, Open Source."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./site/site.css" />
+  </head>
+  <body>
+    <svg class="sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+      <symbol id="i-train" viewBox="0 0 24 24">
+        <path d="M4 14V9a2 2 0 0 1 2-2h7v7" />
+        <path d="M13 14V7h4a2 2 0 0 1 2 2v5" />
+        <path d="M7 7V4h3v3" />
+        <path d="M3 14h18" />
+        <circle cx="8" cy="17.5" r="1.6" />
+        <circle cx="15.5" cy="17.5" r="1.6" />
+      </symbol>
+      <symbol id="i-bluetooth" viewBox="0 0 24 24">
+        <path d="M7 7l10 10-5 4V3l5 4L7 17" />
+      </symbol>
+      <symbol id="i-gamepad" viewBox="0 0 24 24">
+        <rect x="2" y="7" width="20" height="11" rx="5" />
+        <path d="M7 10v4M5 12h4" />
+        <circle cx="16" cy="11" r="1" />
+        <circle cx="18.5" cy="13.5" r="1" />
+      </symbol>
+      <symbol id="i-wrench" viewBox="0 0 24 24">
+        <path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.3 2.3-2-2 2.3-2.3z" />
+      </symbol>
+      <symbol id="i-horn" viewBox="0 0 24 24">
+        <path d="M4 10v4l5 3V7l-5 3z" />
+        <path d="M9 10h2l6-4v12l-6-4H9" />
+        <path d="M18 8a5 5 0 0 1 0 8" />
+      </symbol>
+      <symbol id="i-bulb" viewBox="0 0 24 24">
+        <path d="M9 18h6" />
+        <path d="M10 21h4" />
+        <path d="M12 3a6 6 0 0 0-4 10.5c.8.7 1 1.5 1 2.5h6c0-1 .2-1.8 1-2.5A6 6 0 0 0 12 3z" />
+      </symbol>
+      <symbol id="i-gauge" viewBox="0 0 24 24">
+        <path d="M4.9 19a9 9 0 1 1 14.2 0" />
+        <path d="M12 14l4-4" />
+        <circle cx="12" cy="14" r="1" />
+      </symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24">
+        <rect x="5" y="10" width="14" height="10" rx="2" />
+        <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+        <path d="M12 14v2" />
+      </symbol>
+      <symbol id="i-play" viewBox="0 0 24 24">
+        <path d="M8 5l11 7-11 7z" />
+      </symbol>
+    </svg>
+
+    <a class="skip" href="#main">Zum Inhalt springen</a>
+
+    <header class="nav">
+      <div class="wrap nav-inner">
+        <a class="brand" href="#top" aria-label="Zum Seitenanfang">
+          <span class="brand-mark" aria-hidden="true"><svg class="icon"><use href="#i-train" /></svg></span>
+          <span class="brand-text"><b>DUPLO Train</b><small>Web Control</small></span>
+        </a>
+        <nav class="nav-links" aria-label="Hauptnavigation">
+          <a href="#funktionen">Funktionen</a>
+          <a href="#technik">Technik</a>
+          <a href="#protokoll">Protokoll</a>
+          <a href="#start">Loslegen</a>
+        </nav>
+        <a class="nav-cta" href="control/">Steuerung öffnen <span aria-hidden="true">→</span></a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero wrap" id="top">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="dot"></span> Reverse Engineered · Web Bluetooth · Open Source</p>
+          <h1>Dein DUPLO-Zug.<br /><span>Direkt im Browser.</span></h1>
+          <p class="lead">
+            Koppeln, fahren, hupen, Licht schalten – ohne App-Store, ohne Konto, ohne Cloud.
+            Die Web-App spricht das <strong>LEGO Wireless Protocol v3</strong> genau so wie die
+            offizielle Train-App. Die komplette BLE-Mechanik wurde dafür aus dem Android-APK
+            nachgebaut.
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" href="control/">
+              <svg class="icon" aria-hidden="true"><use href="#i-play" /></svg>
+              Steuerung öffnen
+            </a>
+            <a class="btn ghost" href="#technik">Technik verstehen</a>
+          </div>
+          <ul class="chips" aria-label="Voraussetzungen">
+            <li>Chrome / Edge</li>
+            <li>Hubs 2018–2025</li>
+            <li>keine Installation</li>
+            <li>alles lokal</li>
+          </ul>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="glow"></div>
+          <div class="app-mock">
+            <div class="mock-top">
+              <span class="mock-brand"><svg class="icon" aria-hidden="true"><use href="#i-train" /></svg> DUPLO Train</span>
+              <span class="mock-status"><i></i> Verbunden</span>
+            </div>
+            <div class="mock-speed">
+              <b>60</b><span>%</span>
+            </div>
+            <div class="mock-slider"><i></i></div>
+            <div class="mock-scale"><span>◀ rückwärts</span><span>vorwärts ▶</span></div>
+            <div class="mock-actions">
+              <span class="mock-btn horn"><svg class="icon" aria-hidden="true"><use href="#i-horn" /></svg> Hupe</span>
+              <span class="mock-btn light"><svg class="icon" aria-hidden="true"><use href="#i-bulb" /></svg> Licht <b>an</b></span>
+            </div>
+            <div class="mock-sensors">
+              <span>Farbe <i class="swatch red"></i> Rot</span>
+              <span>Tacho 12</span>
+              <span>Akku 87 %</span>
+            </div>
+          </div>
+          <div class="track"><span class="train"><svg class="icon" aria-hidden="true"><use href="#i-train" /></svg></span></div>
+        </div>
+      </section>
+
+      <section class="stats wrap" aria-label="Technische Kennzahlen">
+        <div><b>4 / 80 ms</b><span>Schreibfenster wie im Original</span></div>
+        <div><b>1</b><span>BLE-Charakteristik für alles</span></div>
+        <div><b>100 ms</b><span>Motor-Keepalive</span></div>
+        <div><b>2</b><span>Hub-Generationen unterstützt</span></div>
+      </section>
+
+      <section class="section wrap" id="funktionen">
+        <div class="section-head">
+          <p class="eyebrow">Funktionen</p>
+          <h2>Erst einfach. Dann beliebig tief.</h2>
+          <p>
+            Die Grundfunktionen liegen direkt auf der Oberfläche. Wer mehr will, wechselt in den
+            Expertenmodus – mit allen Sounds, Farben, Sensoren und dem rohen LWP3-Protokoll.
+          </p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature">
+            <span class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-bluetooth" /></svg></span>
+            <h3>Koppeln</h3>
+            <p>Ein Klick, ein Auswahldialog. Der Browser verbindet sich direkt mit dem Hub – ohne Pairing-Tools, ohne Konto.</p>
+          </article>
+          <article class="feature">
+            <span class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-gauge" /></svg></span>
+            <h3>Fahren</h3>
+            <p>Stufenlos von −100 bis +100. Große Plus-/Minus-Tasten und ein Stopp-Knopf, der auch auf dem Handy gut trifft.</p>
+          </article>
+          <article class="feature">
+            <span class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-horn" /></svg></span>
+            <h3>Hupen</h3>
+            <p>Die Hupe ist ein einziger großer Button. Im Expertenmodus kommen Bremsen, Abfahrt, Wasser und Dampf dazu.</p>
+          </article>
+          <article class="feature">
+            <span class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-bulb" /></svg></span>
+            <h3>Licht umschalten</h3>
+            <p>An und aus mit einem Tipp. Die zuletzt gewählte Farbe aus der Palette wird dabei wiederverwendet.</p>
+          </article>
+          <article class="feature">
+            <span class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-wrench" /></svg></span>
+            <h3>Expertenmodus</h3>
+            <p>Ports, Sensoren, 60-Sekunden-Verlauf, Akku, Firmware, RSSI, Roh-Logs und ein einstellbarer SendThrottler.</p>
+          </article>
+          <article class="feature">
+            <span class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-lock" /></svg></span>
+            <h3>Keine Cloud</h3>
+            <p>Die Verbindung läuft ausschließlich lokal zwischen Browser und Zug. Kein Server, kein Tracking, keine Konten.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section wrap">
+        <div class="split">
+          <article class="panel basic-panel">
+            <p class="panel-tag">Ansicht 01</p>
+            <h3><svg class="icon panel-ico" aria-hidden="true"><use href="#i-gamepad" /></svg> Einfach</h3>
+            <p class="panel-lead">Für den Alltag – alles Wichtige ohne Sucherei.</p>
+            <ul class="check-list">
+              <li>Zug suchen &amp; verbinden</li>
+              <li>Geschwindigkeit und Stopp</li>
+              <li>Hupe</li>
+              <li>Licht an / aus</li>
+            </ul>
+          </article>
+          <article class="panel expert-panel">
+            <p class="panel-tag">Ansicht 02</p>
+            <h3><svg class="icon panel-ico" aria-hidden="true"><use href="#i-wrench" /></svg> Experte</h3>
+            <p class="panel-lead">Für alle, die wissen wollen, was auf der Leitung passiert.</p>
+            <ul class="check-list">
+              <li>Alle fünf Sounds + freie Sound-ID</li>
+              <li>Vollständige LWP3-Farbpalette</li>
+              <li>Ports, Sensoren, Verlauf, Akku, FW/HW</li>
+              <li>Hex-Logs, Advert-Watch, Throttler</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section wrap" id="technik">
+        <div class="section-head">
+          <p class="eyebrow">Technik</p>
+          <h2>Was zwischen Browser und Zug passiert.</h2>
+          <p>
+            Die App ist eine originalgetreue Re-Implementierung der Bluetooth-Schicht aus
+            <code>com.lego.duplo.train 1.8.16</code>. Die Beweiskette liegt im Repository:
+            DEX-Dumps der LEGO-Bluetooth-Klassen, offizielle LWP3-Spezifikation und
+            Community-Captures.
+          </p>
+        </div>
+
+        <div class="tech-grid">
+          <article class="tech-card wide">
+            <h3>Architektur</h3>
+            <div class="arch">
+              <div class="arch-box">
+                <b>Browser</b>
+                <span>Web Bluetooth</span>
+              </div>
+              <div class="arch-arrow" aria-hidden="true">→</div>
+              <div class="arch-box accent">
+                <b>LWP3</b>
+                <span>Service 1623<br />Charakteristik 1624</span>
+              </div>
+              <div class="arch-arrow" aria-hidden="true">→</div>
+              <div class="arch-box">
+                <b>DUPLO Hub</b>
+                <span>Motor · Speaker · RGB<br />Sensorik · Akku</span>
+              </div>
+            </div>
+            <p>
+              Der gesamte Datenverkehr – Steuerbefehle, Sensorwerte, Fehler, Firmware-Infos –
+              läuft über eine einzige Characteristic. Web Bluetooth schreibt mit
+              <em>write-without-response</em> und empfängt Notifications; die App kodiert und
+              dekodiert dazwischen das LWP3-Format.
+            </p>
+          </article>
+
+          <article class="tech-card">
+            <h3>Das Frame-Format</h3>
+            <pre class="code"><code>08 00 81 00 11 51 00 32
+│  │  │  │  │  │  │  └─ Wert (s8: 50 = halbe Fahrt)
+│  │  │  │  │  │  └──── Modus (0 = Motor)
+│  │  │  │  │  └─────── WriteDirectModeData
+│  │  │  │  └────────── Port (vom Hub gemeldet)
+│  │  │  └───────────── Port Output Command
+│  │  └──────────────── Hub-ID
+│  └─────────────────── Länge
+└────────────────────── Länge inkl. sich selbst</code></pre>
+          </article>
+
+          <article class="tech-card">
+            <h3>SendThrottler</h3>
+            <p>
+              Die originale App drosselt Schreibvorgänge auf <strong>4 Pakete pro 80 ms</strong>.
+              Die Web-App spiegelt diese Queue inklusive „Overtake“-Logik: Neue Motorbefehle
+              verdrängen veraltete, damit der frischeste Sollwert zuerst rausgeht.
+            </p>
+          </article>
+
+          <article class="tech-card">
+            <h3>Motor-Keepalive</h3>
+            <p>
+              DUPLO-Hubs verlieren einzelne Motor-Kommandos gern. Deshalb wird der letzte
+              Sollwert alle <strong>100 ms</strong> erneut gesendet, solange er nicht null ist –
+              plus ein sofortiges Repeat bei jeder Änderung. Stopp wird doppelt gesendet.
+            </p>
+          </article>
+
+          <article class="tech-card">
+            <h3>Ports statt fester Annahmen</h3>
+            <p>
+              Der Hub meldet seine angeschlossenen Geräte über <em>Hub Attached I/O</em>. Die App
+              ordnet Motor, Lautsprecher, RGB-LED, Farbsensor, Tacho und Spannung anhand des
+              Gerätetyps zu – deshalb funktionieren 2018er- und 2025er-Hub mit demselben Code.
+            </p>
+          </article>
+
+          <article class="tech-card">
+            <h3>Verlässliche Sounds</h3>
+            <p>
+              Audio-Writes gehen besonders leicht verloren. Die App wartet auf das
+              Feedback-Paket <code>0x82</code> und wiederholt einen Sound nur, solange der Hub
+              keine Fertigmeldung geschickt hat – so werden Doppel-Trigger vermieden.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section wrap" id="protokoll">
+        <div class="section-head">
+          <p class="eyebrow">Protokoll</p>
+          <h2>Die Befehle im Klartext.</h2>
+          <p>
+            <code>PP</code> ist der zur Laufzeit ermittelte Port. Alle Werte sind so, wie sie
+            tatsächlich über die Leitung gehen – nachvollziehbar im Hex-Log des Expertenmodus.
+          </p>
+        </div>
+
+        <div class="table-wrap">
+          <table class="cmd-table">
+            <thead>
+              <tr>
+                <th>Funktion</th>
+                <th>Bytes</th>
+                <th>Erklärung</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Fahren</td>
+                <td><code>08 00 81 PP 11 51 00 SS</code></td>
+                <td><code>SS</code> ist ein signed byte von <code>−100</code> bis <code>+100</code>.</td>
+              </tr>
+              <tr>
+                <td>Stopp</td>
+                <td><code>08 00 81 PP 11 51 00 00</code></td>
+                <td>Wird zweimal gesendet, weil der Kanal verlustbehaftet ist.</td>
+              </tr>
+              <tr>
+                <td>Hupe</td>
+                <td><code>08 00 81 PP 11 51 01 09</code></td>
+                <td>Sound-ID 9. Weitere IDs: 3 Bremsen, 5 Abfahrt, 7 Wasser, 10 Dampf.</td>
+              </tr>
+              <tr>
+                <td>Licht an</td>
+                <td><code>08 00 81 PP 11 51 00 0A</code></td>
+                <td>LWP3-Farbe 10 (weiß). Farben 0–10 sind die Palette, 255 schaltet aus.</td>
+              </tr>
+              <tr>
+                <td>Licht aus</td>
+                <td><code>08 00 81 PP 11 51 00 FF</code></td>
+                <td><code>0xFF</code> bedeutet „keine Farbe“.</td>
+              </tr>
+              <tr>
+                <td>Sensor abonnieren</td>
+                <td><code>0A 00 41 PP MM D1 D2 D3 D4 01</code></td>
+                <td>Port Input Format Setup; Delta als little-endian u32, zuletzt Notify-Flag.</td>
+              </tr>
+              <tr>
+                <td>Akku abfragen</td>
+                <td><code>05 00 01 06 05</code></td>
+                <td>Hub Property 6 (Battery Level), Opcode 5 = Request Update.</td>
+              </tr>
+              <tr>
+                <td>Hub ausschalten</td>
+                <td><code>04 00 02 01</code></td>
+                <td>Hub Action 1. Der Hub meldet vorher <code>0x30</code>/<code>0x31</code>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="tech-grid compact">
+          <article class="tech-card">
+            <h3>Kompatibilität</h3>
+            <div class="compat">
+              <div>
+                <b>2018–2024</b>
+                <span>Hub No. 5 · <code>0x20</code></span>
+                <small>10874, 10875, 10877, 10882 · kein Bonding, leerer Advertise-Name</small>
+              </div>
+              <div>
+                <b>2025</b>
+                <span>Hub No. 16 · <code>0x21</code></span>
+                <small>Set 10427 · Bonding erforderlich, Chrome zeigt einen Pairing-Dialog</small>
+              </div>
+            </div>
+          </article>
+          <article class="tech-card">
+            <h3>Reverse Engineering</h3>
+            <p>
+              Grundlage ist das Play-Bundle-APK der offiziellen App (Unity/IL2CPP,
+              <code>dk.lego.cubb.*</code>). Die Java-Bluetooth-Schicht wurde aus
+              <code>classes.dex</code> extrahiert und dokumentiert. Die vollständigen Notizen
+              stehen in <a href="BLE-MECHANICS.md">BLE-MECHANICS.md</a>.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section wrap" id="start">
+        <div class="section-head">
+          <p class="eyebrow">Loslegen</p>
+          <h2>In drei Schritten aufs Gleis.</h2>
+        </div>
+
+        <div class="start-grid">
+          <ol class="start-steps">
+            <li>
+              <b>Zug vorbereiten</b>
+              <span>Zug einschalten und die LEGO-App (sowie alles andere, was mit dem Hub verbunden ist) schließen.</span>
+            </li>
+            <li>
+              <b>Steuerung öffnen</b>
+              <span>Auf dieser Seite „Steuerung öffnen“ wählen. Chrome oder Edge, HTTPS oder localhost.</span>
+            </li>
+            <li>
+              <b>Koppeln und fahren</b>
+              <span>„Zug suchen“ antippen, Hub auswählen, Regler bewegen. Beim 2025er-Hub die Kopplung bestätigen.</span>
+            </li>
+          </ol>
+
+          <div class="start-card">
+            <h3>Lokal starten</h3>
+            <pre class="code"><code>npm install
+npm run dev</code></pre>
+            <p>
+              Vite startet einen lokalen Server. Web Bluetooth braucht
+              <strong>HTTPS oder <code>localhost</code></strong> – ein einfacher HTTP-Server im
+              LAN reicht nicht.
+            </p>
+            <a class="btn primary full" href="control/">
+              <svg class="icon" aria-hidden="true"><use href="#i-play" /></svg>
+              Zur Steuerungsapp
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section wrap">
+        <div class="section-head">
+          <p class="eyebrow">Fragen</p>
+          <h2>Typische Stolpersteine.</h2>
+        </div>
+        <div class="faq">
+          <details>
+            <summary>Warum funktioniert es nur in Chrome oder Edge?</summary>
+            <p>
+              Web Bluetooth ist ein Chromium-Feature. Safari und Firefox implementieren die
+              API nicht. Auf Android funktioniert Chrome, auf dem Desktop braucht es einen
+              Bluetooth-Adapter.
+            </p>
+          </details>
+          <details>
+            <summary>Der Hub erscheint nicht im Auswahldialog.</summary>
+            <p>
+              Meist ist noch die LEGO-App verbunden, der Zug aus, oder der Hub bereits mit einem
+              anderen Gerät gekoppelt. Der Hub ist nur sichtbar, wenn er frei ist.
+            </p>
+          </details>
+          <details>
+            <summary>Der Zug fährt an und bleibt sofort stehen.</summary>
+            <p>
+              Das ist eine Eigenheit der Hubs: einzelne Motor-Writes gehen verloren. Die App
+              sendet den Sollwert deshalb alle 100 ms erneut, solange er nicht null ist.
+              Im Expertenmodus lässt sich das im Hex-Log gut beobachten.
+            </p>
+          </details>
+          <details>
+            <summary>Sounds kommen manchmal nicht an.</summary>
+            <p>
+              Der Audio-Kanal ist verlustbehafteter als der Motor-Kanal. Die App wartet auf
+              Hub-Feedback und wiederholt nur, wenn keine Fertigmeldung kam – blindes Wiederholen
+              würde laufende Sounds unterbrechen.
+            </p>
+          </details>
+          <details>
+            <summary>Werden Daten irgendwohin gesendet?</summary>
+            <p>
+              Nein. Die Seite ist rein statisch. Die Bluetooth-Verbindung besteht direkt zwischen
+              deinem Browser und dem Zug. Es gibt keinen Server, kein Tracking und keine Konten.
+            </p>
+          </details>
+          <details>
+            <summary>Ist das eine offizielle LEGO-App?</summary>
+            <p>
+              Nein. Das ist ein unabhängiges Reverse-Engineering-Projekt. LEGO und DUPLO sind
+              Marken der LEGO Gruppe; dieses Projekt steht in keiner Verbindung dazu.
+            </p>
+          </details>
+        </div>
+      </section>
+
+      <section class="cta wrap">
+        <div>
+          <p class="eyebrow">Bereit?</p>
+          <h2>Der Zug wartet.</h2>
+          <p>Steuerung öffnen, Hub auswählen, losfahren. Keine Installation nötig.</p>
+        </div>
+        <a class="btn primary big" href="control/">
+          <svg class="icon" aria-hidden="true"><use href="#i-play" /></svg>
+          Steuerung öffnen
+        </a>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-inner">
+        <div>
+          <a class="brand" href="#top">
+            <span class="brand-mark" aria-hidden="true"><svg class="icon"><use href="#i-train" /></svg></span>
+            <span class="brand-text"><b>DUPLO Train</b><small>Web Control</small></span>
+          </a>
+          <p class="disclaimer">
+            Unabhängiges Reverse-Engineering-Projekt. Keine Verbindung zur LEGO Gruppe.
+            LEGO und DUPLO sind Marken der LEGO Gruppe.
+          </p>
+        </div>
+        <div class="footer-links">
+          <a href="control/">Steuerung</a>
+          <a href="BLE-MECHANICS.md">Reverse-Engineering</a>
+          <a href="LICENSE">MIT-Lizenz</a>
+          <a href="https://lego.github.io/lego-ble-wireless-protocol-docs/">LWP3-Spezifikation</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "name": "duplo-train-web-control",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Web-Bluetooth-Steuerung für den LEGO DUPLO Zug, reverse-engineert aus der offiziellen Train-App.",
+  "keywords": [
+    "lego",
+    "duplo",
+    "train",
+    "web-bluetooth",
+    "lwp3",
+    "reverse-engineering"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "devDependencies": {
+    "vite": "^8.3.5"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  }
+}

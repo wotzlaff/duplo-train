@@ -52,6 +52,7 @@ const COLOR_SWATCHES = {
   5: '#00a9ce', 6: '#237841', 7: '#f2cd37', 8: '#fe8a18', 9: '#c91a09',
   10: '#f4f4f4', 255: 'transparent',
 };
+const LIGHT_DEFAULT_COLOR = 10;   /* white — used the first time the light is switched on */
 
 const SOUND_NAMES = {
   3: 'Brake', 5: 'Depart', 7: 'Water refill', 9: 'Horn', 10: 'Steam',
@@ -93,6 +94,8 @@ const state = {
   sawFeedback: false,   /* hub emitted 0x82 at least once */
   soundPending: null,   /* retry book-keeping for the lossy sound channel */
   preferWrite: false,   /* fall back to writeValue after WWR failures */
+  lightOn: false,       /* basic light toggle state */
+  lightColor: LIGHT_DEFAULT_COLOR, /* last non-off LWP3 colour */
   stats: { tx: 0, txErr: 0, fb: 0, discard: 0 },
   sensorHistory: { speedo: [], rssi: [] },
   lastSeenAdvert: null, /* hex of LEGO 6 bytes, from advert watch when available */
@@ -122,6 +125,77 @@ function setPill(id, text, cls) {
   const el = $(id);
   el.textContent = text;
   el.className = 'pill ' + cls;
+}
+
+/* ========================================================= light & views */
+
+function renderLightState() {
+  const button = $('btn-light');
+  const label = $('light-state');
+  const swatch = $('light-swatch');
+  if (button) {
+    button.classList.toggle('is-on', state.lightOn);
+    button.setAttribute('aria-pressed', state.lightOn ? 'true' : 'false');
+  }
+  if (label) label.textContent = state.lightOn ? 'An' : 'Aus';
+  if (swatch) {
+    swatch.style.backgroundColor = state.lightOn
+      ? (COLOR_SWATCHES[state.lightColor] || '#ffd500')
+      : '#535866';
+  }
+}
+
+function setLed(color, announce = true) {
+  if (!connectedGuard()) return false;
+  const port = state.ports.rgb?.port ?? PORT_FALLBACK.rgb;
+  /* Legoino parity: activate the LED port's mode before writing to it. */
+  if (state.ports.rgb) throttler.enqueue(cmdSubscribe(port, 0, 1, false));
+  const msg = cmdLed(color);
+  bytesOf(msg, 'TX', 'tx');
+  throttler.enqueue(msg);
+
+  if (color === 255) {
+    state.lightOn = false;            /* keep the last real colour for the toggle */
+  } else {
+    state.lightOn = true;
+    state.lightColor = color;
+  }
+  renderLightState();
+
+  if (announce) {
+    const name = (LWP3_COLORS.find(([id]) => id === color) || [color, 'Farbe ' + color])[1];
+    log(`→ LED: ${name} (${color})`, 'info');
+  }
+  return true;
+}
+
+function toggleLight() {
+  if (!state.connected) {
+    log('Nicht verbunden – zuerst „Zug suchen“ drücken.', 'warn');
+    return;
+  }
+  if (state.lightOn) setLed(255);
+  else setLed(state.lightColor === 255 ? LIGHT_DEFAULT_COLOR : state.lightColor);
+}
+
+function setView(name, persist = true) {
+  const expert = name === 'expert';
+  $('view-basic').classList.toggle('hidden', expert);
+  $('view-expert').classList.toggle('hidden', !expert);
+
+  for (const [button, active] of [[$('mode-basic'), !expert], [$('mode-expert'), expert]]) {
+    if (!button) continue;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-selected', active ? 'true' : 'false');
+  }
+
+  const hint = $('mode-hint');
+  if (hint) hint.textContent = expert
+    ? 'Alle Rohdaten, Sensoren, Farben und das LWP3-Protokoll.'
+    : 'Koppeln, fahren, hupen, Licht – mehr braucht es nicht.';
+
+  if (persist) { try { localStorage.setItem('duplo.view', name); } catch (e) {} }
+  if (expert) drawSensorChart();      /* canvas has a size only once visible */
 }
 
 /* ============================================================ LWP3 framing */
@@ -302,10 +376,10 @@ function webBluetoothAvailable() { return 'bluetooth' in navigator; }
 async function findAndConnect() {
   if (!webBluetoothAvailable()) {
     log('Web Bluetooth is not available in this browser. Use Chrome/Edge (desktop with BLE adapter, or Android).', 'err');
-    setPill('pill-bt', 'No Web Bluetooth', 'pill-warn');
+    setPill('pill-bt', 'Kein Web Bluetooth', 'pill-warn');
     return;
   }
-  setPill('pill-bt', 'Web Bluetooth ready', 'pill-ok');
+  setPill('pill-bt', 'Web Bluetooth bereit', 'pill-ok');
   log('requestDevice({ filters:[{ services:[ LWP3 ' + LWP3.SERVICE.slice(4, 12) + '… ]}]}) — the web analogue of the app scan:', 'info');
 
   let device;
@@ -329,14 +403,14 @@ async function findAndConnect() {
 
 async function connectGatt() {
   const d = state.device;
-  setPill('pill-conn', 'Connecting…', 'pill-warn');
+  setPill('pill-conn', 'Verbinde …', 'pill-warn');
   try {
     state.server = await d.gatt.connect();
     log('GATT connected — (app does: requestConnectionPriority → discoverServices)', 'info');
   } catch (e) {
     /* 2025 hub (Hub No. 16) requires bonding; Chrome pairs automatically…  */
     log('connect failed: ' + e.message + ' (2025 hub requires bonding — accept the pairing dialog)', 'err');
-    setPill('pill-conn', 'Connect failed', 'pill-off');
+    setPill('pill-conn', 'Verbindung fehlgeschlagen', 'pill-off');
     return;
   }
 
@@ -362,16 +436,19 @@ async function connectGatt() {
   }
 
   state.connected = true;
-  setPill('pill-conn', 'Connected', 'pill-ok');
+  setPill('pill-conn', 'Verbunden', 'pill-ok');
   $('btn-disconnect').disabled = false;
   $('btn-poweroff').disabled = false;
   $('device-info').classList.remove('hidden');
+  $('device-hint')?.classList.add('hidden');
   $('di-id').textContent = d.id || 'n/a (Chrome hides MAC)';
   $('di-name').textContent = d.name || '(empty)';
 
   /* mirror the app side-effect: zero the drive slider + reset UI */
   $('speed').value = 0; updateSpeedReadout();
   state.desiredSpeed = 0;
+  state.lightOn = false;
+  renderLightState();
   state.sensorHistory = { speedo: [], rssi: [] };
   drawSensorChart();
 
@@ -413,17 +490,20 @@ function onDisconnected() {
   updateStats();
   state.connected = false;
   state.characteristic = null;
+  state.lightOn = false;
+  renderLightState();
   state.ports = {}; state.portModes = {}; state.portFormats = {}; state.portRanges = {};
   state.versions = { fw: null, hw: null };
   $('btn-disconnect').disabled = true;
   $('btn-poweroff').disabled = true;
   $('device-info').classList.add('hidden');
+  $('device-hint')?.classList.remove('hidden');
   ['val-color', 'val-speedo', 'val-voltage', 'val-battery', 'val-rssi'].forEach(id => { $(id).textContent = '–'; });
   $('color-swatch').style.backgroundColor = '#535866';
   state.sensorHistory = { speedo: [], rssi: [] };
   drawSensorChart();
-  $('ports-grid').innerHTML = '<p class="hint">Connect first — the train announces its own ports.</p>';
-  setPill('pill-conn', 'Disconnected', 'pill-off');
+  $('ports-grid').innerHTML = '<p class="hint">Zuerst verbinden – der Zug meldet seine Anschlüsse selbst.</p>';
+  setPill('pill-conn', 'Nicht verbunden', 'pill-off');
   log('GATT disconnected', 'warn');
 }
 
@@ -890,7 +970,7 @@ function renderPorts() {
 function updateSpeedReadout() {
   const v = parseInt($('speed').value, 10);
   $('speed-readout').textContent = (v > 0 ? '↑' : v < 0 ? '↓' : '') + Math.abs(v);
-  $('speed-readout').style.color = v === 0 ? 'var(--dim)' : v > 0 ? 'var(--ok)' : 'var(--bad)';
+  $('speed-readout').style.color = v === 0 ? 'var(--dim)' : v > 0 ? 'var(--green)' : 'var(--red)';
 }
 
 function removeQueuedMotorCommands() {
@@ -907,6 +987,16 @@ function enqueueLatestMotor(speed) {
 function mountedControls() {
   window.addEventListener('resize', drawSensorChart);
   drawSensorChart();
+
+  /* ---- basic / expert view switch ------------------------------------ */
+  $('mode-basic').onclick = () => setView('basic');
+  $('mode-expert').onclick = () => setView('expert');
+  let savedView = 'basic';
+  try {
+    if (localStorage.getItem('duplo.view') === 'expert') savedView = 'expert';
+  } catch (e) { /* storage unavailable (private mode etc.) */ }
+  setView(savedView, false);
+
   $('btn-clearchart').onclick = () => {
     state.sensorHistory = { speedo: [], rssi: [] };
     drawSensorChart();
@@ -957,6 +1047,16 @@ function mountedControls() {
     log('→ motor stop (speed 0, sent twice)', 'info');
   };
 
+  /* basic quick actions: horn + light toggle */
+  $('btn-horn').onclick = () => {
+    if (!connectedGuard()) return;
+    $('btn-horn').classList.add('pulse');
+    setTimeout(() => $('btn-horn').classList.remove('pulse'), 300);
+    playSoundReliable(9);
+  };
+  $('btn-light').onclick = toggleLight;
+  renderLightState();
+
   /* sounds */
   $('sounds').querySelectorAll('button[data-sound]').forEach(b => {
     b.onclick = () => {
@@ -975,19 +1075,12 @@ function mountedControls() {
     playSoundReliable(id);
   };
 
-  /* LED colours — LWP3 palette */
+  /* LED colours — LWP3 palette (also feeds the basic light toggle) */
   const wrap = $('ledcolors');
   for (const [id, name] of LWP3_COLORS) {
     const b = document.createElement('button');
-    b.textContent = name;
-    b.onclick = () => {
-      if (!connectedGuard()) return;
-      if (state.ports.rgb) throttler.enqueue(cmdSubscribe(state.ports.rgb.port, 0, 1, false));
-      const msg = cmdLed(id);
-      bytesOf(msg, 'TX', 'tx');
-      log(`→ LED colour: ${name} (${id})`, 'info');
-      throttler.enqueue(msg);
-    };
+    b.innerHTML = `<span class="led-dot" style="background:${COLOR_SWATCHES[id] || '#6b7280'}"></span>${name}`;
+    b.onclick = () => setLed(id);
     wrap.appendChild(b);
   }
   $('btn-battery').onclick = () => { if (connectedGuard()) { throttler.enqueue(cmdHubPropRequest(6)); log('→ Hub Properties: request battery(6)', 'info'); } };
@@ -1026,7 +1119,7 @@ function mountedControls() {
 
 function connectedGuard() {
   if (state.connected) return true;
-  log('not connected — press “Find train…” first', 'warn');
+  log('Nicht verbunden – zuerst „Zug suchen“ drücken.', 'warn');
   return false;
 }
 
@@ -1044,7 +1137,7 @@ async function advancedAdvertWatch() {
       keepRepeatedDevices: true,
     });
     log('advertising watch started — LEGO manufacturer data (0x0397) will be decoded', 'info');
-    setPill('pill-scan', 'Scanning (advert watch)', 'pill-ok');
+    setPill('pill-scan', 'Scan läuft (Advert watch)', 'pill-ok');
   } catch (e) { log('requestLEScan failed: ' + e.message, 'err'); }
 
   const devices = await navigator.bluetooth.getDevices().catch(() => []);
@@ -1074,18 +1167,17 @@ async function advancedAdvertWatch() {
 
 /* ================================================================= bootstrap */
 function bootstrapDuplo() {
-  if (!$('btn-choose')) return; // React mounts the controls before its ready event.
+  if (!$('btn-choose')) return;   // controls must be present in the document
   mountedControls();
   updateSpeedReadout();
   if (!webBluetoothAvailable()) {
-    setPill('pill-bt', 'No Web Bluetooth', 'pill-warn');
+    setPill('pill-bt', 'Kein Web Bluetooth', 'pill-warn');
     log('navigator.bluetooth missing — use Chrome/Edge. HTTPS or localhost required.', 'err');
   } else {
-    setPill('pill-bt', 'Web Bluetooth ready', 'pill-ok');
+    setPill('pill-bt', 'Web Bluetooth bereit', 'pill-ok');
   }
-  setPill('pill-scan', 'NotScanning', 'pill-off');
-  setPill('pill-conn', 'Disconnected', 'pill-off');
+  setPill('pill-scan', 'Scan bereit', 'pill-off');
+  setPill('pill-conn', 'Nicht verbunden', 'pill-off');
   log('Names/protocol mirrored 1:1 from the LEGO DUPLO Train app: scan→' + LWP3.SERVICE.slice(4, 8) + '…, mfr id 919 (0x0397), throttler 4/80ms.', 'info');
 }
 window.addEventListener('DOMContentLoaded', bootstrapDuplo);
-window.addEventListener('duplo-ui-ready', bootstrapDuplo);

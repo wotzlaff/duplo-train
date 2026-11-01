@@ -314,7 +314,8 @@ and community captures ([codecat's DUPLO train work](https://codecat.io/projects
 
 ## 7. Deliverable: the Web-App
 
-`webapp/` contains a faithful Web Bluetooth re-implementation of these mechanics:
+`control/` contains a faithful Web Bluetooth re-implementation of these mechanics
+(the project landing page lives in `index.html`):
 
 * **Scan** filter — service UUID 1623 (the web analogue of the app's software filter),
   optional *advertising watch* path (`requestLEScan`, experimental) that mirrors
@@ -324,11 +325,13 @@ and community captures ([codecat's DUPLO train work](https://codecat.io/projects
 * full **LWP3 encoder/decoder** (attached IO, port values, hub properties, actions, errors),
 * **throttled sender** mirroring `SendThrottler` (4 packets / 80 ms window,
   write-without-response, queue overtake),
-* **train controls**: drive slider (−100…+100), stop, the five documented sounds,
-  LED colour (LWP3 palette), battery/switch-off, live decoder + byte-level log,
+* **train controls**: a simple view (connect, drive, horn, light toggle) plus an
+  expert view with all five documented sounds, free sound IDs, the full LWP3
+  colour palette, battery/switch-off, ports, sensors, a live chart and a
+  byte-level log,
 * ports are resolved **by device type** from `Hub Attached I/O` events, so both
   the 2018–2024 hub (0x20) and the 2025 hub (0x21) work.
 
-Run it from `webapp/index.html` (Chrome/Edge — desktop with a real BLE adapter,
+Run it from `control/index.html` (Chrome/Edge — desktop with a real BLE adapter,
 or Android Chrome; HTTPS or `localhost` required) while keeping the LEGO app
 closed — the train only advertises when powered on and not yet connected.

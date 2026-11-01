@@ -4,12 +4,23 @@ external/
 # Python artifacts of the analysis tooling
 __pycache__/
 *.pyc
+.venv/
+venv/
 
 # Editor / OS noise
 *.swp
 .DS_Store
+Thumbs.db
 
 # Node / Vite
-webapp/node_modules/
-webapp/dist/
-webapp/.vite/
+node_modules/
+dist/
+.vite/
+
+# Local environment overrides
+.env
+.env.local
+
+# Logs
+*.log
+npm-debug.log*
