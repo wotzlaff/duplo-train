@@ -116,6 +116,7 @@ const state = {
   eventsPort: null,     /* 2025 EVENTS port (sound + light), usually 0x34 */
   lightOn: false,       /* basic light toggle state */
   lightColor: null,     /* last non-off colour in the active palette */
+  lightPending: null,   /* retry book-keeping for the EVENTS/RGB light channel */
   stats: { tx: 0, txErr: 0, fb: 0, discard: 0 },
   sensorHistory: { speedo: [], rssi: [] },
   lastSeenAdvert: null, /* hex of LEGO 6 bytes, from advert watch when available */
@@ -221,6 +222,17 @@ function renderLightState() {
   }
 }
 
+function clearLightPending() {
+  if (state.lightPending && state.lightPending.timer) clearTimeout(state.lightPending.timer);
+  state.lightPending = null;
+}
+
+function lightTargetPort() {
+  return state.hubGeneration === 'modern'
+    ? (state.eventsPort ?? PORT_FALLBACK_MODERN.rgb)
+    : (state.ports.rgb?.port ?? PORT_FALLBACK.rgb);
+}
+
 function setLed(color, announce = true) {
   if (!connectedGuard()) return false;
 
@@ -246,9 +258,25 @@ function setLed(color, announce = true) {
   }
   renderLightState();
 
+  /* LEDs are usually reliable, but the 2025 EVENTS channel can drop a write —
+   * and a click before the EVENTS subscription is processed is ignored. Retry
+   * a few times unless the hub confirms completion via 0x82. */
+  clearLightPending();
+  let tries = 0;
+  const port = lightTargetPort();
+  const retry = () => {
+    if (!state.lightPending) return;
+    if (!state.connected || !state.characteristic || ++tries > 3) { clearLightPending(); return; }
+    log(`→ LED retry #${tries} (${colorName(color)}) — no hub feedback yet`, 'warn');
+    bytesOf(msg, 'TX', 'tx');
+    throttler.enqueue(msg);
+    state.lightPending.timer = setTimeout(retry, 300);
+  };
+  state.lightPending = { port, color, timer: setTimeout(retry, 300) };
+
   if (announce) {
     log(`→ LED: ${colorName(color)} (${color})` +
-      (state.hubGeneration === 'modern' ? ' via EVENTS' : ''), 'info');
+      (state.hubGeneration === 'modern' ? ` via EVENTS 0x${port.toString(16)}` : ''), 'info');
   }
   return true;
 }
@@ -516,6 +544,7 @@ async function connectGatt() {
   state.eventsPort = null;
   state.lightColor = null;
   state.lightOn = false;
+  clearLightPending();
   renderLedPalette();
   renderLightState();
   const generationEl = $('di-generation');
@@ -592,6 +621,7 @@ function disconnectNow() {
   if (state.colorPrimeTimer !== null) { clearTimeout(state.colorPrimeTimer); state.colorPrimeTimer = null; }
   state.desiredSpeed = 0;
   clearSoundPending();
+  clearLightPending();
   if (state.characteristic) { try { state.characteristic.stopNotifications(); } catch (e) {} }
   state.device?.gatt.disconnect();
 }
@@ -603,6 +633,7 @@ function onDisconnected() {
   if (state.colorPrimeTimer !== null) { clearTimeout(state.colorPrimeTimer); state.colorPrimeTimer = null; }
   state.desiredSpeed = 0;
   clearSoundPending();
+  clearLightPending();
   state.sawFeedback = false;
   state.preferWrite = false;
   state.stats = { tx: 0, txErr: 0, fb: 0, discard: 0 };
@@ -613,6 +644,7 @@ function onDisconnected() {
   state.eventsPort = null;
   state.lightColor = null;
   state.lightOn = false;
+  clearLightPending();
   renderLedPalette();
   renderLightState();
   const generationEl = $('di-generation');
@@ -733,6 +765,16 @@ function decodeAttachedIO(u8) {
     const speakerSub = cmdSubscribe(0x01, 1, 1, false);
     bytesOf(speakerSub, 'TX', 'tx');
     throttler.enqueue(speakerSub);
+
+    /* If the user toggled the light before EVENTS was ready, replay it now
+     * that the hub will accept writes on 0x34. */
+    if (state.lightOn) {
+      const color = state.lightColor ?? defaultLightColor();
+      const light = cmdLed(color);
+      bytesOf(light, 'TX', 'tx');
+      throttler.enqueue(light);
+      log('EVENTS-Abo aktiv — Lichtzustand erneut gesendet', 'info');
+    }
   }
 
   /* Sensors use mode 0; the color sensor uses its RGB mode 3. */
@@ -1024,6 +1066,12 @@ function decodeFeedback(u8) {
   if (isSpeakerPort && completed) {
     log('sound confirmed by hub feedback (port 0x' + port.toString(16) + ', status 0x' + bits.toString(16) + ')', 'info');
     clearSoundPending();
+  }
+
+  const isLightPort = !!(state.lightPending && state.lightPending.port === port);
+  if (isLightPort && completed) {
+    log('LED confirmed by hub feedback (port 0x' + port.toString(16) + ', status 0x' + bits.toString(16) + ')', 'info');
+    clearLightPending();
   }
   if (bits & 0x04) {
     state.stats.discard++;

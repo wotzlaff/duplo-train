@@ -206,6 +206,14 @@ test_js = r"""
   toggleLight(); await flush();
   out.push('modern-light-off=' + state.lightOn + ':' + state.lightColor);
 
+  /* light retry and feedback gating */
+  const beforeLightRetry = lightWrites;
+  fireTimers(300);
+  await flush();
+  out.push('modern-light-retry=' + (lightWrites > beforeLightRetry ? 'yes' : 'no'));
+  decodeFeedback(new Uint8Array([5, 0, 0x82, 0x34, 0x02]));  /* 2025 completed */
+  out.push('light-feedback-cleared=' + (state.lightPending === null ? 'yes' : 'no'));
+
   __testResult = JSON.stringify(out);
 })().catch((error) => { __testError = String((error && error.stack) || error); });
 """
@@ -262,6 +270,8 @@ expect = [
     "modern-sound-port=52:1",                              # horn 0x34, others 0x01
     "modern-light-on=true:1",                              # 2025 default white
     "modern-light-off=false:1",                            # off keeps last colour
+    "modern-light-retry=yes",                              # dropped light writes are retried
+    "light-feedback-cleared=yes",                          # 0x82 status 0x02 clears the retry
 ]
 
 got = json.loads(result)
